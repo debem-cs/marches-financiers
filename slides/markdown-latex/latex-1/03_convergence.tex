@@ -1,0 +1,81 @@
+\chapter{Independence and Convergence}
+
+\section{Independence}
+
+Independence captures the intuitive idea that the outcome of one event does not influence the likelihood of another.
+
+\begin{definition}[Independence of Events]
+Events $(A_{\lambda})_{\lambda \in \Lambda}$ are \textbf{mutually independent} if for every finite sub-collection with indices $\lambda_1, \dots, \lambda_k$, the probability of the intersection is the product of the probabilities:
+\[
+\mathbb{P}\left( \bigcap_{j=1}^k A_{\lambda_j} \right) = \prod_{j=1}^k \mathbb{P}(A_{\lambda_j}).
+\]
+\end{definition}
+\textbf{Warning}: Pairwise independence does NOT imply mutual independence. (Example: Bernstein's counterexample).
+
+\begin{definition}[Independence of $\sigma$-algebras]
+Sub-$\sigma$-algebras $\mathcal{G}_1, \dots, \mathcal{G}_n \subset \mathcal{F}$ are independent if for any choice of events $A_i \in \mathcal{G}_i$:
+\[
+\mathbb{P}\left( \bigcap_{i=1}^n A_i \right) = \prod_{i=1}^n \mathbb{P}(A_i).
+\]
+\end{definition}
+
+\begin{definition}[Independence of Random Variables]
+Random variables $(X_{\lambda})$ are independent if their generated $\sigma$-algebras $\sigma(X_{\lambda}) = X_{\lambda}^{-1}(\mathcal{G})$ are independent.
+\end{definition}
+
+\section{Modes of Convergence}
+In analysis, a sequence of numbers converges to a limit. In probability, since the random outcomes depend on $\omega$, there are multiple ways to define ``closeness'' to a limit random variable $Y$.
+
+Let $(Y_n)_{n \geq 1}$ and $Y$ be random variables.
+
+\subsection{Almost Sure Convergence (a.s.)}
+Pointwise convergence for ``almost all'' outcomes.
+\[
+Y_n \xrightarrow{\text{a.s.}} Y \iff \mathbb{P}\left( \{ \omega : \lim_{n \to \infty} Y_n(\omega) = Y(\omega) \} \right) = 1.
+\]
+This is the strongest form of pointwise convergence.
+
+\subsection{\texorpdfstring{$L^p$}{Lp} Convergence}
+Convergence in the mean of the $p$-th power difference.
+\[
+Y_n \xrightarrow{L^p} Y \iff \|Y_n - Y\|_p = \left( \mathbb{E}[|Y_n - Y|^p] \right)^{1/p} \to 0.
+\]
+Implies $L^q$ convergence for any $q < p$ (by Hölder's inequality).
+
+\subsection{Convergence in Probability}
+The probability of observing a significant difference goes to zero.
+\[
+Y_n \xrightarrow{\mathbb{P}} Y \iff \forall \epsilon > 0, \quad \mathbb{P}(|Y_n - Y| > \epsilon) \to 0.
+\]
+\textbf{Relations}:
+\begin{itemize}
+    \item $L^p \implies$ Probability (Markov inequality).
+    \item Almost Sure $\implies$ Probability.
+    \item The converses are generally false (though Probability $\implies$ a.s. along a subsequence).
+\end{itemize}
+
+\subsection{Convergence in Law (Distribution)}
+Only the distributions approach the limit distribution. The random variables themselves might not be close.
+\[
+Y_n \xrightarrow{\text{law}} Y \iff \mathbb{E}[f(Y_n)] \to \mathbb{E}[f(Y)] \quad \text{for all bounded continuous } f.
+\]
+Also denoted as $\implies$ or $\xrightarrow{\mathcal{D}}$. This is the weakest form of convergence.
+
+\section{Limit Theorems}
+
+Let $(X_n)$ be a sequence of independent and identically distributed (i.i.d.) random variables.
+
+\begin{theorem}[Strong Law of Large Numbers]
+If $X_1 \in L^1$ (measurable mean $m = \mathbb{E}[X_1]$), then the empirical average converges almost surely to the theoretical mean:
+\[
+\bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i \xrightarrow{\text{a.s.}} m.
+\]
+\end{theorem}
+
+\begin{theorem}[Central Limit Theorem]
+If $X_1 \in L^2$ (finite variance $\sigma^2 = \text{Var}(X_1)$), then the standardized sum converges in law to a standard Gaussian:
+\[
+\frac{\sqrt{n}(\bar{X}_n - m)}{\sigma} = \frac{\sum_{i=1}^n (X_i - m)}{\sigma \sqrt{n}} \xrightarrow{\text{law}} \mathcal{N}(0, 1).
+\]
+\end{theorem}
+This explains the ubiquity of the Normal distribution in finance (returns aggregation).

@@ -1,0 +1,76 @@
+\documentclass[12pt, a4paper]{report}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+% Geometry setup
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm
+}
+\setlength{\headheight}{30pt}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Stochastic Finance and Risk Modelling - Chapter 1},
+    pdfauthor={Laurence Carassus and Gaoyue Guo},
+}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{example}{Example}[chapter]
+\newtheorem{remark}[theorem]{Remark}
+
+% Layout/Style
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\leftmark}
+\lhead{Stochastic Finance and Risk Modelling}
+\cfoot{\thepage}
+
+\title{\textbf{Stochastic Finance and Risk Modelling} \\ \large Chapter 1: From Probability to Stochastic Process}
+\author{Based on slides by Ioane Muni-Toke \\ Laurence Carassus and Gaoyue Guo \\ \textit{Expanded Study Resource}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+This document serves as a comprehensive study guide for the course "Stochastic Finance and Risk Modelling". It expands upon the lecture slides relative to Chapter 1: "From probability to stochastic process". 
+
+The goal of this text is to provide a rigorous mathematical foundation required for modern financial modeling. We begin with the axiomatic definition of probability spaces and $\sigma$-algebras, move through random variables and their distributions, and finally establish key convergence results and the concept of conditional expectation, which is central to martingale theory and asset pricing.
+
+\include{00_topology}
+\include{01_foundations}
+\include{02_random_variables}
+\include{03_convergence}
+\include{04_conditional_expectation}
+\include{05_measure_change}
+
+\end{document}

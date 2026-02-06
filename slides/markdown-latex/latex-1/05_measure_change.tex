@@ -1,0 +1,52 @@
+\chapter{Equivalent Probability Measures and Change of Measure}
+
+In finance (Girsanov Theorem), we frequently move between the ``historical'' or ``physical'' measure $\mathbb{P}$ and a ``risk-neutral'' measure $\mathbb{Q}$.
+
+\section{Radon-Nikodym Derivative}
+
+\begin{definition}[Radon-Nikodym Density]
+Let $\mathbb{P}$ be a reference probability measure. Let $Z$ be a non-negative random variable ($Z \geq 0$ a.s.) with $\mathbb{E}_{\mathbb{P}}[Z] = 1$.
+We can define a new probability measure $\mathbb{Q}$ by weighing the outcomes by $Z$:
+\[
+\mathbb{Q}(A) := \int_A Z(\omega) \, d\mathbb{P}(\omega) = \mathbb{E}_{\mathbb{P}}[ \mathbb{1}_A Z ], \quad \forall A \in \mathcal{F}.
+\]
+The variable $Z$ is called the \textbf{Radon-Nikodym derivative} (or density) of $\mathbb{Q}$ with respect to $\mathbb{P}$. We write:
+\[
+Z = \frac{d\mathbb{Q}}{d\mathbb{P}}.
+\]
+\end{definition}
+
+\subsection{Relationship between Expectations}
+For any random variable $X$:
+- $X \in L^1(\mathbb{Q})$ iff $XZ \in L^1(\mathbb{P})$.
+- The expectation transforms as:
+\[
+\mathbb{E}_{\mathbb{Q}}[X] = \mathbb{E}_{\mathbb{P}}[X Z].
+\]
+
+\section{Absolute Continuity and Equivalence}
+
+\begin{definition}[Absolute Continuity]
+A measure $\mathbb{Q}$ is \textbf{absolutely continuous} with respect to $\mathbb{P}$ (denoted $\mathbb{Q} \ll \mathbb{P}$) if $\mathbb{P}(A) = 0 \implies \mathbb{Q}(A) = 0$.
+Intuitively, ``impossible'' events under $\mathbb{P}$ must remain ``impossible'' under $\mathbb{Q}$.
+\end{definition}
+
+\begin{definition}[Equivalent Measures]
+Measures $\mathbb{P}$ and $\mathbb{Q}$ are \textbf{equivalent} ($\mathbb{P} \sim \mathbb{Q}$) if $\mathbb{Q} \ll \mathbb{P}$ and $\mathbb{P} \ll \mathbb{Q}$. They agree on which events are possible (have probability $> 0$) and which are impossible.
+\end{definition}
+
+\begin{theorem}[Radon-Nikodym Theorem]
+If $\mathbb{Q} \ll \mathbb{P}$, there exists a unique measurable function $Z \geq 0$ such that $d\mathbb{Q} = Z d\mathbb{P}$.
+If $\mathbb{Q} \sim \mathbb{P}$, then strictly $Z > 0$ almost surely.
+\end{theorem}
+
+\section{Conditional Bayes Formula/Kallianpur-Striebel}
+How does conditional expectation change when we change the measure? This is crucial for pricing (computing $\mathbb{E}^{\mathbb{Q}}[ \dots | \mathcal{F}_t ]$).
+
+\begin{theorem}[Conditional Bayes Formula]
+Let $\mathbb{Q} = Z \cdot \mathbb{P}$. Let $\mathcal{G} \subset \mathcal{F}$ be a sub-$\sigma$-algebra. For any $X \in L^1(\mathbb{Q})$:
+\[
+\mathbb{E}_{\mathbb{Q}}[X | \mathcal{G}] = \frac{\mathbb{E}_{\mathbb{P}}[X Z | \mathcal{G}]}{\mathbb{E}_{\mathbb{P}}[Z | \mathcal{G}]}.
+\]
+\end{theorem}
+\textbf{Intuition}: The ``local'' density on the subspace given by $\mathcal{G}$ is represented by the conditional expectation of $Z$. We must re-normalize by this local density.

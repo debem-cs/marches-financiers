@@ -1,0 +1,118 @@
+\chapter{Random Variables and Distributions}
+
+\section{Random Variables}
+
+A random variable is, somewhat counter-intuitively, not a variable but a function. It connects the abstract world of the probability space $(\Omega, \mathcal{F}, \mathbb{P})$ to a concrete numerical space (usually $\mathbb{R}$ or $\mathbb{R}^d$) where we can perform calculations.
+
+\begin{definition}[Random Variable]
+Let $(\Omega, \mathcal{F})$ be a measurable space and $(\Sigma, \mathcal{G})$ be another measurable space (often $(\mathbb{R}^d, \mathcal{B}(\mathbb{R}^d))$). A map $X: \Omega \to \Sigma$ is called a \textbf{measurable function} or \textbf{random variable (r.v.)} if the pre-image of every measurable set in $\Sigma$ is a measurable event in $\Omega$:
+\[
+X^{-1}(B) := \{ \omega \in \Omega : X(\omega) \in B \} \in \mathcal{F}, \quad \forall B \in \mathcal{G}.
+\]
+\end{definition}
+
+This condition ensures that questions like ``What is the probability that $X$ falls in region $B$?'' are well-defined, because $\{X \in B\}$ is an event in $\mathcal{F}$, on which $\mathbb{P}$ is defined.
+
+\section{Distributions and Pushforward Measures}
+
+When we observe a random variable $X$, we effectively transport the probability mass from $\Omega$ to the target space $\Sigma$.
+
+\begin{definition}[Pushforward Measure / Law]
+Let $X$ be a random variable from $(\Omega, \mathcal{F}, \mathbb{P})$ to $(\Sigma, \mathcal{G})$. The \textbf{pushforward measure} of $\mathbb{P}$ by $X$, denoted $X_{\#} \mathbb{P}$ or $\mathbb{P}_X$, is a probability measure on $(\Sigma, \mathcal{G})$ defined by:
+\[
+\mathbb{P}_X(B) := \mathbb{P}(X^{-1}(B)) = \mathbb{P}(X \in B), \quad \forall B \in \mathcal{G}.
+\]
+This measure $\mathbb{P}_X$ is called the \textbf{law} or \textbf{distribution} of $X$.
+\end{definition}
+In simpler terms, the distribution $\mathbb{P}_X$ tells us how the randomness is distributed on the value space (e.g., the real line), ignoring the underlying details of $\Omega$.
+
+\section{Expectation and Integration}
+
+\begin{definition}[Expectation]
+The expectation of a random variable $X: \Omega \to \mathbb{R}^d$ is defined as the Lebesgue integral of $X$ with respect to the measure $\mathbb{P}$:
+\[
+\mathbb{E}[X] := \int_{\Omega} X(\omega) \, \mathbb{P}(d\omega).
+\]
+\end{definition}
+
+\subsection{Theorem of Transport (Transfer Theorem)}
+This fundamental theorem allows us to compute expectations without working directly with the abstract space $\Omega$. We can work solely with the distribution of $X$ on $\mathbb{R}^d$.
+
+\begin{theorem}
+Let $X: \Omega \to \Sigma$ be a random variable and $g: \Sigma \to \mathbb{R}$ be a measurable function. Let $Y = g(X)$. Then $Y$ is integrable (i.e., $Y \in L^1(\Omega)$) if and only if $g \in L^1(\Sigma, \mathbb{P}_X)$. In this case:
+\[
+\mathbb{E}[g(X)] = \int_{\Omega} g(X(\omega)) \, \mathbb{P}(d\omega) = \int_{\Sigma} g(x) \, \mathbb{P}_X(dx).
+\]
+\end{theorem}
+This is the workhorse of probability. If $X$ has a probability density function $f_X(x)$ on $\mathbb{R}$, this simplifies to the familiar Riemann integral:
+\[
+\mathbb{E}[g(X)] = \int_{-\infty}^{\infty} g(x) f_X(x) \, dx.
+\]
+
+\section{\texorpdfstring{$L^p$}{Lp} Spaces and Moments}
+
+\begin{definition}[$L^p$ Spaces]
+For $p \geq 1$, the space $L^p(\Omega, \mathcal{F}, \mathbb{P})$ consists of all random variables $X$ such that $|X|^p$ is integrable:
+\[
+\mathbb{E}[|X|^p] < \infty.
+\]
+The norm is defined as $\|X\|_p = (\mathbb{E}[|X|^p])^{1/p}$.
+\end{definition}
+
+\begin{itemize}
+    \item \textbf{$L^1$}: Finite mean.
+    \item \textbf{$L^2$}: Finite variance. This is a Hilbert space with inner product $\langle X, Y \rangle = \mathbb{E}[XY]$.
+\end{itemize}
+
+\begin{definition}[Variance and Covariance]
+For $X, Y \in L^2(\Omega)$, the \textbf{covariance} is:
+\[
+\text{Cov}(X, Y) := \mathbb{E}[(X - \mathbb{E}[X])(Y - \mathbb{E}[Y])] = \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y].
+\]
+The \textbf{variance} is $\text{Var}(X) := \text{Cov}(X, X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$.
+\end{definition}
+
+\section{Common Distributions}
+
+\subsection{Discrete Distributions}
+\begin{enumerate}
+    \item \textbf{Binomial Distribution} $B(n, p)$:
+    Describes the number of successes in $n$ independent Bernoulli trials with probability $p$.
+    Support: $\{0, 1, \dots, n\}$.
+    \[
+    \mathbb{P}(X=k) = \binom{n}{k} p^k (1-p)^{n-k}.
+    \]
+    
+    \item \textbf{Poisson Distribution} $\mathcal{P}(\lambda)$:
+    Describes rare events occurring at a known constant rate $\lambda$.
+    Support: $\mathbb{N} = \{0, 1, 2, \dots\}$.
+    \[
+    \mathbb{P}(X=k) = e^{-\lambda} \frac{\lambda^k}{k!}.
+    \]
+\end{enumerate}
+
+\subsection{Continuous Distributions}
+\begin{enumerate}
+    \item \textbf{Uniform Distribution} $\mathcal{U}(a, b)$:
+    Constant probability density over an interval.
+    Support: $[a, b]$.
+    \[
+    \mathbb{P}_X(dx) = \frac{1}{b-a} \mathbb{1}_{[a, b]}(x) \, dx.
+    \]
+    
+    \item \textbf{Gaussian (Normal) Distribution} $\mathcal{N}(m, \sigma^2)$:
+    The most important distribution due to the Central Limit Theorem.
+    Support: $\mathbb{R}$.
+    parameters: mean $m$, variance $\sigma^2$.
+    \[
+    \mathbb{P}_X(dx) = \frac{1}{\sqrt{2\pi}\sigma} \exp\left( -\frac{(x-m)^2}{2\sigma^2} \right) \, dx.
+    \]
+\end{enumerate}
+
+\section{Gaussian Vectors}
+A random vector $X = (X_1, \dots, X_d)$ is a \textbf{Gaussian vector} if any linear combination of its components is a univariate Gaussian method.
+\[
+\forall a \in \mathbb{R}^d, \quad a^T X = \sum_{i=1}^d a_i X_i \sim \mathcal{N}(\mu_a, \sigma^2_a).
+\]
+This is a much stronger condition than simply saying each marginal $X_i$ is Gaussian.
+The law is determined by the mean vector $\mu = \mathbb{E}[X]$ and the covariance matrix $\Sigma$, where $\Sigma_{ij} = \text{Cov}(X_i, X_j)$.

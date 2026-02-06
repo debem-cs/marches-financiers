@@ -1,0 +1,78 @@
+\chapter{Conditional Expectation}
+
+Conditional expectation is arguably the most important concept in mathematical finance, as prices of fair assets are modeled as conditional expectations of their future payoffs under a specific measure (martingales).
+
+\section{Conditional Expectation in \texorpdfstring{$L^1$}{L1}}
+
+The elementary definition $\mathbb{E}[X|Y=y] = \sum x \mathbb{P}(X=x|Y=y)$ works for discrete variables but fails for continuous ones because $\mathbb{P}(Y=y) = 0$. The rigorous definition relies on $\sigma$-algebras and measurability.
+
+\begin{theorem}[Existence and Uniqueness]
+Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space and let $X \in L^1(\Omega, \mathcal{F}, \mathbb{P})$. Let $\mathcal{G} \subseteq \mathcal{F}$ be a sub-$\sigma$-algebra (representing ``partial information'').
+
+There exists a \textbf{unique} random variable $Z$, denoted by $\mathbb{E}[X|\mathcal{G}]$, such that:
+\begin{enumerate}
+    \item \textbf{Measurability}: $Z$ is $\mathcal{G}$-measurable.
+    \item \textbf{Partial Averaging Property}: For every bounded $\mathcal{G}$-measurable random variable $H$ (or equivalently for all $A \in \mathcal{G}$):
+    \[
+    \mathbb{E}[Z H] = \mathbb{E}[X H] \quad \left( \text{i.e., } \int_A Z \, d\mathbb{P} = \int_A X \, d\mathbb{P} \right).
+    \]
+\end{enumerate}
+This $Z$ is called the \textbf{conditional expectation} of $X$ given $\mathcal{G}$.
+\end{theorem}
+\textit{Uniqueness holds $\mathbb{P}$-almost surely.}
+
+\begin{remark}
+If $\mathcal{G} = \sigma(Y)$ covers the information provided by observing a random variable $Y$, we write $\mathbb{E}[X|Y]$.
+\end{remark}
+
+\section{Key Properties}
+Let $X, Y \in L^1$ and $\mathcal{G}, \mathcal{H}$ be sub-$\sigma$-algebras.
+
+\begin{proposition}
+The conditional expectation satisfies:
+\begin{enumerate}
+    \item \textbf{Linearity}: $\mathbb{E}[aX + bY | \mathcal{G}] = a\mathbb{E}[X|\mathcal{G}] + b\mathbb{E}[Y|\mathcal{G}]$.
+    \item \textbf{Positivity}: If $X \geq 0$ a.s., then $\mathbb{E}[X|\mathcal{G}] \geq 0$ a.s.
+    \item \textbf{Taking out what is known}: If $Y$ is $\mathcal{G}$-measurable and $XY \in L^1$, then:
+    \[
+    \mathbb{E}[XY|\mathcal{G}] = Y \mathbb{E}[X|\mathcal{G}].
+    \]
+    \item \textbf{Tower Property} (Iterated Conditioning): If $\mathcal{H} \subset \mathcal{G}$ (less information in $\mathcal{H}$), then:
+    \[
+    \mathbb{E}[ \mathbb{E}[X|\mathcal{G}] | \mathcal{H} ] = \mathbb{E}[X|\mathcal{H}].
+    \]
+    Evaluating the best guess of a best guess yields the coarser guess.
+    \item \textbf{Independence}: If $X$ is independent of $\mathcal{G}$, then $\mathbb{E}[X|\mathcal{G}] = \mathbb{E}[X]$.
+    \item \textbf{Full Information}: If $X$ is $\mathcal{G}$-measurable, then $\mathbb{E}[X|\mathcal{G}] = X$.
+    \item \textbf{Jensen's Inequality}: If $\phi: \mathbb{R} \to \mathbb{R}$ is convex, then $\phi(\mathbb{E}[X|\mathcal{G}]) \leq \mathbb{E}[\phi(X)|\mathcal{G}]$.
+\end{enumerate}
+\end{proposition}
+
+\section{Geometric Interpretation in \texorpdfstring{$L^2$}{L2}}
+
+If we restrict ourselves to $L^2(\Omega, \mathcal{F}, \mathbb{P})$, the space is a Hilbert space. The set of $\mathcal{G}$-measurable random variables in $L^2$, denoted $L^2(\mathcal{G})$, is a closed linear subspace of $L^2(\mathcal{F})$.
+
+\begin{theorem}[Orthogonal Projection]
+For $X \in L^2(\mathcal{F})$, the conditional expectation $\mathbb{E}[X|\mathcal{G}]$ is the \textbf{orthogonal projection} of $X$ onto the subspace $L^2(\mathcal{G})$.
+\[
+\mathbb{E}[X|\mathcal{G}] = \text{argmin}_{Z \in L^2(\mathcal{G})} \| X - Z \|_2 = \text{argmin}_{Z \in L^2(\mathcal{G})} \mathbb{E}[(X-Z)^2].
+\]
+Using Hilbert space geometry, this means the error $X - \mathbb{E}[X|\mathcal{G}]$ is orthogonal to every vector in the subspace $L^2(\mathcal{G})$:
+\[
+\langle X - \mathbb{E}[X|\mathcal{G}], Z \rangle = 0 \quad \forall Z \in L^2(\mathcal{G}).
+\]
+\end{theorem}
+This interprets the conditional expectation as the ``best Mean-Square estimator'' of $X$ given the information $\mathcal{G}$.
+
+\section{Gaussian Regression}
+A powerful application of the $L^2$ projection view is in Gaussian vectors.
+
+\begin{theorem}
+Let $(Y_1, \dots, Y_n, X)$ be a Gaussian vector in $L^2$. We want to estimate $X$ given observations $Y = (Y_1, \dots, Y_n)^T$.
+The conditional expectation is linear in $Y$:
+\[
+\mathbb{E}[X | Y_1, \dots, Y_n] = \mathbb{E}[X] + \lambda^T (Y - \mathbb{E}[Y])
+\]
+where $\lambda = \Sigma_Y^{-1} \text{Cov}(X, Y)$. Here, $\Sigma_Y$ is the covariance matrix of $Y$, and $\text{Cov}(X, Y)$ is the vector of covariances between $X$ and each $Y_i$.
+\end{theorem}
+Moreover, the residual error $X - \mathbb{E}[X|Y]$ is independent of $\sigma(Y)$ (a specific property of Gaussianity; essentially orthogonality implies independence for Gaussians).

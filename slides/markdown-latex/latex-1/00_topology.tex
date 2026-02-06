@@ -1,0 +1,103 @@
+\chapter{Topological Prerequisites}
+
+To fully leverage the power of measure theory in probability (especially constructing Borel \texorpdfstring{$\sigma$-}{sigma-}algebras and understanding convergence), we need a solid understanding of \textbf{Topology}.
+
+A topology generalizes the notion of ``closeness'' and ``limits'' without necessarily needing a distance function (metric), although in finance we mostly work with metric spaces.
+
+\section{Metric Spaces}
+
+\begin{definition}[Metric Space]
+A \textbf{metric space} is a pair $(M, d)$ where $M$ is a set and $d: M \times M \to [0, \infty)$ is a distance function satisfying:
+\begin{enumerate}
+    \item \textbf{Identity}: $d(x, y) = 0 \iff x = y$.
+    \item \textbf{Symmetry}: $d(x, y) = d(y, x)$.
+    \item \textbf{Triangle Inequality}: $d(x, z) \leq d(x, y) + d(y, z)$.
+\end{enumerate}
+\end{definition}
+
+The most important building block in a metric space is the \textbf{Open Ball}.
+
+\begin{definition}[Open Ball]
+The open ball of radius $r > 0$ centered at $x \in M$ is:
+\[
+B(x, r) := \{ y \in M : d(x, y) < r \}.
+\]
+\end{definition}
+
+In $\mathbb{R}$ with the Euclidean metric $d(x, y) = |x - y|$, the open ball is simply the open interval $(x-r, x+r)$. In $\mathbb{R}^2$, it is the interior of a disk.
+
+\section{General Topology}
+
+While metric spaces are intuitive, the rigorous definition of ``measurable events'' relies on the more general concept of \textbf{Open Sets}.
+
+\begin{definition}[Topology]
+A \textbf{topology} on a set $\Omega$ is a collection $\mathcal{T}$ of subsets of $\Omega$ (called \textbf{open sets}) such that:
+\begin{enumerate}
+    \item $\emptyset \in \mathcal{T}$ and $\Omega \in \mathcal{T}$.
+    \item Any \textbf{union} (finite or infinite) of open sets is open.
+    \item Any \textbf{finite intersection} of open sets is open.
+\end{enumerate}
+\end{definition}
+
+In a metric space, a set $U$ is open if for every point $x \in U$, there exists some small ball entirely contained in $U$ ($B(x, \epsilon) \subset U$).
+
+\subsection{Closed Sets}
+A set $F$ is \textbf{closed} if its complement $F^c = \Omega \setminus F$ is open.
+\textbf{Intuition}: Closed sets ``contain their boundaries''.
+\begin{example}
+In $\mathbb{R}$:
+\begin{itemize}
+    \item $(0, 1)$ is open.
+    \item $[0, 1]$ is closed.
+    \item $[0, 1)$ is neither open nor closed.
+\end{itemize}
+\end{example}
+
+\subsection{Closure, Interior, Boundary}
+For any set $A$:
+\begin{itemize}
+    \item \textbf{Interior} $A^\circ$: The largest open set contained in $A$.
+    \item \textbf{Closure} $\bar{A}$: The smallest closed set containing $A$.
+    \item \textbf{Boundary} $\partial A = \bar{A} \setminus A^\circ$.
+\end{itemize}
+Crucially, a set $A$ is closed if and only if $A = \bar{A}$.
+
+\section{Continuity}
+
+In calculus, we define continuity using $\epsilon-\delta$. In topology, we have a much cleaner definition that connects directly to $\sigma$-algebras.
+
+\begin{definition}[Continuous Function]
+A function $f: (X, \mathcal{T}_X) \to (Y, \mathcal{T}_Y)$ is \textbf{continuous} if the inverse image of every open set is open.
+\[
+\forall V \in \mathcal{T}_Y, \quad f^{-1}(V) \in \mathcal{T}_X.
+\]
+\end{definition}
+This definition explains why random variables are defined as measurable functions: variables are to $\sigma$-algebras what continuous functions are to topologies.
+
+\section{Important Properties for Probability}
+
+\subsection{Separability}
+A topological space is \textbf{separable} if it contains a countable dense subset.
+\begin{itemize}
+    \item $\mathbb{R}$ is separable because $\mathbb{Q}$ (rationals) is countable and dense in $\mathbb{R}$.
+    \item \textbf{Why it matters}: Separability prevents the space from being ``too big''. It ensures that the Borel $\sigma$-algebra is well-behaved and that the support of a measure is unique.
+\end{itemize}
+
+\subsection{Completeness}
+A metric space is \textbf{complete} if every Cauchy sequence converges to a limit within the space.
+\begin{itemize}
+    \item $\mathbb{R}$ is complete (Cauchy sequences converge to real numbers).
+    \item $\mathbb{Q}$ is not complete (a sequence of rationals can converge to $\sqrt{2} \notin \mathbb{Q}$).
+\end{itemize}
+
+\subsection{Polish Spaces}
+A \textbf{Polish Space} is a separable, completely metrizable topological space.
+\begin{itemize}
+    \item Examples: $\mathbb{R}$, $\mathbb{R}^d$, $C([0, T], \mathbb{R})$ (continuous functions, via Wiener measure).
+    \item These are the ``nice'' spaces where modern probability theory lives.
+\end{itemize}
+
+\subsection{Compactness}
+A set $K$ is \textbf{compact} if every open cover has a finite subcover.
+In $\mathbb{R}^d$ (Heine-Borel theorem), a set is compact if and only if it is \textbf{closed} and \textbf{bounded}.
+Compactness is crucial for proving the existence of limits (Prohorov's Theorem talks about ``tightness'', which is compactness for measures).
