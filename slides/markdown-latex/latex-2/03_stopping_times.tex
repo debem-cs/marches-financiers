@@ -1,0 +1,94 @@
+\chapter{Stopping Times}
+
+In many financial applications (e.g., American options, optimal stopping problems), actions depend on random events. A fundamental concept is the \textbf{stopping time}, which models a decision to stop or take action based \textit{only} on currently available information.
+
+\section{Definition and Intuition}
+
+A random variable $\tau : \Omega \to I \cup \{+\infty\}$ is a time index that is random. However, for it to be useful in decision making, observing the process up to time $t$ must be sufficient to determine if $\tau$ has occurred by time $t$.
+
+\begin{definition}[Stopping Time]
+A random variable $\tau$ taking values in $I \cup \{+\infty\}$ is a \textbf{stopping time} with respect to the filtration $\mathbb{F} = (\mathcal{F}_t)_{t \in I}$ if for every $t \in I$:
+\[
+\{\tau \le t\} \in \mathcal{F}_t.
+\]
+\end{definition}
+
+\textbf{Intuition}: The event $\{\tau \le t\}$ means "the stopping time has occurred by time $t$". The definition requires this event to be observable given the information $\mathcal{F}_t$.
+If $\tau$ represents the time to sell a stock, the decision to sell \textit{at or before time $t$} must rely only on stock prices up to time $t$, not on future prices.
+
+\begin{proposition}
+If $I = \mathbb{N}$ (discrete time), then $\tau$ is a stopping time if and only if:
+\[
+\{\tau = t\} \in \mathcal{F}_t, \quad \forall t \in I.
+\]
+\end{proposition}
+\begin{proof}
+$(\Rightarrow)$ If $\tau$ is a stopping time, then $\{\tau \le t\} \in \mathcal{F}_t$ and $\{\tau \le t-1\} \in \mathcal{F}_{t-1} \subseteq \mathcal{F}_t$.
+Since $\{\tau = t\} = \{\tau \le t\} \setminus \{\tau \le t-1\}$, it is the difference of two sets in $\mathcal{F}_t$, hence in $\mathcal{F}_t$.
+$(\Leftarrow)$ If $\{\tau = k\} \in \mathcal{F}_k$ for all $k$, then
+\[
+\{\tau \le t\} = \bigcup_{k=0}^t \{\tau = k\}.
+\]
+Since $\{\tau = k\} \in \mathcal{F}_k \subseteq \mathcal{F}_t$ for $k \le t$, the finite union is in $\mathcal{F}_t$.
+\end{proof}
+
+\section{Examples of Stopping Times}
+
+\subsection{First Hitting Time}
+Let $A$ be a Borel set in the state space $E$ (e.g., $A = [K, \infty)$ for a price threshold).
+Basically, the \textbf{first hitting time} of $A$ is defined as:
+\[
+H_A(\omega) = \inf \{ t \in I : X_t(\omega) \in A \}.
+\]
+(Convention: $\inf \emptyset = +\infty$).
+
+\begin{proposition}
+If $X$ is an adapted process, then $H_A$ is a stopping time.
+\end{proposition}
+\begin{proof}
+We check the condition $\{\tau \le t\} \in \mathcal{F}_t$:
+\begin{align*}
+\{H_A \le t\} &= \{ \exists k \in \{0, \dots, t\} \text{ s.t. } X_k \in A \} \\
+&= \bigcup_{k=0}^t \{ X_k \in A \}.
+\end{align*}
+Since $X$ is adapted, $\{ X_k \in A \} \in \mathcal{F}_k \subseteq \mathcal{F}_t$ for all $k \le t$.
+Since $\mathcal{F}_t$ is a $\sigma$-algebra, it is closed under finite unions. Thus, $\{H_A \le t\} \in \mathcal{F}_t$.
+\end{proof}
+
+\subsection{Counter-Example: Last Hitting Time}
+Define $L_A = \sup \{ t \in I : X_t \in A \}$. This is generally \textbf{not} a stopping time.
+To know if $L_A \le t$, we need to know that the process will \textit{never} visit $A$ again after time $t$. This requires future information, which is not available in $\mathcal{F}_t$.
+
+\section{Stopped Processes}
+
+Given a process $X$ and a stopping time $\tau$, we often want to consider the process "frozen" at time $\tau$. This is crucial for analyzing strategies that exit a market or stop a game.
+
+\begin{definition}[Stopped Process]
+The \textbf{stopped process} $X^\tau = (X^\tau_t)_{t \in I}$ is defined by:
+\[
+X^\tau_t(\omega) = X_{t \wedge \tau(\omega)}(\omega) = \begin{cases}
+X_t(\omega) & \text{if } t < \tau(\omega) \\
+X_{\tau(\omega)}(\omega) & \text{if } t \ge \tau(\omega)
+\end{cases}
+\]
+where $a \wedge b = \min(a, b)$.
+\end{definition}
+
+\begin{proposition}
+If $X$ is adapted and $\tau$ is a stopping time, then the stopped process $X^\tau$ is adapted.
+\end{proposition}
+\begin{proof}
+We need to show that $X^\tau_t$ is $\mathcal{F}_t$-measurable for each $t$.
+We can write:
+\[
+X^\tau_t = X_t \cdot \mathbb{I}_{\{t < \tau\}} + \sum_{k=0}^t X_k \cdot \mathbb{I}_{\{\tau = k\}}.
+\]
+Let's analyze each term:
+1. $\{t < \tau\} = \{\tau \le t\}^c \in \mathcal{F}_t$ (since $\tau$ is a stopping time). $X_t$ is $\mathcal{F}_t$-measurable. Thus the product is $\mathcal{F}_t$-measurable.
+2. For each $k \le t$, regarding the term in the sum:
+   $\{\tau = k\} \in \mathcal{F}_k \subseteq \mathcal{F}_t$.
+   $X_k$ is $\mathcal{F}_k$-measurable $\implies \mathcal{F}_t$-measurable.
+   Thus $X_k \cdot \mathbb{I}_{\{\tau = k\}}$ is $\mathcal{F}_t$-measurable.
+Sum of measurable functions is measurable.
+Therefore, $X^\tau_t$ is $\mathcal{F}_t$-measurable.
+\end{proof}

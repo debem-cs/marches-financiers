@@ -1,0 +1,100 @@
+\chapter{Market, Assets, and Portfolio}
+
+\section{The One-Period Market Model}
+
+We consider a simplified model of a financial market that operates over a single time period. The timeline consists of two specific dates:
+\begin{itemize}
+    \item $t=0$: The current time, or "now".
+    \item $t=T=1$: Accurse future time, or "end of the period".
+\end{itemize}
+
+In this market, there are $d+1$ assets available for trading. We denote the price of asset $i$ at time $t$ by $S_t^i$, where $i \in \{0, 1, \dots, d\}$ and $t \in \{0, 1\}$.
+
+The assets are categorized into two types: a riskless asset and risky assets.
+
+\subsection{The Riskless Asset}
+
+We designate asset $0$ as the riskless asset (or risk-free asset). This asset is characterized by a deterministic return over the period.
+
+\begin{definition}[Riskless Asset]
+Asset $0$ is riskless if its initial price is strictly positive, $S_0^0 > 0$, and its future price is given by:
+\begin{equation}
+    S_1^0 = S_0^0 (1+r),
+\end{equation}
+where $r$ is a constant known as the \textit{risk-free interest rate}. We assume $r > -1$ to ensure prices remain positive.
+\end{definition}
+
+Commonly, we normalize the initial price to unit currency, i.e., we choose $S_0^0 = 1$. In this case, $S_1^0 = 1+r$.
+This asset can be interpreted as a bank account or a government bond:
+\begin{itemize}
+    \item If you invest $S_0^0$ at time 0, you receive $S_0^0(1+r)$ at time 1. This corresponds to lending money (saving).
+    \item Conversely, you can borrow $S_0^0$ at time 0 and repay $S_0^0(1+r)$ at time 1.
+\end{itemize}
+
+\subsection{Risky Assets}
+
+The remaining $d$ assets, indexed by $i = 1, \dots, d$, are risky assets. Their prices at time $t=0$ are known constants, but their prices at time $t=1$ are uncertain.
+
+We model this uncertainty using a probability space $(\Omega, \mathcal{F}_1, \mathbb{P})$.
+\begin{itemize}
+    \item $\Omega$: The sample space, representing the set of all possible states of nature or market scenarios.
+    \item $\mathcal{F}_1$: A $\sigma$-algebra of events observable at time 1.
+    \item $\mathbb{P}$: The real-world (or historical) probability measure.
+\end{itemize}
+
+\begin{definition}[Risky Assets]
+The initial price vector of the risky assets is a constant vector in $\mathbb{R}^d_+$:
+\begin{equation}
+    S_0 = (S_0^1, \dots, S_0^d).
+\end{equation}
+The future price vector at time $t=1$ is a random vector $S_1 = (S_1^1, \dots, S_1^d)$ defined on the probability space $(\Omega, \mathcal{F}_1, \mathbb{P})$.
+Specifically, each $S_1^i$ is a non-negative random variable, meaning it is $\mathcal{F}_1$-measurable and maps $\Omega \to \mathbb{R}_+$.
+\end{definition}
+
+\subsubsection{Construction of the Probability Space}
+A canonical way to construct this space is to let the sample space be the set of all possible strictly positive price vectors:
+\begin{equation}
+    \Omega := \mathbb{R}^d_+ = (0, \infty)^d.
+\end{equation}
+The $\sigma$-algebra $\mathcal{F}_1$ is the Borel $\sigma$-algebra on $\mathbb{R}^d_+$, denoted $\mathcal{B}(\mathbb{R}^d_+)$.
+The random variable $S_1$ is then the identity map on $\Omega$:
+\begin{equation}
+    S_1(\omega) := \omega, \quad \forall \omega \in \mathbb{R}^d_+.
+\end{equation}
+Here, a specific $\omega \in \Omega$ represents a realized scenario of asset prices at time 1.
+
+\section{Portfolios and Value Processes}
+
+An investor participates in the market by constructing a portfolio, which is a collection of assets held between time 0 and time 1.
+
+\begin{definition}[Portfolio]
+A portfolio (or trading strategy) is defined by a vector $\phi = (\xi^0, \xi) \in \mathbb{R} \times \mathbb{R}^d$, where:
+\begin{itemize}
+    \item $\xi^0 \in \mathbb{R}$ represents the quantity (number of units) of the riskless asset held.
+    \item $\xi = (\xi^1, \dots, \xi^d) \in \mathbb{R}^d$ represents the quantities of the risky assets held.
+\end{itemize}
+\end{definition}
+
+Crucially, the coefficients $\xi^i$ are not restricted to be integers or positive.
+\begin{itemize}
+    \item $\xi^i > 0$: Long position (buying/holding the asset).
+    \item $\xi^i < 0$: Short position (selling/shorting the asset). Short selling implies borrowing the asset, selling it today, and promising to buy it back at time 1.
+\end{itemize}
+
+\subsection{Portfolio Value}
+
+The value of a portfolio is simply the sum of the values of its constituent assets.
+
+\begin{definition}[Value Process]
+Let $\phi = (\xi^0, \xi)$ be a portfolio.
+The \textbf{initial value} $V_0^\phi$ at time 0 is:
+\begin{equation}
+    V_0^\phi := \xi^0 S_0^0 + \xi \cdot S_0 = \xi^0 S_0^0 + \sum_{i=1}^d \xi^i S_0^i.
+\end{equation}
+The \textbf{final value} $V_1^\phi$ at time 1 is a random variable given by:
+\begin{equation}
+    V_1^\phi := \xi^0 S_1^0 + \xi \cdot S_1 = \xi^0 S_0^0(1+r) + \sum_{i=1}^d \xi^i S_1^i.
+\end{equation}
+\end{definition}
+
+This simple framework allows us to define gains and losses. If $V_1^\phi > V_0^\phi$, the strategy has generated a profit (in nominal terms). However, to properly compare values at different times, we must account for the time value of money, leading to the concept of discounted prices.

@@ -1,0 +1,56 @@
+\chapter{Complete Markets}
+
+We now address the question of replicability for all possible payoffs. If every derivative can be perfectly hedged, the market is "complete". This is a highly desirable property, as it implies that any financial risk can be eliminated through trading.
+
+\section{Definition and Characterization}
+
+\begin{definition}[Complete Market]
+A financial market $\mathcal{M}$ is said to be \textbf{complete} if every payoff $H \in L^0(\Omega, \mathcal{F}_1, \mathbb{P})$ is replicable.
+That is, for any random variable $H$, there exists a portfolio $\phi = (\xi^0, \xi)$ such that $V_1^\phi = H$ almost surely.
+\end{definition}
+
+In a complete market, every risk is "insurable" or "hedgeable".
+
+\subsection{Connection to Martingale Measures}
+The completeness of a market is intimately related to the uniqueness of the risk-neutral measure.
+
+\begin{theorem}[Second Fundamental Theorem of Asset Pricing]
+Consider an arbitrage-free market model. The market is complete if and only if there exists a \textbf{unique} martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$.
+\end{theorem}
+
+This theorem provides a powerful tool to check for completeness without explicitly constructing hedging strategies for every payoff. We just need to check the set of martingale measures:
+\begin{itemize}
+    \item \textbf{No $\mathbb{Q}$}: Arbitrage exists. The model is flawed.
+    \item \textbf{Unique $\mathbb{Q}$}: The market is arbitrage-free and complete. Every derivative has a unique price. This is the ideal theoretical setting (e.g., Black-Scholes model in continuous time).
+    \item \textbf{Multiple $\mathbb{Q}$s}: The market is arbitrage-free but incomplete. Some derivatives cannot be replicated perfectly. Their prices are not unique but lie within an interval determined by the range of expectations under different $\mathbb{Q}$s.
+\end{itemize}
+
+\section{Geometric Interpretation}
+
+In our finite probability space setting with $|\Omega| = K$ states:
+\begin{itemize}
+    \item The space of all payoffs is isomorphic to $\mathbb{R}^K$.
+    \item The space of replicable payoffs is the subspace spanned by the asset price vectors (a linear subspace of dimension at most $d+1$).
+    \item Completeness means this subspace spans the entire $\mathbb{R}^K$.
+    \item Thus, a necessary condition for completeness is that the number of linearly independent assets ($d+1$) must be at least the number of states ($K$).
+\end{itemize}
+
+Typically, we need as many risky assets as there are sources of uncertainty/risk factors to complete the market.
+
+\section{Summary of Key Results}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Economic Concept} & \textbf{Mathematical Equivalent (Martingale Theory)} \\ \hline
+No Arbitrage              & Existence of at least one EMM ($\mathbb{Q} \sim \mathbb{P}$) \\ \hline
+Completeness              & Uniqueness of the EMM ($\mathbb{Q}$) \\ \hline
+Arbitrage-Free Price      & Expectation under an EMM: $\mathbb{E}^\mathbb{Q}[\tilde{H}]$ \\ \hline
+Replication Strategy      & Representation in Martingale Representation Theorem \\ \hline
+\end{tabular}
+\caption{Correspondence between Finance and Mathematics}
+\label{tab:finance_math_correspondence}
+\end{table}
+
+This chapter has established the foundational one-period framework. Subsequent chapters will extend these ideas to multi-period models and, eventually, continuous-time models, where the same fundamental principles—no arbitrage and risk-neutral pricing—remain the guiding lights.

@@ -13,6 +13,7 @@
 \usepackage{titlesec}
 \usepackage{xcolor}
 \usepackage{tikz}
+\usetikzlibrary{trees}
 
 % Geometry setup
 \geometry{
@@ -29,7 +30,7 @@
     linkcolor=blue,
     filecolor=magenta,      
     urlcolor=cyan,
-    pdftitle={Stochastic Finance and Risk Modelling - Chapter 1},
+    pdftitle={Stochastic Finance and Risk Modelling - Chapter 2},
     pdfauthor={Laurence Carassus and Gaoyue Guo},
 }
 
@@ -48,11 +49,11 @@
 \pagestyle{fancy}
 \fancyhf{}
 \rhead{\leftmark}
-\lhead{}
+\lhead{Chapter 2: Stochastic Processes}
 \cfoot{\thepage}
 
-\title{\textbf{Stochastic Finance and Risk Modelling} \\ \large Chapter 1: From Probability to Stochastic Process}
-\author{Based on slides by Ioane Muni-Toke \\ Laurence Carassus and Gaoyue Guo \\ \textit{Expanded Study Resource}}
+\title{\textbf{Stochastic Finance and Risk Modelling} \\ \large Chapter 2: From Probability to Stochastic Process (Continuation)}
+\author{Based on slides by Ioane Muni-Toke \\ Adapted by Laurence Carassus and Gaoyue Guo \\ \textit{Expanded Study Resource}}
 \date{\today}
 
 \begin{document}
@@ -63,15 +64,14 @@
 
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
-This document serves as a comprehensive study guide for the course "Stochastic Finance and Risk Modelling". It expands upon the lecture slides relative to Chapter 1: "From probability to stochastic process". 
 
-The goal of this text is to provide a rigorous mathematical foundation required for modern financial modeling. We begin with the axiomatic definition of probability spaces and $\sigma$-algebras, move through random variables and their distributions, and finally establish key convergence results and the concept of conditional expectation, which is central to martingale theory and asset pricing.
+This document serves as a comprehensive study guide for the second part of the "From probability to stochastic process" lecture. It expands upon the key concepts of stochastic processes, filtrations, stopping times, and martingales in discrete time.
 
-\include{00_topology}
-\include{01_foundations}
-\include{02_random_variables}
-\include{03_convergence}
-\include{04_conditional_expectation}
-\include{05_measure_change}
+The goal is to provide a rigorous yet intuitive understanding of how information evolves over time in a probabilistic setting, which is the cornerstone of financial modeling. We will explore the mathematical structures that allow us to model random systems that evolve, culminating in the powerful theory of martingales.
+
+\include{01_stochastic_processes}
+\include{02_filtrations}
+\include{03_stopping_times}
+\include{04_martingales}
 
 \end{document}

@@ -1,0 +1,126 @@
+\chapter{Martingales}
+
+The theory of martingales is central to modern probability and finance. A martingale represents the mathematical formalization of a "fair game", where knowledge of the past does not help predict the future mean variations.
+
+\section{Definitions}
+
+Let $(\Omega, \mathcal{F}, (\mathcal{F}_t)_{t \in I}, \mathbb{P})$ be a filtered probability space. Let $X = (X_t)_{t \in I}$ be a stochastic process.
+We assume $X$ is \textbf{adapted} and \textbf{integrable}, meaning $X_t \in L^1(\Omega)$ (i.e., $\mathbb{E}[|X_t|] < \infty$) for all $t \in I$.
+
+\begin{definition}[Martingale, Sub/Super-martingale]
+The process $X$ is called a:
+\begin{enumerate}
+    \item \textbf{Martingale} if for all $s \le t$:
+    \[
+    \mathbb{E}[X_t \mid \mathcal{F}_s] = X_s \quad \text{a.s.}
+    \]
+    \item \textbf{Sub-martingale} if for all $s \le t$:
+    \[
+    \mathbb{E}[X_t \mid \mathcal{F}_s] \ge X_s \quad \text{a.s.}
+    \]
+    \item \textbf{Super-martingale} if for all $s \le t$:
+    \[
+    \mathbb{E}[X_t \mid \mathcal{F}_s] \le X_s \quad \text{a.s.}
+    \]
+\end{enumerate}
+\end{definition}
+
+\textbf{Intuition}:
+\begin{itemize}
+    \item \textbf{Martingale}: A "fair game". Given the history up to time $s$, the expected value of your wealth at any future time $t$ is exactly your current wealth $X_s$. There is no drift.
+    \item \textbf{Sub-martingale}: A "favorable game" (or representing a convex function of a martingale, like wealth in an economy with growth). The expected future value is greater than or equal to the current value. It tends to grow on average.
+    \item \textbf{Super-martingale}: An "unfavorable game" (e.g., gambling at a casino). The expected future value decreases or stays the same.
+\end{itemize}
+
+\begin{proposition}
+If $X$ is a martingale, then expectations are constant:
+\[
+\mathbb{E}[X_t] = \mathbb{E}[X_0] = \text{const}, \quad \forall t \in I.
+\]
+\end{proposition}
+\begin{proof}
+Take expectations on both sides of the martingale property with $s=0$:
+\[
+\mathbb{E}[ \mathbb{E}[X_t \mid \mathcal{F}_0] ] = \mathbb{E}[X_0].
+\]
+By the tower property of conditional expectation, the LHS is $\mathbb{E}[X_t]$.
+\end{proof}
+
+\section{Doob's Inequalities}
+
+Martingales allow us to bound the probability of large deviations of the entire path of the process, not just at a fixed time.
+
+\subsection{Doob's Maximal Inequality}
+
+\begin{theorem}[Doob's Sub-martingale Inequality]
+Let $X$ be a non-negative sub-martingale. Then for any $\lambda > 0$ and any
+$n \in \mathbb{N}$:
+\[
+\mathbb{P}\left( \max_{0 \le k \le n} X_k \ge \lambda \right) \le \frac{\mathbb{E}[X_n \mathbb{I}_{\{ \max_{k \le n} X_k \ge \lambda \}}]}{\lambda} \le \frac{\mathbb{E}[X_n]}{\lambda}.
+\]
+\end{theorem}
+
+\begin{proof}
+Let $A = \{ \max_{0 \le k \le n} X_k \ge \lambda \}$. We want to bound $\mathbb{P}(A)$.
+Define the stopping time $\tau = \inf \{ k : X_k \ge \lambda \} \wedge n$.
+Note that on the set $A$, we necessarily have $X_{\tau} \ge \lambda$ (if the maximum is attained before $n$, $X_{\tau} \ge \lambda$; if it is never attained, we don't care about the set $A^c$).
+However, let's be more precise.
+Let $E_k = \{ \max_{0 \le j < k} X_j < \lambda \text{ and } X_k \ge \lambda \}$. These sets are disjoint and their union is $A = \bigcup_{k=0}^n E_k$.
+On the set $E_k$, $X_k \ge \lambda$.
+Since $X$ is a sub-martingale, $\mathbb{E}[X_n \mid \mathcal{F}_k] \ge X_k$.
+Integrating over $E_k \in \mathcal{F}_k$:
+\[
+\mathbb{E}[X_n \mathbb{I}_{E_k}] = \mathbb{E}[ \mathbb{E}[X_n \mid \mathcal{F}_k] \mathbb{I}_{E_k} ] \ge \mathbb{E}[ X_k \mathbb{I}_{E_k} ] \ge \lambda \mathbb{P}(E_k).
+\]
+Summing over $k=0$ to $n$:
+\[
+\mathbb{E}[X_n \mathbb{I}_A] = \sum_{k=0}^n \mathbb{E}[X_n \mathbb{I}_{E_k}] \ge \lambda \sum_{k=0}^n \mathbb{P}(E_k) = \lambda \mathbb{P}(A).
+\]
+Thus $\mathbb{P}(A) \le \frac{1}{\lambda} \mathbb{E}[X_n \mathbb{I}_A] \le \frac{1}{\lambda} \mathbb{E}[X_n]$ (since $X_n \ge 0$).
+\end{proof}
+
+\subsection{\texorpdfstring{$L^p$}{Lp} Inequality}
+
+A useful consequence for $p > 1$:
+
+\begin{theorem}[Doob's $L^p$ Inequality]
+If $X$ is a martingale (or non-negative sub-martingale) and $X_n \in L^p$ with $p > 1$,
+then:
+\[
+\left\| \max_{0 \le k \le n} |X_k| \right\|_p \le \frac{p}{p-1} \|X_n\|_p.
+\]
+i.e.,
+\[
+\mathbb{E}\left[ \left( \max_{0 \le k \le n} |X_k| \right)^p \right] \le \left( \frac{p}{p-1} \right)^p \mathbb{E}[|X_n|^p].
+\]
+\end{theorem}
+This theorem essentially says that the maximum of a martingale is controlled by its terminal value in $L^p$ norm.
+
+\section{Doob's Martingale Convergence Theorem}
+
+One of the most powerful results in probability theory concerns the limit behavior of martingales.
+
+\begin{theorem}[Doob's Convergence Theorem]
+Let $(X_t)_{t \ge 0}$ be a super-martingale bounded in $L^1$, i.e.,
+\[
+\sup_{t \ge 0} \mathbb{E}[|X_t|] < \infty.
+\]
+Then there exists a random variable $X_\infty \in L^1(\Omega)$ such that:
+\[
+X_t \to X_\infty \quad \text{almost surely as } t \to \infty.
+\]
+\end{theorem}
+
+\begin{remark}
+\begin{itemize}
+    \item The condition $\sup \mathbb{E}[|X_t|] < \infty$ is automatically satisfied if $X$ is a non-negative super-martingale (since $\mathbb{E}[|X_t|] = \mathbb{E}[X_t] \le \mathbb{E}[X_0]$).
+    \item Convergence is \textbf{almost sure}, not necessarily in $L^1$. For $L^1$ convergence, we need the collection $\{X_t\}$ to be \textit{uniformly integrable}.
+\end{itemize}
+\end{remark}
+
+\subsection{Interpretation using Upcrossing Inequality}
+The proof relies on counting the number of "upcrossings" of an interval $[a, b]$. A convergent sequence cannot oscillate infinitely many times between distinct values $a$ and $b$. Doob showed that the expected number of time a sub-martingale crosses from below $a$ to above $b$ is finite.
+\[
+\mathbb{E}[U_n[a,b]] \le \frac{\mathbb{E}[(X_n - a)^+]}{b-a}.
+\]
+Since the RHS is bounded (by the $L^1$ bound), the number of upcrossings is finite almost surely for all rational intervals, implying convergence.

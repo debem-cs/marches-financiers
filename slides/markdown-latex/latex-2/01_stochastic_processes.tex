@@ -1,0 +1,85 @@
+\chapter{Stochastic Processes}
+
+\section{Definition and Basic Properties}
+
+A stochastic process is a mathematical object defined to describe the evolution of a system subject to randomness over time. Formally, it is a collection of random variables defined on a common probability space.
+
+\begin{definition}[Stochastic Process]
+Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space. A \textbf{stochastic process} is a family of random variables $X = (X_t)_{t \in I}$ defined on $(\Omega, \mathcal{F})$ and taking values in a measurable space $(E, \mathcal{E})$, often called the \textit{state space}.
+\end{definition}
+
+The set $I$ is called the \textbf{index set} or \textbf{parameter set}, representing time.
+\begin{itemize}
+    \item \textbf{Discrete-time}: If $I$ is a countable set, such as $\mathbb{N} = \{0, 1, 2, \dots\}$ or a finite set $I = \{0, 1, \dots, T\}$. In this course, we primarily focus on the discrete-time setting with a finite horizon $I = \{0, 1, \dots, T\}$.
+    \item \textbf{Continuous-time}: If $I$ is an interval of $\mathbb{R}$, such as $[0, T]$ or $[0, \infty)$. This is the subject of advanced stochastic calculus (e.g., Brownian motion).
+\end{itemize}
+
+The state space $E$ is typically $\mathbb{R}^d$ equipped with the Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R}^d)$.
+
+\section{The Canonical Construction}
+
+One standard way to construct a stochastic process is to define it on a \textit{product space}. This is often referred to as the "canonical" construction, where the sample space $\Omega$ itself represents the set of all possible paths of the process.
+
+Consider a finite horizon $T \in \mathbb{N}$ and a state space $E$.
+\begin{itemize}
+    \item Let $\Omega = E^T = \{ \omega = (\omega_1, \dots, \omega_T) : \omega_i \in E \}$ be the set of all possible sequences of length $T$.
+    \item We can define a $\sigma$-algebra $\mathcal{F}$ on $\Omega$, typically the product $\sigma$-algebra.
+    \item We define a probability measure $\mathbb{P}$ on $(\Omega, \mathcal{F})$.
+\end{itemize}
+
+In this setting, the stochastic process $X = (X_t)_{1 \leq t \leq T}$ can be defined as the \textbf{coordinate mapping}:
+\[
+X_t(\omega) = \omega_t, \quad \text{for } \omega = (\omega_1, \dots, \omega_T).
+\]
+Here, the randomness $\omega$ \textit{is} the entire trajectory of the process, and $X_t$ simply "reads" the value of the trajectory at time $t$.
+
+\subsection{Example: Coin Toss (Random Walk)}
+
+Consider the "Head or Tail" game where we toss a balanced coin $T$ times.
+\begin{itemize}
+    \item \textbf{State Space}: $E = \{H, T\}$ (Head, Tail). Alternatively, we can map this to numerical values, e.g., $\{1, 0\}$ or $\{1, -1\}$.
+    \item \textbf{Sample Space}: $\Omega = E^T = \{ \omega = (\omega_1, \dots, \omega_T) : \omega_i \in \{H, T\} \}$. The size of the sample space is $|\Omega| = 2^T$.
+    \item \textbf{Probability Measure}: Since the coin is balanced, every outcome sequence is equally likely.
+    \[
+    \mathbb{P}(\{\omega\}) = \frac{1}{|\Omega|} = \frac{1}{2^T}, \quad \forall \omega \in \Omega.
+    \]
+    The $\sigma$-algebra is the power set $\mathcal{F} = 2^\Omega$.
+\end{itemize}
+
+We can define random variables $X_t$ representing the outcome of the $t$-th toss:
+\[
+X_t(\omega) = \begin{cases} 1 & \text{if } \omega_t = H \\ 0 & \text{if } \omega_t = T \end{cases}
+\]
+The collection $(X_t)_{1 \leq t \leq T}$ is a stochastic process taking values in $\{0, 1\}$.
+
+We can also define the \textbf{accumulated sum} process $S = (S_t)_{1 \leq t \leq T}$:
+\[
+S_t = \sum_{i=1}^t X_i
+\]
+The process $(S_t)$ takes values in the set $\{0, 1, \dots, T\}$ and represents the total number of "Heads" obtained up to time $t$.
+
+\section{Trajectories (Sample Paths)}
+
+There are two complementary ways to view a stochastic process $X: I \times \Omega \to E$.
+
+\textbf{View 1: A collection of random variables}
+\[
+X(t, \cdot) : \Omega \to E, \quad \omega \mapsto X_t(\omega)
+\]
+For a fixed time $t$, $X_t$ is a random variable describing the state of the system at that specific moment.
+
+\textbf{View 2: A random function (Trajectory)}
+\[
+X(\cdot, \omega) : I \to E, \quad t \mapsto X_t(\omega)
+\]
+For a fixed outcome $\omega \in \Omega$, the function $t \mapsto X_t(\omega)$ is called a \textbf{trajectory} or \textbf{sample path} of the process.
+
+\begin{definition}[Trajectory]
+For each $\omega \in \Omega$, the function $X(\omega): t \mapsto X_t(\omega)$ is a realization of the stochastic process. It describes one specific history of the system's evolution.
+\end{definition}
+
+If we denote $\Sigma = E$ (the state space) and $\Sigma^I$ as the set of all functions from $I$ to $\Sigma$, then the entire process $X$ can be viewed as a single random variable taking values in the function space $\Sigma^I$:
+\[
+X: (\Omega, \mathcal{F}) \to (\Sigma^I, \mathcal{G}^{\otimes I})
+\]
+where $\mathcal{G}^{\otimes I}$ is the approproiate product $\sigma$-algebra on the function space.

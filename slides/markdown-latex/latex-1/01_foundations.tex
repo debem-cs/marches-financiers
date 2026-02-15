@@ -1,5 +1,74 @@
 \chapter{Probability Spaces and \texorpdfstring{$\sigma$-}{sigma-}algebras}
 
+\section{Prerequisites: Set Theory \& Notation}
+
+Before defining measurable spaces, let us clarify the distinction between a \textbf{set}, a \textbf{collection}, and the notation we use.
+
+\subsection{Set vs. Collection}
+\begin{itemize}
+    \item \textbf{Sample Space} $\Omega$: The set of all possible outcomes $\omega$.
+    \item \textbf{Event} $A$: A subset of $\Omega$ ($A \subseteq \Omega$).
+    \item \textbf{Collection} $\mathcal{F}$: A ``set of sets''. It contains events, not outcomes directly.
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}
+    % Observable Set Omega
+    \draw[thick, blue] (0,0) ellipse (2cm and 1.5cm);
+    \node[blue] at (0, 1.8) {$\Omega$ (Sample Space)};
+    \filldraw[black] (0.5, 0.5) circle (1pt) node[anchor=west] {$\omega_1$};
+    \filldraw[black] (-0.5, -0.5) circle (1pt) node[anchor=east] {$\omega_2$};
+    
+    % Sigma-algebra F
+    \draw[thick, red] (5,0) rectangle (9, 3);
+    \node[red] at (7, 3.3) {$\mathcal{F}$ (Collection of Events)};
+    
+    % Subset A inside F
+    \draw[blue, fill=blue!10] (6, 1) rectangle (7, 2);
+    \node[blue] at (6.5, 1.5) {$A$};
+    \node[scale=0.8] at (6.5, 0.5) {$\{ \omega_1, \dots \}$};
+
+    % Subset B inside F
+    \draw[blue, fill=blue!10] (8, 1.5) circle (0.5);
+    \node[blue] at (8, 1.5) {$B$};
+    
+    \draw[->, dotted] (0.5, 0.5) -- (6.2, 1.2);
+\end{tikzpicture}
+\end{center}
+
+
+\subsection{Example: Two Coin Tosses}
+Consider an experiment where we toss a coin twice.
+\begin{itemize}
+    \item \textbf{Sample Space} $\Omega = \{HH, HT, TH, TT\}$ (4 outcomes).
+    \item \textbf{Outcomes}: Simple elements like $\omega_1 = HH$.
+    \item \textbf{Events}: Subsets of $\Omega$, e.g., ``Head on first toss'' $A = \{HH, HT\}$.
+    \item \textbf{Collection}: A $\sigma$-algebra $\mathcal{F}$ represents solvable questions.
+    \begin{itemize}
+        \item If we know everything: $\mathcal{F} = 2^\Omega$ (contains $\{HH\}$, $\{HT\}$, etc.).
+        \item If we only see the \textbf{first coin}: $\mathcal{F}_1 = \{ \emptyset, \Omega, \{HH, HT\}, \{TH, TT\} \}$.
+        \item Note that $\{HH\} \notin \mathcal{F}_1$ because we cannot distinguish $HH$ from $HT$ without seeing the second coin.
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Countable vs. Uncountable}
+A set is \textbf{countable} (dénombrable) if you can list its elements in a sequence $x_1, x_2, x_3, \dots$ (potentially infinite).
+\begin{itemize}
+    \item \textbf{Countable}: Finite sets, $\mathbb{N}$ (integers), $\mathbb{Q}$ (rationals).
+    \item \textbf{Uncountable}: $\mathbb{R}$ (reals), $[0, 1]$.
+\end{itemize}
+This distinction is crucial because $\sigma$-algebras are only closed under \textbf{countable} operations. We cannot sum probabilities over uncountable sets (e.g., $\sum_{x \in [0,1]} P(\{x\})$ makes no sense).
+
+\subsection{Key Notation}
+\begin{itemize}
+    \item \textbf{Difference} ($A \setminus B$ or $\Omega \setminus A$): "Everything in $\Omega$ except what is in $A$".
+    \[ A^c := \Omega \setminus A = \{ \omega \in \Omega : \omega \notin A \} \]
+    \item \textbf{Countable Union} ($\bigcup_{n \ge 1} A_n$): The union of a sequence $A_1, A_2, \dots$. It means "at least one of the events $A_n$ occurs".
+    \item \textbf{Disjoint Union} ($\bigsqcup$ or "Pairwise Disjoint"): A union where no two sets overlap ($A_i \cap A_j = \emptyset$ for $i \neq j$). This is crucial for adding probabilities: $\mathbb{P}(\bigsqcup A_n) = \sum \mathbb{P}(A_n)$.
+    \item \textbf{Power Set} ($2^\Omega$): The set of \textit{all} possible subsets of $\Omega$. If $|\Omega| = n$, then $|2^\Omega| = 2^n$.
+\end{itemize}
+
 \section{Measurable Spaces}
 
 The foundation of rigorous probability theory lies in measure theory. Before we can talk about probabilities of events, we must strictly define what an ``event'' is. Not every subset of a sample space can consistently be assigned a probability, especially when dealing with uncountably infinite sample spaces like the real line $\mathbb{R}$.
@@ -21,6 +90,7 @@ The pair $(\Omega, \mathcal{F})$ is called a \textbf{measurable space}. The elem
 From these axioms, we can deduce other properties:
 \begin{itemize}
     \item The whole space $\Omega$ must be in $\mathcal{F}$ because $\Omega = \emptyset^c$.
+    \item \textbf{Closed under Countable Operations}: The term "closed" means if you take any countable number of sets from $\mathcal{F}$ and apply set operations (union, intersection, complement), the result stays in $\mathcal{F}$.
     \item \texorpdfstring{$\sigma$-}{sigma-}algebras are closed under countable intersections. By De Morgan's laws:
     \[
     \bigcap_{n \geq 1} A_n = \left( \bigcup_{n \geq 1} A_n^c \right)^c \in \mathcal{F}.
@@ -66,7 +136,19 @@ Let $(\Omega, \tau)$ be a topological space. The \textbf{Borel \texorpdfstring{$
     \prod_{i=1}^d ]a_i, b_i[ = \{ \omega = (\omega_1, \dots, \omega_d) \in \mathbb{R}^d : a_i < \omega_i < b_i, \forall i \}.
     \]
 \end{itemize}
-Note that while $\mathcal{B}(\mathbb{R}^d)$ contains almost any set we can construct explicitly, there do exist non-Borel sets (though they are pathological).
+Note that while $\mathcal{B}(\mathbb{R}^d)$ contains almost any set we can construct explicitly, there do exist \textbf{non-Borel sets}.
+    \begin{itemize}
+        \item \textbf{Non-Borel Sets}: These are "pathological" sets (like the Vitali set) constructed using the Axiom of Choice. They essentially "break" the concept of length/measure.
+        \item We exclude them from our $\sigma$-algebra to ensure mathematical consistency.
+    \end{itemize}
+
+    \textbf{Important Note: $\mathcal{B}(\mathbb{R}^d) \neq 2^{\mathbb{R}^d}$}
+    \begin{itemize}
+        \item The Borel $\sigma$-algebra is strictly smaller than the Power Set.
+        \item $\mathcal{B}(\mathbb{R})$ contains only sets constructed from open intervals.
+        \item $2^{\mathbb{R}}$ contains \textbf{every} possible subset, including non-measurable ones.
+        \item For probability theory, we work with $\mathcal{B}(\mathbb{R})$ to avoid paradoxes.
+    \end{itemize}
 
 \subsection{Product \texorpdfstring{$\sigma$-}{sigma-}algebra}
 When dealing with multiple random variables or stochastic processes, we work with Cartesian products of spaces.
@@ -77,14 +159,27 @@ Let $((\Omega_n, \mathcal{F}_n))_{n \geq 1}$ be a sequence of measurable spaces.
     \[
     A_1 \times \dots \times A_n, \quad \text{where } A_i \in \mathcal{F}_i.
     \]
+    \textbf{Crucial Distinction:}
+    \begin{itemize}
+        \item $\Omega_1 \times \Omega_2$: Cartesian product of \textbf{points} (the ground space).
+        \item $\mathcal{F}_1 \otimes \mathcal{F}_2$: Sigma-algebra generated by rectangles. It is strictly larger than just $\mathcal{F}_1 \times \mathcal{F}_2$ (which is just a set of pairs of sets). The $\otimes$ symbol implies we generate all necessary unions/intersections to make it a valid $\sigma$-algebra.
+    \end{itemize}
     Important property: $\mathcal{B}(\mathbb{R}) \otimes \dots \otimes \mathcal{B}(\mathbb{R}) = \mathcal{B}(\mathbb{R}^n)$.
+    
+    \textbf{Example: Why do we need $\otimes$? (The Circle Problem)}
+    Consider the plane $\mathbb{R}^2 = \mathbb{R} \times \mathbb{R}$.
+    \begin{itemize}
+        \item A "rectangle" is a set $A \times B$ (e.g., $x \in [0,1], y \in [0,1]$).
+        \item A Circle $C = \{ (x,y) : x^2 + y^2 \leq 1 \}$ is a valid event we want to measure.
+        \item \textbf{Problem}: A circle \textbf{cannot} be written as a single rectangle $A \times B$ or a finite union of them.
+        \item \textbf{Solution}: The $\sigma$-algebra $\mathcal{F} \otimes \mathcal{F}$ allows for \textbf{countable unions}. We can approximate the circle with infinitely many small rectangles. Thus, the circle belongs to $\mathcal{F} \otimes \mathcal{F}$, even though it is not a "simple product" of sets.
+    \end{itemize}
     
     \item \textbf{Infinite Product}: For the infinite product space $\prod_{n \geq 1} \Omega_n$, the product $\sigma$-algebra $\bigotimes_{n \geq 1} \mathcal{F}_n$ is generated by \textbf{cylinders} with a finite basis. A measurable cylinder is a set of the form:
     \[
     C = \{ \omega \in \prod \Omega_n : \omega_{i_1} \in A_{i_1}, \dots, \omega_{i_k} \in A_{i_k} \}
     \]
-    where only a finite number of coordinates $i_1, \dots, i_k$ are restricted to subsets $A_{i_j} \in \mathcal{F}_{i_j}$, and all other coordinates are free (i.e., in $\Omega_m$).
-    This definition is crucial for defining stochastic processes as random variables taking values in spaces of functions sequences.
+    where only a finite number of coordinates are restricted. This is essential because we cannot define a uniform measure on infinite dimensions directly; we must work with these finite-dimensional projections (Kolmogorov Extension Theorem).
 \end{itemize}
 
 \section{Probability Measures}

@@ -42,6 +42,13 @@ Y_n \xrightarrow{L^p} Y \iff \|Y_n - Y\|_p = \left( \mathbb{E}[|Y_n - Y|^p] \rig
 \]
 Implies $L^q$ convergence for any $q < p$ (by Hölder's inequality).
 
+\paragraph{Why is this useful?}
+\begin{itemize}
+    \item \textbf{Moment Convergence}: It implies that the moments converge: $\mathbb{E}[Y_n] \to \mathbb{E}[Y]$ and $\text{Var}(Y_n) \to \text{Var}(Y)$. (Note: a.s. convergence does NOT guarantee this, e.g., ``mass escaping to infinity'').
+    \item \textbf{Stability}: It controls the ``energy'' of the error. In finance, $L^2$ convergence is crucial because the Itô Integral is constructed as a limit in $L^2$ space.
+    \item \textbf{Completeness}: The space $L^p$ is complete (Banach space). This means that if a sequence of random variables gets closer to each other (Cauchy), it is guaranteed to converge to a valid random variable within the space.
+\end{itemize}
+
 \subsection{Convergence in Probability}
 The probability of observing a significant difference goes to zero.
 \[

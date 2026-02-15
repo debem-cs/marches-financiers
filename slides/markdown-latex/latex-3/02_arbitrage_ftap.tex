@@ -1,0 +1,116 @@
+\chapter{Arbitrage and the Fundamental Theorem of Asset Pricing}
+
+\section{Arbitrage}
+
+Arbitrage is a central concept in financial mathematics. Intuitively, an arbitrage opportunity is a trading strategy that offers the possibility of a risk-free profit. In an efficient market, such opportunities should not exist, or at least not persist for long, as rational agents would exploit them until prices adjust.
+
+\begin{definition}[Arbitrage Opportunity]
+A portfolio $\phi = (\xi^0, \xi)$ is called an \textbf{arbitrage opportunity} if it satisfies the following three conditions:
+\begin{enumerate}
+    \item \textbf{Zero initial cost}: $V_0^\phi = 0$.
+    \item \textbf{Non-negative final wealth}: $V_1^\phi \ge 0$ almost surely (a.s.) under the probability measure $\mathbb{P}$.
+    \item \textbf{Positive probability of profit}: $\mathbb{P}(V_1^\phi > 0) > 0$.
+\end{enumerate}
+\end{definition}
+
+Condition (1) means the investor starts with nothing. Condition (2) means there is no risk of losing money. Condition (3) means there is a chance to make money. If such a portfolio exists, one could scale it up indefinitely to make infinite profit without risk.
+
+\subsection{Characterizing Arbitrage without the Risk-Free Asset}
+
+We can eliminate the variable $\xi^0$ using the self-financing condition. If $V_0^\phi = 0$, then:
+\begin{equation}
+    \xi^0 S_0^0 + \xi \cdot S_0 = 0 \implies \xi^0 = - \frac{\xi \cdot S_0}{S_0^0}.
+\end{equation}
+Substituting this into the expression for $V_1^\phi$:
+\begin{align}
+    V_1^\phi &= \xi^0 S_1^0 + \xi \cdot S_1 \\
+    &= - \frac{\xi \cdot S_0}{S_0^0} S_0^0 (1+r) + \xi \cdot S_1 \\
+    &= \xi \cdot S_1 - (1+r) \xi \cdot S_0.
+\end{align}
+This leads to a simplified criterion for arbitrage involving only the risky asset positions $\xi$.
+
+\begin{proposition}
+The market admits an arbitrage opportunity if and only if there exists a vector $\xi \in \mathbb{R}^d$ such that:
+\begin{enumerate}
+    \item $\xi \cdot S_1 \ge (1+r) \xi \cdot S_0, \quad \mathbb{P}\text{-a.s.}$
+    \item $\mathbb{P}(\xi \cdot S_1 > (1+r) \xi \cdot S_0) > 0$.
+\end{enumerate}
+\end{proposition}
+
+\textbf{Interpretation ($d=1$):}
+For a single risky asset, the condition $\xi \cdot S_1 \ge (1+r) \xi \cdot S_0$ becomes:
+\begin{itemize}
+    \item If $\xi > 0$ (long position): $\frac{S_1^1 - S_0^1}{S_0^1} \ge r$. The return of the risky asset dominates the risk-free rate.
+    \item If $\xi < 0$ (short position): $\frac{S_1^1 - S_0^1}{S_0^1} \le r$. The return of the risky asset is dominated by the risk-free rate.
+\end{itemize}
+This implies that if an asset systematically outperforms or underperforms the risk-free rate in all states of the world, an arbitrage exists.
+
+\section{Discounted Prices and Martingales}
+
+To compare cash flows at different times properly, we discount future values back to the present using the risk-free asset as a numeraire.
+
+\begin{definition}[Discounted Price Process]
+The discounted price of asset $i$, denoted by $\tilde{S}^i_t$, is defined as:
+\begin{equation}
+    \tilde{S}_t^i = \frac{S_t^i}{S_t^0}, \quad \text{for } t \in \{0, 1\}.
+\end{equation}
+Clearly, $\tilde{S}_0^i = S_0^i / S_0^0$ and $\tilde{S}_1^i = S_1^i / [S_0^0(1+r)]$.
+For the riskless asset itself, $\tilde{S}_t^0 = 1$ for all $t$.
+\end{definition}
+
+Similarly, the discounted value of a portfolio is $\tilde{V}_t^\phi = V_t^\phi / S_t^0$.
+The change in discounted value is determined solely by the change in discounted risky asset prices, $\Delta \tilde{S}_1 = \tilde{S}_1 - \tilde{S}_0$:
+\begin{equation}
+    \tilde{V}_1^\phi - \tilde{V}_0^\phi = \xi \cdot (\tilde{S}_1 - \tilde{S}_0) = \xi \cdot \Delta \tilde{S}_1.
+\end{equation}
+
+This allows us to restate the arbitrage condition even more compactly:
+\begin{proposition}
+An arbitrage opportunity exists iff there is a $\xi \in \mathbb{R}^d$ such that $\xi \cdot \Delta \tilde{S}_1 \ge 0$ a.s. and $\mathbb{P}(\xi \cdot \Delta \tilde{S}_1 > 0) > 0$.
+\end{proposition}
+
+\section{Risk-Neutral Measure (Martingale Measure)}
+
+\begin{definition}[Martingale Measure]
+A probability measure $\mathbb{Q}$ on $(\Omega, \mathcal{F}_1)$ is called a \textbf{risk-neutral measure} or \textbf{martingale measure} if:
+\begin{enumerate}
+    \item $\mathbb{Q}$ is equivalent to $\mathbb{P}$ (denoted $\mathbb{Q} \sim \mathbb{P}$), meaning they share the same null sets: $\mathbb{P}(A) = 0 \iff \mathbb{Q}(A) = 0$.
+    \item The discounted price process is a martingale under $\mathbb{Q}$. In our one-period setting, this means:
+    \begin{equation}
+        \tilde{S}_0^i = \mathbb{E}^\mathbb{Q}[\tilde{S}_1^i], \quad \forall i = 1, \dots, d.
+    \end{equation}
+\end{enumerate}
+\end{definition}
+
+Using the definition of discounted prices, the martingale condition can be written as:
+\begin{equation}
+    S_0^i = \mathbb{E}^\mathbb{Q} \left[ \frac{S_1^i}{1+r} \right] \implies S_0^i(1+r) = \mathbb{E}^\mathbb{Q}[S_1^i].
+\end{equation}
+This states that under the risk-neutral measure $\mathbb{Q}$, the expected return of every asset equals the risk-free rate $r$. The "risk premium" vanishes, hence the term "risk-neutral".
+
+\section{Fundamental Theorem of Asset Pricing (FTAP)}
+
+The FTAP is the cornerstone of modern finance, establishing a deep link between the economic concept of no-arbitrage and the mathematical concept of martingales.
+
+\begin{theorem}[First Fundamental Theorem of Asset Pricing]
+The market is arbitrage-free if and only if there exists at least one risk-neutral martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$.
+\end{theorem}
+
+\begin{proof}[Sketch of Idea]
+The "if" direction is relatively straightforward. Suppose such a $\mathbb{Q}$ exists. Then for any portfolio with $V_0^\phi = 0$, the discounted value process is a martingale (linear combination of martingales).
+Thus $\mathbb{E}^\mathbb{Q}[\tilde{V}_1^\phi] = \tilde{V}_0^\phi = 0$.
+If $\tilde{V}_1^\phi \ge 0$ a.s., then its expectation can only be 0 if $\tilde{V}_1^\phi = 0$ a.s. This contradicts the requirement for strict profit with positive probability. Hence, no arbitrage exists.
+The "only if" direction requires the Separating Hyperplane Theorem from convex analysis and is more involved.
+\end{proof}
+
+\section{Portfolio Returns}
+
+We define the return of a portfolio $\phi$ (with $V_0^\phi \ne 0$) as:
+\begin{equation}
+    R(\phi) = \frac{V_1^\phi - V_0^\phi}{V_0^\phi}.
+\end{equation}
+Under any risk-neutral measure $\mathbb{Q}$, the expected return of \textit{any} portfolio is equal to the risk-free rate $r$.
+\begin{equation}
+    \mathbb{E}^\mathbb{Q}[R(\phi)] = r.
+\end{equation}
+This is a powerful result: under $\mathbb{Q}$, it doesn't matter how risky a portfolio is; its expected appreciation is simply the risk-free rate.

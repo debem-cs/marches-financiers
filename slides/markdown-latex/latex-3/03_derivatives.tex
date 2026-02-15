@@ -1,0 +1,104 @@
+\chapter{Derivatives and Pricing}
+
+\section{Payoffs and Replicable Payoffs}
+
+The primary goal of financial engineering is to price and hedge financial products. These products are often defined by their future cash flows, which depend on the uncertain state of the market.
+
+\begin{definition}[Payoff]
+A \textbf{contingent claim} or \textbf{derivative} is defined by its payoff at maturity $T=1$.
+Mathematically, a payoff is a non-negative random variable $H$ on the probability space $(\Omega, \mathcal{F}_1, \mathbb{P})$.
+\end{definition}
+
+Examples include options, futures, and swaps. The key question is: "What is the fair price of $H$ at time $t=0$?"
+
+\subsection{Replicable Payoffs}
+
+One way to price a derivative is through replication. If we can construct a portfolio that exactly matches the payoff $H$ in every possible state of the world, then the price of $H$ today must be the initial cost of that portfolio (assuming no arbitrage).
+
+\begin{definition}[Replicable Payoff]
+A payoff $H$ is said to be \textbf{replicable} (or specific) if there exists a portfolio $\phi = (\xi^0, \xi)$ such that its final value equals $H$ almost surely:
+\begin{equation}
+    V_1^\phi = \xi^0 S_1^0 + \xi \cdot S_1 = H, \quad \mathbb{P}\text{-a.s.}
+\end{equation}
+Such a portfolio is called a \textbf{replicating portfolio} or a \textbf{hedge}.
+\end{definition}
+
+The set of all replicable payoffs is a linear subspace of the space of random variables, given by:
+\begin{equation}
+    \mathcal{H}_{rep} = \left\{ \xi^0 S_1^0 + \xi \cdot S_1 \mid (\xi^0, \xi) \in \mathbb{R}^{d+1} \right\}.
+\end{equation}
+
+\begin{proposition}[Law of One Price]
+In an arbitrage-free market, if a payoff $H$ is replicable, its price is unique. Specifically, if two portfolios $\phi$ and $\psi$ both replicate $H$ (i.e., $V_1^\phi = V_1^\psi = H$), then they must have the same initial cost:
+\begin{equation}
+    V_0^\phi = V_0^\psi.
+\end{equation}
+\end{proposition}
+\begin{proof}
+Consider the portfolio $\phi - \psi$.
+$V_1^{\phi-\psi} = V_1^\phi - V_1^\psi = H - H = 0$.
+If $V_0^{\phi-\psi} < 0$, we have an arbitrage (immediate profit with no future liability).
+If $V_0^{\phi-\psi} > 0$, the reverse portfolio $\psi - \phi$ is an arbitrage.
+Thus $V_0^{\phi-\psi} = 0$.
+\end{proof}
+
+\section{Common Types of Derivatives}
+
+Most derivatives are functions of the underlying asset prices at maturity. Let $\mathcal{F}_1 = \sigma(S_1^0, \dots, S_1^d)$.
+A derivative is often of the form $H = f(S_1^0, \dots, S_1^d)$ for some measurable function $f: \mathbb{R}^{d+1} \to \mathbb{R}$.
+
+\subsection{Forward Contract}
+A forward contract is an agreement to buy an asset $S^i$ at time $T=1$ for a fixed delivery price $K$.
+\begin{itemize}
+    \item \textbf{Payoff}: $H^F = S_1^i - K$.
+    \item Can be positive or negative.
+    \item \textbf{Replication}:
+    Buy 1 unit of asset $i$ and borrow $K/(1+r)$ at time 0.
+    At time 1, you own the asset $S_1^i$ and owe $K$.
+    Total value: $S_1^i - K$.
+    Initial cost: $S_0^i - \frac{K}{1+r}$. This is the arbitrage-free price.
+\end{itemize}
+
+\subsection{Call Option}
+A call option gives the holder the right (but not the obligation) to buy an asset $S^i$ at strike price $K$.
+\begin{itemize}
+    \item The holder exercises the option only if $S_1^i > K$.
+    \item \textbf{Payoff}: $H^C = \max(S_1^i - K, 0) = (S_1^i - K)^+$.
+    \item Strictly non-negative.
+\end{itemize}
+
+\subsection{Put Option}
+A put option gives the holder the right to sell an asset $S^i$ at strike price $K$.
+\begin{itemize}
+    \item The holder exercises the option only if $S_1^i < K$.
+    \item \textbf{Payoff}: $H^P = \max(K - S_1^i, 0) = (K - S_1^i)^+$.
+\end{itemize}
+
+\section{Arbitrage-Free Pricing}
+
+What if a payoff is not replicable? Can we still assign it a price?
+We define the price $p$ of a derivative $H$ such that introducing this new asset into the market does not create an arbitrage opportunity.
+
+\begin{definition}[Arbitrage-Free Price]
+Let $\mathcal{M}$ be the original market with assets $(S^0, S^1, \dots, S^d)$.
+Consider a derivative $H$. We call $p$ an \textbf{arbitrage-free price} for $H$ if the extended market $\mathcal{N} = \mathcal{M} \cup \{S^{d+1}\}$ with:
+\begin{equation}
+    S_0^{d+1} = p, \quad S_1^{d+1} = H
+\end{equation}
+remains arbitrage-free.
+\end{definition}
+
+\begin{theorem}[Pricing Formula]
+Assume the market $\mathcal{M}$ is arbitrage-free. The set of all possible arbitrage-free prices for a derivative $H$ is given by the set of expected discounted payoffs under all risk-neutral measures $\mathbb{Q}$:
+\begin{equation}
+    \mathcal{P}(H) = \left\{ \mathbb{E}^\mathbb{Q} \left[ \frac{H}{S_1^0} \right] \mid \mathbb{Q} \sim \mathbb{P} \text{ is a martingale measure} \right\}.
+\end{equation}
+\end{theorem}
+
+This connects pricing directly to the measures $\mathbb{Q}$.
+\begin{itemize}
+    \item If $H$ is replicable, its price is unique and equals $\mathbb{E}^\mathbb{Q}[\frac{H}{S_1^0}]$ for \textit{any} martingale measure $\mathbb{Q}$.
+    \item If $H$ is not replicable, there may be a range of valid prices, corresponding to different views on risk (different $\mathbb{Q}$s).
+\end{itemize}
+
+This leads to the concept of market completeness.

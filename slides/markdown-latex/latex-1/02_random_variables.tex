@@ -11,6 +11,32 @@ X^{-1}(B) := \{ \omega \in \Omega : X(\omega) \in B \} \in \mathcal{F}, \quad \f
 \]
 \end{definition}
 
+\begin{remark}[Notation]
+In Definition 3.1, $(\Sigma, \mathcal{G})$ is the \textbf{target space} (or state space) where the values of the random variable live.
+\begin{itemize}
+    \item Most of the time, $\Sigma = \mathbb{R}$ or $\mathbb{R}^d$.
+    \item $\mathcal{G}$ is the corresponding Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R})$ or $\mathcal{B}(\mathbb{R}^d)$.
+\end{itemize}
+So, the condition simply means: "The inverse image of any Borel set must be an event in $\mathcal{F}$".
+\end{remark}
+
+
+\subsection{Example: The Coin Toss Game}
+Consider a game where we toss a coin three times.
+\begin{itemize}
+    \item \textbf{Sample Space} $\Omega = \{HHH, HHT, HTH, HTT, THH, THT, TTH, TTT\}$.
+    \item \textbf{Random Variable} $X$: Let $X$ be the number of Heads.
+    \[
+    X(HHH) = 3, \quad X(HHT) = 2, \quad \dots, \quad X(TTT) = 0.
+    \]
+    \item \textbf{Measurability Check}: Is the question "What is the probability that $X=2$?" well-defined?
+    \item We check the pre-image:
+    \[
+    X^{-1}(\{2\}) = \{ \omega \in \Omega : X(\omega) = 2 \} = \{ HHT, HTH, THH \}.
+    \]
+    Since this set $\{HHT, HTH, THH\}$ is an event in our $\sigma$-algebra $\mathcal{F}$ (which is usually $2^\Omega$ for finite spaces), then yes, $X$ is a valid Random Variable.
+\end{itemize}
+
 This condition ensures that questions like ``What is the probability that $X$ falls in region $B$?'' are well-defined, because $\{X \in B\}$ is an event in $\mathcal{F}$, on which $\mathbb{P}$ is defined.
 
 \section{Distributions and Pushforward Measures}
@@ -60,8 +86,33 @@ The norm is defined as $\|X\|_p = (\mathbb{E}[|X|^p])^{1/p}$.
 \end{definition}
 
 \begin{itemize}
-    \item \textbf{$L^1$}: Finite mean.
-    \item \textbf{$L^2$}: Finite variance. This is a Hilbert space with inner product $\langle X, Y \rangle = \mathbb{E}[XY]$.
+    \item \textbf{$L^1$}: The space of random variables with \textbf{finite mean}.
+    \[
+    X \in L^1 \implies \mathbb{E}[|X|] < \infty.
+    \]
+    This is the minimal requirement to talk about ``expected value''.
+    
+    \item \textbf{$L^2$}: The space of random variables with \textbf{finite variance} (or finite energy/power).
+    \[
+    X \in L^2 \implies \mathbb{E}[X^2] < \infty.
+    \]
+    This is the most important space in finance because variance measures risk.
+    \item \textbf{Hierarchy}: Since we are on a probability space (which has finite measure $\mathbb{P}(\Omega)=1$), higher moments imply lower moments:
+    \[
+    L^p \subset L^q \quad \text{if } p > q.
+    \]
+    Specifically, $L^2 \subset L^1$. If a variable has finite variance, it definitely has a finite mean. The reverse is not true (e.g., Cauchy distribution).
+\end{itemize}
+
+\subsection{Why is \texorpdfstring{$L^2$}{L2} special? (Hilbert Space)}
+$L^2$ is the only $L^p$ space that is a \textbf{Hilbert Space}. It comes equipped with an inner product:
+\[
+\langle X, Y \rangle = \mathbb{E}[XY].
+\]
+This allows us to talk about geometry:
+\begin{itemize}
+    \item \textbf{Orthogonality}: Two random variables are orthogonal if $\mathbb{E}[XY] = 0$. If they are centered, this means they are \textbf{uncorrelated}.
+    \item \textbf{Projections}: We can project a random variable onto a subspace. This is exactly what \textbf{Conditional Expectation} $\mathbb{E}[X|\mathcal{G}]$ is: the orthogonal projection of $X$ onto the space of $\mathcal{G}$-measurable functions. This geometric interpretation is key to understanding martingales and optimal hedging.
 \end{itemize}
 
 \begin{definition}[Variance and Covariance]

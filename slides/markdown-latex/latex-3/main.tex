@@ -13,6 +13,7 @@
 \usepackage{titlesec}
 \usepackage{xcolor}
 \usepackage{tikz}
+\usepackage{mathrsfs} % For script fonts if needed
 
 % Geometry setup
 \geometry{
@@ -29,7 +30,7 @@
     linkcolor=blue,
     filecolor=magenta,      
     urlcolor=cyan,
-    pdftitle={Stochastic Finance and Risk Modelling - Chapter 1},
+    pdftitle={Stochastic Finance and Risk Modelling - Chapter 3},
     pdfauthor={Laurence Carassus and Gaoyue Guo},
 }
 
@@ -51,7 +52,7 @@
 \lhead{}
 \cfoot{\thepage}
 
-\title{\textbf{Stochastic Finance and Risk Modelling} \\ \large Chapter 1: From Probability to Stochastic Process}
+\title{\textbf{Stochastic Finance and Risk Modelling} \\ \large Chapter 3: One-period model of financial market}
 \author{Based on slides by Ioane Muni-Toke \\ Laurence Carassus and Gaoyue Guo \\ \textit{Expanded Study Resource}}
 \date{\today}
 
@@ -63,15 +64,13 @@
 
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
-This document serves as a comprehensive study guide for the course "Stochastic Finance and Risk Modelling". It expands upon the lecture slides relative to Chapter 1: "From probability to stochastic process". 
+This document serves as a comprehensive study guide for the course "Stochastic Finance and Risk Modelling". It expands upon the lecture slides relative to Chapter 3: "One-period model of financial market".
 
-The goal of this text is to provide a rigorous mathematical foundation required for modern financial modeling. We begin with the axiomatic definition of probability spaces and $\sigma$-algebras, move through random variables and their distributions, and finally establish key convergence results and the concept of conditional expectation, which is central to martingale theory and asset pricing.
+In this chapter, we introduce the fundamental concepts of financial modeling in a simplified one-period setting. We define the market, assets (riskless and risky), and portfolios. We then explore the crucial concept of arbitrage and the Fundamental Theorem of Asset Pricing (FTAP), which links the absence of arbitrage to the existence of risk-neutral measures. Finally, we discuss contingent claims (derivatives), their pricing, and market completeness.
 
-\include{00_topology}
-\include{01_foundations}
-\include{02_random_variables}
-\include{03_convergence}
-\include{04_conditional_expectation}
-\include{05_measure_change}
+\include{01_market_assets}
+\include{02_arbitrage_ftap}
+\include{03_derivatives}
+\include{04_complete_market}
 
 \end{document}
