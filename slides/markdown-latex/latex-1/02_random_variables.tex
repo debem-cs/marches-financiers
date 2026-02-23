@@ -75,7 +75,19 @@ This is the workhorse of probability. If $X$ has a probability density function 
 \mathbb{E}[g(X)] = \int_{-\infty}^{\infty} g(x) f_X(x) \, dx.
 \]
 
-\section{\texorpdfstring{$L^p$}{Lp} Spaces and Moments}
+\section{Moments}
+The "shape" of a random variable's distribution is often described by its moments.
+\begin{definition}[Moments]
+Let $X$ be a random variable.
+\begin{itemize}
+    \item \textbf{Mean (1st Moment)}: $\mu = \mathbb{E}[X]$. Measures central tendency.
+    \item \textbf{Variance (2nd Central Moment)}: $\sigma^2 = \mathbb{E}[(X-\mu)^2]$. Measures dispersion/risk.
+    \item \textbf{Skewness (3rd Standardized Moment)}: $\gamma = \mathbb{E}[(\frac{X-\mu}{\sigma})^3]$. Measures asymmetry.
+    \item \textbf{Kurtosis (4th Standardized Moment)}: $\kappa = \mathbb{E}[(\frac{X-\mu}{\sigma})^4]$. Measures "fat tails" (extreme events). Gaussian has $\kappa=3$.
+\end{itemize}
+\end{definition}
+
+\section{\texorpdfstring{$L^p$}{Lp} Spaces}
 
 \begin{definition}[$L^p$ Spaces]
 For $p \geq 1$, the space $L^p(\Omega, \mathcal{F}, \mathbb{P})$ consists of all random variables $X$ such that $|X|^p$ is integrable:
@@ -112,7 +124,19 @@ $L^2$ is the only $L^p$ space that is a \textbf{Hilbert Space}. It comes equippe
 This allows us to talk about geometry:
 \begin{itemize}
     \item \textbf{Orthogonality}: Two random variables are orthogonal if $\mathbb{E}[XY] = 0$. If they are centered, this means they are \textbf{uncorrelated}.
+
     \item \textbf{Projections}: We can project a random variable onto a subspace. This is exactly what \textbf{Conditional Expectation} $\mathbb{E}[X|\mathcal{G}]$ is: the orthogonal projection of $X$ onto the space of $\mathcal{G}$-measurable functions. This geometric interpretation is key to understanding martingales and optimal hedging.
+\end{itemize}
+
+\subsection{Distinction: \texorpdfstring{$L^p$}{Lp} Spaces vs \texorpdfstring{$\sigma$-}{sigma-}algebras \texorpdfstring{$\mathcal{F}$}{F}}
+It is common to confuse these two concepts.
+\begin{itemize}
+    \item \textbf{$\mathcal{F}$ is a collection of SETS (Events)}: It defines \textit{what information is available}. "Can we answer the question 'Did event A happen?'".
+    \item \textbf{$L^p$ is a space of FUNCTIONS (Random Variables)}: It defines \textit{random variables with certain properties} (finite energy/mean) that are \textbf{measurable} with respect to $\mathcal{F}$.
+    \item \textbf{Relationship}: A function $X$ belongs to $L^p(\Omega, \mathcal{F}, \mathbb{P})$ only if it is $\mathcal{F}$-measurable.
+    \[
+    \mathcal{F} \text{ (Information)} \quad \leftrightarrow \quad L^p(\mathcal{F}) \text{ (Variables built on that information)}.
+    \]
 \end{itemize}
 
 \begin{definition}[Variance and Covariance]

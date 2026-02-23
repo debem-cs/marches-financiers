@@ -35,6 +35,16 @@ Y_n \xrightarrow{\text{a.s.}} Y \iff \mathbb{P}\left( \{ \omega : \lim_{n \to \i
 \]
 This is the strongest form of pointwise convergence.
 
+\paragraph{Decoding the Notation:}
+The equation $\mathbb{P}(\{ \omega : \lim Y_n(\omega) = Y(\omega) \}) = 1$ does \textbf{NOT} mean that any specific outcome $\omega$ has probability 1.
+\begin{itemize}
+    \item We look at the \textbf{set of all "good" outcomes} $G = \{ \omega \in \Omega : Y_n(\omega) \to Y(\omega) \}$.
+    \item Construct this set first. For some $\omega$, the sequence converges. For others, it might not.
+    \item The condition says: The \textbf{probability of this set $G$ is 1}.
+    \item Equivalently, the set of "bad" outcomes $N = G^c$ has probability $\mathbb{P}(N) = 0$.
+    \item \textit{Example}: If we pick a number uniformly in $[0,1]$, the probability of picking exactly $0.5$ is 0. But the probability of picking \textit{any} number in $[0,1]$ is 1 itself.
+\end{itemize}
+
 \subsection{\texorpdfstring{$L^p$}{Lp} Convergence}
 Convergence in the mean of the $p$-th power difference.
 \[

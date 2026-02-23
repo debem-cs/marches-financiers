@@ -16,6 +16,28 @@ Z = \frac{d\mathbb{Q}}{d\mathbb{P}}.
 \]
 \end{definition}
 
+\begin{remark}[Notation: Indicator Function]
+The symbol $\mathbb{1}_A$ is the \textbf{Indicator Function}.
+\[
+\mathbb{1}_A(\omega) = \begin{cases} 
+1 & \text{if } \omega \in A \\
+0 & \text{if } \omega \notin A 
+\end{cases}
+\]
+So $\mathbb{E}_{\mathbb{P}}[\mathbb{1}_A Z]$ is just a fancy way of writing "The integral of $Z$ only over the set $A$".
+\end{remark}
+
+\paragraph{Intuition: Multiple Probability Measures?}
+How can we have two probabilities $\mathbb{P}$ and $\mathbb{Q}$?
+\begin{itemize}
+    \item Think of a \textbf{Coin Toss}.
+    \item $\Omega = \{H, T\}$. The outcomes are fixed.
+    \item Measure $\mathbb{P}$ (Fair Coin): $\mathbb{P}(H) = 0.5, \mathbb{P}(T) = 0.5$.
+    \item Measure $\mathbb{Q}$ (Biased Coin): $\mathbb{Q}(H) = 0.6, \mathbb{Q}(T) = 0.4$.
+    \item We just "re-weighted" the probabilities. The universe $\Omega$ didn't change, only our assignment of likelihoods.
+    \item The factor $Z$ tells us how to re-weight: $Z(H) = \frac{0.6}{0.5} = 1.2$, $Z(T) = \frac{0.4}{0.5} = 0.8$.
+\end{itemize}
+
 \subsection{Relationship between Expectations}
 For any random variable $X$:
 - $X \in L^1(\mathbb{Q})$ iff $XZ \in L^1(\mathbb{P})$.
@@ -23,6 +45,30 @@ For any random variable $X$:
 \[
 \mathbb{E}_{\mathbb{Q}}[X] = \mathbb{E}_{\mathbb{P}}[X Z].
 \]
+
+\paragraph{Intuition: Why multiply by \texorpdfstring{$Z$}{Z}?}
+When we compute an average under $\mathbb{Q}$, we should weight outcomes by their $\mathbb{Q}$-probability. However, if we want to use the $\mathbb{P}$-probability (because we are computing $\mathbb{E}_{\mathbb{P}}$), we must adjust the weight of each outcome $\omega$.
+\[
+\text{Weight in } \mathbb{Q} = Z(\omega) \times \text{Weight in } \mathbb{P}.
+\]
+So, to compute the $\mathbb{Q}$-average of $X$, we take the $\mathbb{P}$-average of the \textbf{re-weighted variable} $X \cdot Z$.
+\begin{itemize}
+    \item If $Z(\omega) > 1$, outcome $\omega$ is \textbf{more likely} under $\mathbb{Q}$ than $\mathbb{P}$, so we give $X(\omega)$ \textbf{more weight}.
+    \item If $Z(\omega) < 1$, outcome $\omega$ is \textbf{less likely} under $\mathbb{Q}$, so we give $X(\omega)$ \textbf{less weight}.
+\end{itemize}
+
+\subsection{Example: Gaussian Shift (Essential for Finance)}
+This is the building block of the Girsanov Theorem.
+\begin{itemize}
+    \item Let $X \sim \mathcal{N}(0, 1)$ under $\mathbb{P}$. So $f_{\mathbb{P}}(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}$.
+    \item We want to move to a measure $\mathbb{Q}$ where $X \sim \mathcal{N}(\mu, 1)$.
+    \item The target density is $f_{\mathbb{Q}}(x) = \frac{1}{\sqrt{2\pi}} e^{-(x-\mu)^2/2}$.
+    \item The Radon-Nikodym derivative is the ratio of densities:
+    \[
+    Z(\omega) = \frac{f_{\mathbb{Q}}(X(\omega))}{f_{\mathbb{P}}(X(\omega))} = \frac{e^{-(X-\mu)^2/2}}{e^{-X^2/2}} = e^{\mu X - \frac{1}{2}\mu^2}.
+    \]
+    \item If we use this $Z$ to re-weight probabilities, $X$ behaves like it has mean $\mu$ instead of $0$.
+\end{itemize}
 
 \section{Absolute Continuity and Equivalence}
 
