@@ -58,6 +58,19 @@ Clearly, $\tilde{S}_0^i = S_0^i / S_0^0$ and $\tilde{S}_1^i = S_1^i / [S_0^0(1+r
 For the riskless asset itself, $\tilde{S}_t^0 = 1$ for all $t$.
 \end{definition}
 
+\textbf{Intuition behind the Discounted Price:}
+The discounted price can be understood through three key perspectives:
+\begin{enumerate}
+    \item \textbf{Change of Num\'eraire (Measuring in "Savings Units"):} Instead of measuring the price of a risky asset in currency (e.g., dollars), we measure it in units of the risk-free asset. The discounted price $\tilde{S}_t^i$ answers the question: "How many units of the risk-free asset $S^0$ do I need to sell to buy one unit of the risky asset $S^i$?"
+    \item \textbf{Isolating the Risk Premium:} A risk-free investment automatically grows by a factor of $(1+r)$. If a risky asset also grows by exactly $(1+r)$, it offers no additional return for the risk taken. By dividing by $S_1^0$, we remove this "baseline" growth. 
+    \begin{itemize}
+        \item If $\tilde{S}_1^i > \tilde{S}_0^i$, the asset outperformed the risk-free rate.
+        \item If $\tilde{S}_1^i = \tilde{S}_0^i$, the asset exactly matched the risk-free rate.
+        \item If $\tilde{S}_1^i < \tilde{S}_0^i$, the asset underperformed the risk-free rate.
+    \end{itemize}
+    \item \textbf{Time Value of Money:} To fairly compare a future value $S_1^i$ with a present value $S_0^i$, we must bring the future value to the present terms. Dividing by $(1+r)$ "discounts" the future price, accounting for the opportunity cost of capital.
+\end{enumerate}
+
 Similarly, the discounted value of a portfolio is $\tilde{V}_t^\phi = V_t^\phi / S_t^0$.
 The change in discounted value is determined solely by the change in discounted risky asset prices, $\Delta \tilde{S}_1 = \tilde{S}_1 - \tilde{S}_0$:
 \begin{equation}

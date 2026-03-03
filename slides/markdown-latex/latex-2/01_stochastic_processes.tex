@@ -58,24 +58,45 @@ S_t = \sum_{i=1}^t X_i
 \]
 The process $(S_t)$ takes values in the set $\{0, 1, \dots, T\}$ and represents the total number of "Heads" obtained up to time $t$.
 
-\section{Trajectories (Sample Paths)}
+\section{Trajectories (Sample Paths) and Notation}
 
-There are two complementary ways to view a stochastic process $X: I \times \Omega \to E$.
+The most complete and rigorous way to define a stochastic process is as a function of two variables: time and randomness.
+\[
+X : I \times \Omega \to E
+\]
+Let us break down this structural notation:
+\begin{itemize}
+    \item $X$: The name of the stochastic process.
+    \item $I$: The \textbf{index set} (time domain), e.g., $\{0, 1, \dots, T\}$.
+    \item $\Omega$: The \textbf{sample space} (the set of all possible random outcomes $\omega$).
+    \item $\times$: The \textbf{Cartesian product}, meaning $X$ takes a pair of inputs $(t, \omega)$.
+    \item $\to E$: The \textbf{state space}. The $\to$ arrow defines the structural mapping from the domain sets to the codomain set $E$.
+\end{itemize}
 
-\textbf{View 1: A collection of random variables}
+When we write $X(t, \omega) = x$, we mean: "At time $t$, given that the random scenario $\omega$ occurred, the value of the process is $x \in E$."
+
+This two-variable perspective allows us to "fix" one variable and study the process from two complementary views. To understand these views, it is crucial to distinguish between two types of arrows used in mathematical mapping:
+\begin{itemize}
+    \item The straight arrow \textbf{$\to$} (e.g., $A \to B$) defines the \textit{sets} involved: it maps a domain to a codomain.
+    \item The maps-to arrow \textbf{$\mapsto$} (e.g., $x \mapsto f(x)$) defines the \textit{operation rule}: it shows exactly how a specific element from the domain is transformed into an element in the codomain.
+\end{itemize}
+
+\subsection{View 1: A collection of random variables (Fixing time)}
+If we fix a specific time $t \in I$ and let $\omega$ vary, we obtain a new function:
 \[
 X(t, \cdot) : \Omega \to E, \quad \omega \mapsto X_t(\omega)
 \]
-For a fixed time $t$, $X_t$ is a random variable describing the state of the system at that specific moment.
+Here, $X(t, \cdot)$ is a \textbf{Random Variable}. The dot "$\cdot$" indicates that the randomness variable is left free. We usually drop the dot and simply write \textbf{$X_t$}. It answers the question: "What will the value be at time $t$?" The answer is a random distribution over $E$.
 
-\textbf{View 2: A random function (Trajectory)}
+\subsection{View 2: A random function / Trajectory (Fixing randomness)}
+If the random outcome has already been realized (we fix a specific scenario $\omega \in \Omega$) and we let time run, we obtain:
 \[
 X(\cdot, \omega) : I \to E, \quad t \mapsto X_t(\omega)
 \]
-For a fixed outcome $\omega \in \Omega$, the function $t \mapsto X_t(\omega)$ is called a \textbf{trajectory} or \textbf{sample path} of the process.
+For a fixed outcome $\omega$, the deterministic function $t \mapsto X_t(\omega)$ is called a \textbf{trajectory}, \textbf{sample path}, or \textbf{realization} of the process.
 
 \begin{definition}[Trajectory]
-For each $\omega \in \Omega$, the function $X(\omega): t \mapsto X_t(\omega)$ is a realization of the stochastic process. It describes one specific history of the system's evolution.
+For each $\omega \in \Omega$, the function $X(\cdot, \omega)$ describes one specific history of the system's evolution over time.
 \end{definition}
 
 If we denote $\Sigma = E$ (the state space) and $\Sigma^I$ as the set of all functions from $I$ to $\Sigma$, then the entire process $X$ can be viewed as a single random variable taking values in the function space $\Sigma^I$:
