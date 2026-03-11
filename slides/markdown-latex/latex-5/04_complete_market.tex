@@ -1,0 +1,43 @@
+\chapter{Complete Market}
+\label{chap:complete_market}
+
+In Chapter \ref{chap:payoffs_and_derivatives}, we saw that when a payoff is replicable, we can objectively determine its exact unique and fair arbitrage-free price. A natural and exceedingly important question arises: are \textit{all} payoffs replicable?
+
+\section{Market Completeness}
+
+Different market models have vastly different expressive capabilities when it comes to hedging risks. Some models perfectly allow you to offset any possible arbitrary financial exposure strictly by trading the underlying assets dynamically. 
+
+\begin{definition}[Complete Market]
+A market is formally called \textbf{complete} if \textbf{every} possible bounded European payoff $H \in \mathcal{F}_T$ is replicable by some self-financing strategy.
+\end{definition}
+
+If a market is complete and arbitrage-free, derivatives become entirely redundant from an economic perspective. The market is "complete" in the sense that introducing a new derivative contract does not expand the universe of obtainable random payoffs—investors could have implicitly synthesized that exact derivative themselves using dynamic trading. In these ideal complete markets, every derivative can be perfectly priced and perfectly hedged, meaning an investment bank can theoretically eliminate absolutely all market risk from issuing options.
+
+\section{The Second Fundamental Theorem of Asset Pricing}
+
+Market completeness is not just an abstract property; much like the First Fundamental Theorem linked absence of arbitrage to the mere \textit{existence} of a martingale measure, the Second Fundamental Theorem powerfully links completeness to the \textit{uniqueness} of that measure.
+
+\begin{theorem}[Second Fundamental Theorem of Asset Pricing]
+Assume a market model satisfies the No-Arbitrage condition (so at least one equivalent martingale measure exists). Then the market model is \textbf{complete} if and only if the equivalent martingale measure $\mathbb{Q}$ is \textbf{strictly unique}.
+\end{theorem}
+
+\begin{proof}[Intuition and Interpretation]
+We have established earlier (Proposition \ref{prop:unique_price}) that if a payoff $H$ is replicable, then its initial price must unambiguously be exactly $V_0^{\xi_0, \xi} = \mathbb{E}^{\mathbb{Q}}\left[H / S_T^0\right]$ for \textbf{every} equivalent martingale measure $\mathbb{Q}$. This means that all valid measures $\mathbb{Q}_1, \mathbb{Q}_2, \dots$ must necessarily agree on the expectation of $H$.
+
+If the market is arbitrarily complete, then \textit{every} payoff is replicable. Thus, for any two equivalent martingale measures $\mathbb{Q}_1$ and $\mathbb{Q}_2$, they must identically yield:
+$$ \mathbb{E}^{\mathbb{Q}_1}\left[ \frac{H}{S_T^0} \right] = \mathbb{E}^{\mathbb{Q}_2}\left[ \frac{H}{S_T^0} \right] $$
+for \textbf{all} bounded $\mathcal{F}_T$-measurable variables $H$. By standard measure theory, if two probability measures give the identical expectation for every bounded measurable function, then they are mathematically the same measure: $\mathbb{Q}_1 \equiv \mathbb{Q}_2$. Hence, $\mathbb{Q}$ is undeniably unique.
+
+Conversely, if the market specifically admits multiple distinct equivalent martingale measures $\mathbb{Q}_1 \neq \mathbb{Q}_2$, then those bounds on arbitrage-free prices for unreplicable options will strictly not collapse to a single point. There will naturally be some bounded payoff $H$ such that $\mathbb{E}^{\mathbb{Q}_1}[H] \neq \mathbb{E}^{\mathbb{Q}_2}[H]$. Since replicating portfolios must always command uniform expectations, this payoff cannot possibly be strongly replicable, and the market explicitly becomes \textbf{incomplete}.
+\end{proof}
+
+\subsection{Examples of Complete vs Incomplete Markets}
+
+To put this theoretical result into perspective:
+\begin{itemize}
+    \item \textbf{The Cox-Ross-Rubinstein (CRR) Binomial Model:} If an asset price can only move deterministically to two possible states (Up or Down) at each discretetime step, the market is completely spanned by trading a stock and a bond. The linear system has exactly two equations (one for Up, one for Down) and two unknowns ($\xi_t^0, \xi_t^1$). It perfectly resolves, predicting a unique EMM. Thus, the classic Binomial Model is \textbf{complete}.
+    \item \textbf{The Trinomial Model:} If the asset price can strictly jump to three distinct states (Up, Middle, Down), but you still only have two assets (stock and bond) to hedge with, your system is heavily underdetermined. Three equations cannot be solved reliably with only two variables. In this model, you cannot uniquely replicate the price, and an infinite gamut of structurally valid EMMs will naturally arise. The Trinomial Model is intrinsically \textbf{incomplete}.
+    \item \textbf{Stochastic Volatility Models:} Expanding into continuous time, models where variance fluctuates unpredictably (like the Heston model) introduce new distinct sources of random noise unspanned by the underlying asset. Unless the market also physically trades variance swaps or similar contracts, these models universally admit multiple EMMs and are incomplete.
+\end{itemize}
+
+In real-world empirical finance, markets are fundamentally incomplete. Frictional forces like transaction costs, unpredictable liquidity drops, short-selling restrictions, and continuous unhedgeable jump risks violently break the theoretical assumptions. Nonetheless, evaluating complete baseline models yields the critical foundations for pricing and hedging most standard instruments.

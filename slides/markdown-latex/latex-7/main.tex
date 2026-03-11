@@ -1,0 +1,82 @@
+\documentclass[12pt, a4paper]{report}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% Geometry setup
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm
+}
+\setlength{\headheight}{30pt}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Stochastic Finance and Risk Modelling - Chapter 7},
+    pdfauthor={Laurence Carassus and Gaoyue Guo},
+}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{example}{Example}[chapter]
+\newtheorem{remark}[theorem]{Remark}
+
+% Layout/Style
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\leftmark}
+\lhead{}
+\cfoot{\thepage}
+
+\title{\textbf{Stochastic Finance and Risk Modelling} \\ \large Chapter 7: American Options}
+\author{Based on slides by Ioane Muni-Toke \\ Laurence Carassus and Gaoyue Guo \\ \textit{Expanded Study Resource}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+This document serves as a comprehensive study guide for the course "Stochastic Finance and Risk Modelling," functioning as a complete substitute for the lecture slides related to Chapter 7: "American Options."
+
+Unlike European options, which can only be exercised at maturity $T$, American options provide the holder with the right to exercise the option at any time up to and including the maturity date. This early exercise feature adds significant complexity to the pricing and hedging of these instruments. To mathematically formalize the holder's choice of when to exercise, we rely heavily on the theory of \textit{stopping times} and the \textit{Snell envelope}, which solves the underlying optimal stopping problem.
+
+In this chapter, we first formalize the American option setup. We then rigorously define stopping times, stopped processes, and their properties. Following this, we introduce the crucial concept of the Snell envelope as the smallest supermartingale dominating the payoff process, linking it explicitly to optimal stopping times. Finally, we establish the pricing equations for American options, compare them to their European counterparts, and discuss replication strategies from both the buyer and seller perspectives in a complete market.
+
+Detailed explanations, rigorous mathematical derivations, and intuition are provided throughout to bridge conceptual gaps and ensure a deep understanding of the material.
+
+\include{01_first_approach}
+\include{02_stopping_time}
+\include{03_snell_envelope}
+\include{04_pricing_replication}
+
+\end{document}

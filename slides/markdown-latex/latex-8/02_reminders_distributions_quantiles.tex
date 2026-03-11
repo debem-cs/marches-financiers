@@ -1,0 +1,110 @@
+\chapter{Probability Reminders: Distribution Functions and Quantiles}
+
+Before defining formal risk measures, it is necessary to rigorously establish the mathematical foundations regarding the distribution of random variables. These concepts lie at the heart of evaluating potential losses and mathematically describing exposure.
+
+\section{Cumulative Distribution Functions (CDF)}
+
+\begin{definition}[Cumulative Distribution Function]
+Let $X$ be a real-valued random variable defined on a probability space $(\Omega, \mathcal{F}, \mathbb{P})$. We term the \textbf{Cumulative Distribution Function (CDF)} of $X$ as the function $F_X : \mathbb{R} \to [0, 1]$ defined by:
+$$
+\forall x \in \mathbb{R}, \quad F_X(x) = \mathbb{P}(X \leq x).
+$$
+\end{definition}
+
+The cumulative distribution function acts as a complete probabilistic descriptor for a random variable. A defining characteristic of the CDF is its adherence to the following proposition:
+
+\begin{proposition}[Properties of the CDF]
+The cumulative distribution function $F_X$ of a random variable $X$ possesses the following properties:
+\begin{enumerate}
+    \item \textbf{Weakly increasing:} If $x_1 \leq x_2$, then $F_X(x_1) \leq F_X(x_2)$.
+    \item \textbf{Càdlàg (Continu à droite, limite à gauche):} Bounded and right-continuous. Specifically, for every point $x_0 \in \mathbb{R}$:
+    $$
+    \lim_{x \to x_0^+} F_X(x) = F_X(x_0).
+    $$
+    It has left limits at every point, meaning $\lim_{x \to x_0^-} F_X(x)$ exists, and represents $\mathbb{P}(X < x_0)$.
+    \item \textbf{Asymptotic limits:} It behaves predictably at infinities:
+    $$
+    \lim_{x \to -\infty} F_X(x) = 0, \quad \lim_{x \to +\infty} F_X(x) = 1.
+    $$
+\end{enumerate}
+\end{proposition}
+
+\subsection*{Example: The Standard Normal Distribution}
+
+A crucial distribution in financial modeling is the standard normal distribution $\mathcal{N}(0, 1)$, whose density function is typically denoted as $\phi(x)$ and CDF as $\Phi(x)$. While $\Phi(x)$ lacks a closed-form algebraic formula, its properties are widely documented. Notably:
+\begin{itemize}
+    \item When addressing tail risks, critical reference points are frequently encountered. The $95^{\text{th}}$ percentile yields $\Phi(1.64) \approx 0.95$.
+    \item Moving to the deep tail, the $99^{\text{th}}$ percentile gives $\Phi(2.33) \approx 0.99$.
+\end{itemize}
+These specific critical values directly translate into standard Value at Risk calculations.
+
+\subsection{Characterizations and Limit Theorems}
+
+The CDF has expansive theoretical applications inside probability theory:
+\begin{enumerate}
+    \item \textbf{Law Characterization:} The CDF characterizes the law of the random variable. If two random variables $X$ and $Y$ share the exact same CDF, they possess the exact same distribution. Thus, for any bounded measurable function $f: \mathbb{R} \to \mathbb{R}$:
+    $$
+    \mathbb{E}[f(X)] = \mathbb{E}[f(Y)].
+    $$
+    \item \textbf{Weak Convergence:} A sequence of random variables $(X_n)_{n \geq 1}$ is said to converge in law (or weak convergence) to a limit $X$ if and only if, for every continuity point $x \in \mathbb{R}$ of the specific function $F_X$, the point-wise subsequent limit holds:
+    $$
+    \lim_{n \to +\infty} F_{X_n}(x) = F_X(x).
+    $$
+    \item \textbf{Empirical Approximation (Glivenko-Cantelli Theorem):} Let an $i.i.d.$ sequence of random variables $(X_n)_{n \geq 1}$ be given. We can construct an empirical cumulative distribution function $\hat{F}_n(x) = \frac{1}{n} \sum_{i=1}^n \mathbf{1}_{\{X_i \leq x\}}$. The fundamental Glivenko-Cantelli Theorem guarantees that this empirical distribution converges almost surely to the true distribution uniformly over $\mathbb{R}$:
+    $$
+    \sup_{x \in \mathbb{R}} |\hat{F}_n(x) - F_X(x)| \xrightarrow{a.s.} 0.
+    $$
+    This is deeply critical in quantitative finance, as real-world data distributions (like historical asset returns) are usually modeled by directly leaning on empirical distribution functions.
+\end{enumerate}
+
+\section{Quantiles and the Generalized Inverse}
+
+Strict inversion of a CDF is frequently impossible because a CDF may not be strictly increasing (it might have flat "plateaus" where probabilities are zero) and it may not be continuous (exhibiting "jumps" where a discrete point probability mass resides). To bypass this complication, we resort to the concept of the \textit{generalized inverse}.
+
+\begin{definition}[Quantiles and Generalized Inverse]
+Let $X$ be a random variable alongside its CDF $F_X$. For any probability level $p \in (0, 1]$, we define the \textbf{quantile of order $p$} (or $p$-th quantile) as the threshold value:
+$$
+x_p = \inf \{x \in \mathbb{R} : F_X(x) \geq p\}.
+$$
+By mathematical convention, $\inf\{\emptyset\} = +\infty$.
+
+We define the function:
+\begin{align*}
+    F_X^{-1} : (0, 1) &\to \mathbb{R} \\
+    p &\mapsto x_p
+\end{align*}
+This function is right-continuous and is formally termed the \textbf{generalized inverse} of $F_X$.
+\end{definition}
+
+In practical terminology based on the earlier standard normal example, we deduce that $\Phi^{-1}(0.95) \approx 1.64$ equating to the quantile $x_{0.95} \approx 1.64$, and $\Phi^{-1}(0.99) \approx 2.33$, meaning $x_{0.99} \approx 2.33$.
+
+\subsection{Properties of the Generalized Inverse}
+
+The interplay between $F_X$ and $F_X^{-1}$ is governed by specific structured boundaries.
+
+\begin{proposition}[Inequality Relations]
+Let $F_X$ be a valid CDF, and $F_X^{-1}$ be its generalized inverse. For any generic probability $p \in (0, 1)$, the following lower-bound statement holds:
+$$
+F_X\left(F_X^{-1}(p)\right) \geq p.
+$$
+Moreover, the generalized inverse satisfies the fundamental equivalence:
+$$
+F_X(x) \geq p \iff x \geq F_X^{-1}(p).
+$$
+\end{proposition}
+\begin{remark}
+The inequality $F_X(F_X^{-1}(p)) \geq p$ arises precisely because of potential "jumps" (discontinuities) in the CDF $F_X$. If $F_X$ is completely continuous over $\mathbb{R}$, this inequality compresses into a clean equality:
+$$
+\forall p \in (0, 1), \quad F_X(F_X^{-1}(p)) = p.
+$$
+\end{remark}
+
+\subsection*{Stochastic Simulation and Generating Variables}
+The generalized inverse holds massive importance for \textbf{Monte Carlo simulations} frequently utilized by financial engineers to price complex derivatives.
+
+\begin{itemize}
+    \item \textbf{The Inverse Transform Theorem:} Suppose $U$ is a random variable following a uniform distribution over $[0, 1]$. Then, the custom-generated random variable structurally defined as $Z = F_X^{-1}(U)$ holds identically the exact same law as the target random variable $X$. This means an engine that dynamically generates uniform random variables can simulate theoretically \textit{any} probability distribution purely by feeding the uniform variables into that distribution's generalized inverse.
+    \item Conversely, if $F_X$ is strictly continuous, plotting the transformation $U' = F_X(X)$ yields a random variable explicitly following a uniform distribution within $[0, 1]$.
+\end{itemize}
+
+Ultimately, utilizing the generalized inverse is essential precisely because it correctly formalizes quantiles even upon probability spaces filled with complex, mixed continuous-discrete dynamics (such as the default probability of discrete bond issuances intertwined with continuous systemic stock indices).

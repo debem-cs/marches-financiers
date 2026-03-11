@@ -1,0 +1,90 @@
+\chapter{Arbitrages and Martingale Measures}
+\label{chap:arbitrages_and_martingales}
+
+A central premise of financial mathematics and asset pricing is that properly functioning liquid markets do not afford arbitrage opportunities. In this chapter, we formalize the concept of an arbitrage and introduce the most critical theoretical tool in modern finance: the equivalent martingale measure. We connect these two ideas through the Fundamental Theorem of Asset Pricing.
+
+\section{Arbitrage}
+
+Broadly speaking, an arbitrage is a "free lunch": an investment strategy that requires zero initial capital, has absolutely no risk of losing money, and yields a strictly positive probability of making a profit.
+
+\begin{definition}[Arbitrage Opportunity]
+A self-financing strategy $(\xi_0, \xi)$ yields an \textbf{arbitrage opportunity} if the corresponding portfolio's value process $V^{\xi_0, \xi}$ satisfies the following three conditions:
+\begin{enumerate}
+    \item $V_0^{\xi_0, \xi} = 0$: The strategy requires zero initial wealth.
+    \item $\mathbb{P}[V_T^{\xi_0, \xi} \geq 0] = 1$: There is zero probability of ending up with a negative portfolio value at the final time $T$ (almost sure non-negativity).
+    \item $\mathbb{P}[V_T^{\xi_0, \xi} > 0] > 0$: There is a strictly positive probability of ending up with a strictly positive portfolio value.
+\end{enumerate}
+\end{definition}
+
+A market model in which no such strategies exist is said to satisfy the \textbf{No-Arbitrage (NA) condition}. Historically, if an arbitrage exists, market participants would aggressively exploit it, driving prices to a new equilibrium where the arbitrage disappears. Therefore, to model markets accurately, one strictly requires the NA condition:
+\begin{center}
+    No Arbitrage Condition: \quad $V_T^{0, \xi} \geq 0 \text{ } \mathbb{P}\text{-a.s.} \text{ for some } \xi \implies V_T^{0, \xi} = 0 \text{ } \mathbb{P}\text{-a.s.}$
+\end{center}
+
+While defined over the entire interval $[0, T]$, arbitrage can be isolated to single-period segments. The next proposition shows that if an arbitrage exists over the multi-period horizon, one must be able to construct a one-step arbitrage.
+
+\begin{proposition} \label{prop:arbitrage_equivalent}
+There exists an arbitrage opportunity in the market if and only if there exists some specific trading period $t \in \{1, \dots, T\}$ and an $\mathcal{F}_{t-1}$-measurable random vector $\xi_t$ taking values in $\mathbb{R}^d$ such that:
+\begin{equation}
+\begin{cases}
+    \xi_t \cdot (\tilde{S}_t - \tilde{S}_{t-1}) \geq 0 & \mathbb{P}\text{-a.s.}, \\
+    \mathbb{P}\left[\xi_t \cdot (\tilde{S}_t - \tilde{S}_{t-1}) > 0\right] > 0.
+\end{cases}
+\end{equation}
+\end{proposition}
+
+\begin{proof}[Proof Sketch]
+The "if" direction is straightforward. Suppose at time $t$ we can construct the one-period arbitrage $\xi_t$. We define a full strategy where from $k=0$ to $t-1$, we hold nothing ($\xi_k = 0$). At $t$, we hold the arbitrage-generating portfolio $\xi_t$ and perfectly offset its cost with the risk-free asset. The generated gain is precisely $\tilde{V}_t = \xi_t \cdot (\tilde{S}_t - \tilde{S}_{t-1})$. Since it requires zero initial wealth and strictly generates positive expected gain with no downside risk, we then hold this cumulative gain in the riskless asset until time $T$ ($\xi_k = 0$ for $k > t$). The final portfolio value $V_T$ will be $(1+r)^{T-t} V_t$, which trivially satisfies the global arbitrage conditions.
+
+The "only if" direction shows that if a global $T$-period arbitrage exists, you can analyze the portfolio's discounted increments frame by frame backwards in time. For the aggregated gain $\sum_{k=1}^T \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1})$ to be strictly positive with no downside, there must be at least one period where an increment is unilaterally strictly advantageous, meaning the NA condition must strictly hold at every individual trading period.
+\end{proof}
+
+\section{Martingale Measures}
+
+The profound insight of stochastic finance is that the absence of arbitrage is deeply connected to the existence of a specific probability measure underpinning the market.
+
+\begin{definition}[Martingale Measure / Risk-Neutral Measure]
+A probability measure $\mathbb{Q}$ defined on the measurable space $(\Omega, \mathcal{F})$ is said to be a \textbf{martingale measure} (or a \textbf{risk-neutral measure}) if the discounted price processes $(\tilde{S}_t^1, \dots, \tilde{S}_t^d)_{t=0, \dots, T}$ are martingales under $\mathbb{Q}$. Mathematically, this means:
+\begin{enumerate}
+    \item Integrability: $\mathbb{E}_{\mathbb{Q}}[ \tilde{S}_t^i ] < \infty$ for all $t$ and $i$.
+    \item Martingale property: Under the filtration $\mathbb{F}$, we have
+    $$
+    \mathbb{E}_{\mathbb{Q}}\left[ \tilde{S}_t^i \mid \mathcal{F}_{t-1} \right] = \tilde{S}_{t-1}^i \quad \text{for } 1 \leq t \leq T.
+    $$
+\end{enumerate}
+\end{definition}
+
+This mathematical property bears an intuitive economic meaning. Under a martingale measure, the expected future discounted price of any asset, given all current information $\mathcal{F}_{t-1}$, is exactly structurally equal to its current discounted price. Therefore, under $\mathbb{Q}$, no asset offers an expected excess return (risk premium) relative to the riskless bond. The measure $\mathbb{Q}$ "neutralizes" all market risk preferences.
+
+For this measure to be relevant to the actual market governed by the physical probability $\mathbb{P}$, $\mathbb{Q}$ and $\mathbb{P}$ must agree on what is "possible" and what is "impossible".
+
+\begin{definition}[Equivalent Martingale Measure]
+A martingale measure $\mathbb{Q}$ is called an \textbf{equivalent martingale measure (EMM)} if it is equivalent to the physical measure $\mathbb{P}$, denoted as $\mathbb{Q} \sim \mathbb{P}$. Equivalency means the two measures share exactly the same null sets:
+$$
+\text{For any } A \in \mathcal{F}, \quad \mathbb{P}[A] = 0 \iff \mathbb{Q}[A] = 0.
+$$
+\end{definition}
+This equivalence is vital. It guarantees that an event is almost surely impossible (e.g., losing money on an arbitrage) under the real-world measure $\mathbb{P}$ if and only if it is almost surely impossible under the pricing measure $\mathbb{Q}$.
+
+\section{The Fundamental Theorem of Asset Pricing (FTAP)}
+
+The link between absence of arbitrage and martingale measures constitutes one of the most celebrated theorems in financial mathematics. Historically established by Harrison and Pliska (1981), and later expanded into its general continuous-time form by Delbaen and Schachermayer (1994), it provides the backbone of modern pricing theory.
+
+\begin{theorem}[First Fundamental Theorem of Asset Pricing]
+The market is arbitrage-free (i.e., there are no arbitrage opportunities) if and only if there exists an equivalent martingale measure $\mathbb{Q}$.
+\end{theorem}
+
+\begin{proof}[Intuition and Implications]
+The robust mathematical proof involves advanced functional analysis (specifically, separating hyperplane theorems like the Hahn-Banach theorem applied to the convex cones of replicable claims), but its direct financial implications are easy to see.
+
+Assume an EMM $\mathbb{Q}$ exists. Take any self-financing strategy starting with $V_0 = 0$. By Proposition \ref{prop:self_financing_equiv}, the discounted portfolio value is:
+$$
+\tilde{V}_T = \sum_{k=1}^T \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1}).
+$$
+Since $\xi_k$ is predictable and $\tilde{S}_k$ is a martingale under $\mathbb{Q}$, the integral of a predictable process against a martingale remains a martingale. Thus, $(\tilde{V}_t)$ is a $\mathbb{Q}$-martingale.
+Therefore, the expected value under $\mathbb{Q}$ of the final portfolio is equal to its initial value:
+$$
+\mathbb{E}_{\mathbb{Q}}[\tilde{V}_T] = \tilde{V}_0 = 0.
+$$
+If this strategy were an arbitrage, we would have $\mathbb{P}[V_T \geq 0] = 1$ and $\mathbb{P}[V_T > 0] > 0$. By equivalence ($\mathbb{P} \sim \mathbb{Q}$), this heavily implies $\mathbb{Q}[V_t \geq 0] = 1$ and $\mathbb{Q}[V_T > 0] > 0$. However, a non-negative random variable that is strictly positive with some probability must have a strictly positive expectation: $\mathbb{E}_{\mathbb{Q}}[\tilde{V}_T] > 0$. This severely contradicts $\mathbb{E}_{\mathbb{Q}}[\tilde{V}_T] = 0$. Hence, we conclude that no such arbitrage can possibly exist if an EMM $\mathbb{Q}$ exists.
+\end{proof}

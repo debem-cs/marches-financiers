@@ -1,0 +1,83 @@
+\chapter{Replication of Derivatives}
+
+\section{The Concept of Replication}
+
+A core tenet of modern financial theory asserts that in a complete market, any derivative can be perfectly hedged. This means developing a dynamic trading strategy in the primary assets (the stock and the bank account) that miraculously synthesizes the exact payoff of the derivative under all possible future scenarios. Such a strategy is called a \textit{replicating portfolio}.
+
+In mathematical terms, a trading strategy is defined by a pair of predictable processes $(\xi_t, \xi_t^0)_{t=1}^T$. 
+\begin{itemize}
+    \item $\xi_t$ represents the number of shares of the risky asset held during the period $(t-1, t]$.
+    \item $\xi_t^0$ represents the number of units of the riskless asset (bank account) held during the period $(t-1, t]$.
+\end{itemize}
+Predictability requires that the portfolio components $\xi_t$ and $\xi_t^0$ must be rigorously determined based strictly upon the information available at the beginning of the period, namely $\mathcal{F}_{t-1}$. 
+
+The value of this portfolio at time $t$ is strictly given by:
+\begin{equation}
+    V_t = \xi_t S_t + \xi_t^0 S_t^0.
+\end{equation}
+A derivative with an $\mathcal{F}_T$-measurable payoff $H$ is considered replicable if there exists a self-financing strategy such that its terminal portfolio value exactly logically matches the payoff almost surely:
+\begin{equation}
+    V_T = \xi_T S_T + \xi_T^0 S_T^0 = H \quad \mathbb{P}\text{-a.s.}
+\end{equation}
+
+\section{Dynamic Delta Hedging in the Binomial Model}
+
+Because our discrete binomial model branches into exactly two unique states at every structural node, we possess exactly two independent financial instruments (the risky stock and the riskless bond) to balance the equation. This yields a mathematically determined $2 \times 2$ linear system of equations at every node guaranteeing perfect replication.
+
+\begin{proposition}[Replication Strategy for Path-Dependent Payoffs]
+    The perfectly self-financing replication strategy for a path-dependent European payoff $H = h(S_0, \dots, S_T)$ is determined at every node $t \in \{1, \dots, T\}$ by:
+    \begin{equation}
+        \xi_t = \frac{v_t(S_0, \dots, S_{t-1}, S_{t-1}(1+u)) - v_t(S_0, \dots, S_{t-1}, S_{t-1}(1+d))}{S_{t-1}(u-d)} \label{eq:delta_hedging}
+    \end{equation}
+    and
+    \begin{equation}
+        \xi_t^0 = \frac{v_t(S_0, \dots, S_{t-1}, S_{t}) - \xi_t S_t}{S_t^0}. \label{eq:bank_account}
+    \end{equation}
+\end{proposition}
+
+\begin{proof}
+    Consider the portfolio transitioning functionally from time $t-1$ across the single period to time $t$. Given the entire explicit path history up to $t-1$, strictly denoted conceptually as $\vec{S}_{t-1} = (S_0, \dots, S_{t-1})$, the underlying asset price rigidly moves to either $S_t^{up} = S_{t-1}(1+u)$ or $S_t^{down} = S_{t-1}(1+d)$. 
+    
+    Correspondingly, the target derivative theoretical price seamlessly transitions to either $V_t^{up} = v_t(\vec{S}_{t-1}, S_t^{up})$ or $V_t^{down} = v_t(\vec{S}_{t-1}, S_t^{down})$.
+    
+    To violently secure complete replication, our holding strategy $(\xi_t, \xi_t^0)$ decided cleanly at time $t-1$ absolutely must financially output the target value in both disparate eventualities. We construct the simultaneous system:
+    \begin{align}
+        \xi_t S_{t-1}(1+u) + \xi_t^0 S_t^0 &= V_t^{up} \label{eq:sys1} \\
+        \xi_t S_{t-1}(1+d) + \xi_t^0 S_t^0 &= V_t^{down} \label{eq:sys2}
+    \end{align}
+    Note that the riskless asset $S_t^0$ structurally holds identical deterministic value $(1+r)^t$ violently irrespective of the "up" or "down" shift in the stock. By aggressively algebraic subtraction of equation \eqref{eq:sys2} securely from \eqref{eq:sys1}, we strictly eliminate the bond holding entirely:
+    \begin{equation}
+        \xi_t S_{t-1}(1+u) - \xi_t S_{t-1}(1+d) = V_t^{up} - V_t^{down}.
+    \end{equation}
+    Factoring rigorously:
+    \begin{equation}
+        \xi_t S_{t-1} (1 + u - 1 - d) = \xi_t S_{t-1}(u-d) = V_t^{up} - V_t^{down}.
+    \end{equation}
+    Isolating mathematically for $\xi_t$ successfully recovers the canonical discrete delta-hedging ratio formally declared in \eqref{eq:delta_hedging}:
+    \begin{equation}
+        \xi_t = \frac{V_t^{up} - V_t^{down}}{S_{t-1}(u-d)}.
+    \end{equation}
+    
+    Once the strictly necessary stock allocation $\xi_t$ is powerfully quantified, we algebraically resubstitute directly back into either generating equation (or neutrally into the generic relation $V_t = \xi_t S_t + \xi_t^0 S_t^0$) to conclusively govern the riskless asset position formally shown universally in \eqref{eq:bank_account}.
+\end{proof}
+
+The quantity $\xi_t$ fundamentally expresses the discrete sensitivity of the derivative's intrinsic price relative to the underlying stock price shifts. This acts as the rigorous discrete-time analog to the continuous "Delta": $\Delta_t = \frac{\partial V}{\partial S}$. By forcefully holding exactly $\xi_t$ localized units, the investor dynamically neuters any structural directional exposure to the risky variable.
+
+\section{Simplification for Vanilla Options}
+
+Just as path-independent payoffs yield exceptionally simplified functional pricing expressions, their required replication sequences equivalently collapse heavily in sheer dimensionality.
+
+\begin{proposition}[Vanilla Hedging Compression]
+    If the explicitly defined derivative payoff relies absolutely cleanly upon terminal value, $H = h(S_T)$, then the theoretical pricing dependencies permanently transition identically conforming to:
+    \begin{equation}
+        v_t(S_0, S_1, \dots, S_t) \equiv v_t(S_t).
+    \end{equation}
+    Consequently, the localized delta-hedging allocations seamlessly collapse down to strictly demanding:
+    \begin{equation}
+        \xi_t \equiv \xi_t(S_{t-1}) \quad \text{and} \quad \xi_t^0 \equiv \xi_t^0(S_{t-1}).
+    \end{equation}
+\end{proposition}
+
+\begin{proof}
+    Because structural returns $R_t$ naturally maintain their strict i.i.d status beneath the measure $\mathbb{Q}$, the intrinsic price process $S_t$ operates rigorously as a structurally complete Markov process. Consequently, conditionally analyzing any functionally prospective path-independent payoff $h(S_T)$ relies structurally purely upon realizing exactly the localized state variable mathematically isolated as $S_{t-1}$. Therefore, replacing heavily burdened path vectors inside equations \eqref{eq:delta_hedging} smoothly strips out dimensional excess, conclusively proving that hedging mechanics algorithmically demand strictly present-state awareness exclusively.
+\end{proof}

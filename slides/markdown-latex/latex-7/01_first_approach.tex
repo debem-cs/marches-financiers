@@ -1,0 +1,95 @@
+\chapter{First Approach}
+
+In this chapter, we develop the mathematical framework necessary to price an American option in discrete time. We will start with standard definitions and a first look at the recursive pricing approach, often referred to as dynamic programming.
+
+\section{Model and Definitions}
+
+\begin{definition}[Financial Market Framework]
+We consider a financial market in discrete time $t \in \{0, 1, \dots, T\}$. 
+The market consists of a riskless asset (e.g., a bank account) denoted by its price process $(S^0_t)_{0 \leq t \leq T}$ and $d=1$ risky asset with price process $(S_t)_{0 \leq t \leq T}$. 
+
+The uncertainty in the market is modeled on a rigorous probability space $(\Omega, \mathcal{F}, \mathbb{P})$, which is endowed with a natural filtration $\mathbb{F} = (\mathcal{F}_{t})_{0 \leq t \leq T}$. 
+The $\sigma$-algebra $\mathcal{F}_t$ represents all the information available in the market up to and including time $t$. 
+For simplicity and mathematical standard practice, we assume that the initial state is deterministic or completely known, meaning $\mathcal{F}_{0} = \{\emptyset, \Omega\}$ (the trivial $\sigma$-algebra). We also assume that $\mathcal{F}_{T} = \mathcal{F}$, meaning all uncertainty is resolved by the final maturity $T$.
+\end{definition}
+
+Our focus is exclusively on the pricing of \textit{American options}. Recall that the defining characteristic of an American option is its early exercise capability. 
+
+\begin{definition}[American Option Payoff]
+The holder of an American option can choose to exercise it at \textit{any} time $t \in \{0, \dots, T\}$. If the option is exercised exactly at time $t$, the holder will receive a payoff equal to $H_{t}$.
+Here, $H_{t}$ is assumed to be a positive random variable that is $\mathcal{F}_{t}$-measurable. This measurability condition ensures that the payoff dimensioned at time $t$ only depends on market information available up to time $t$ (there is no prescience of the future). The option can only be exercised exactly once.
+\end{definition}
+
+\begin{example}[American Put Option]
+The quintessential example is the American put option of strike $K$ on the risky asset $S_t$. The intrinsic payoff if exercised at time $t$ is defined as:
+$$
+H_t = \max(K - S_t, 0) = (K - S_t)^+
+$$
+\end{example}
+
+For the entirety of this pricing formulation, we operate under the essential pillars of modern mathematical finance.
+\begin{enumerate}
+    \item \textbf{No-Arbitrage:} We assume the market is free of arbitrage opportunities. By the First Fundamental Theorem of Asset Pricing, this implies the existence of an \textit{equivalent martingale measure} (EMM), denoted by $\mathbb{Q}$.
+    \item \textbf{Completeness:} We assume the market is complete. By the Second Fundamental Theorem of Asset Pricing, the equivalent martingale measure $\mathbb{Q}$ is \textit{unique}. Hence, any derivative payoff can be perfectly replicated by a trading strategy.
+\end{enumerate}
+
+\section{Dynamic Programming Formulation}
+
+To find the fair value of an American option at any time $t$, denoted by $U_t$, we introduce a backward induction approach, also known as the dynamic programming principle.
+
+\begin{proposition}[Dynamic Pricing Equation]
+Let $U_t$ be the value of the American option at time $t$. Then the value process sequence $(U_t)_{t=0, \dots, T}$ perfectly satisfies the following backward recursion:
+$$
+\begin{cases}
+U_T = H_T \\
+U_{t-1} = \max\left( H_{t-1}, \, S_{t-1}^0 \mathbb{E}^{\mathbb{Q}}\left[ \frac{U_t}{S_t^0} \Big| \mathcal{F}_{t-1} \right] \right), \quad t = 1, \dots, T
+\end{cases}
+$$
+\end{proposition}
+
+\textbf{Intuition and Explanation:}
+This formulation is the heart of American option pricing. Let us break it down logically:
+\begin{itemize}
+    \item \textbf{At maturity ($t = T$):} The holder has no more time value left. They must either exercise the option to receive its intrinsic value $H_T$ or let it expire worthless. Thus, the value at maturity is strictly the payoff itself: $U_T = H_T$.
+    \item \textbf{At any prior time ($t-1$):} The holder must make a rational choice between two mutually exclusive actions:
+    \begin{enumerate}
+        \item \textbf{Exercise immediately:} The holder receives the intrinsic payoff available right now, which is $H_{t-1}$.
+        \item \textbf{Hold (continue):} If the holder decides \textit{not} to exercise, they hold onto the option for at least one more time step. The value of holding the option is the expected present value of the option's worth tomorrow ($U_t$), under the risk-neutral measure $\mathbb{Q}$, discounted back to today. This represents the \textit{continuation value}: 
+        $$ C_{t-1} = S_{t-1}^0 \mathbb{E}^{\mathbb{Q}}\left[ \frac{U_t}{S_t^0} \Big| \mathcal{F}_{t-1} \right] $$
+    \end{enumerate}
+    Assuming rational behavior, the holder will always choose the action that maximizes their payoff. Therefore, the value of the option today, $U_{t-1}$, must be the maximum of the immediate exercise value and the continuation value.
+\end{itemize}
+
+\subsection{Supermartingale Property of the Discounted Value}
+
+Let us define the \textit{discounted value} of the option and the payoff, a standard transformation that simplifies martingale analysis. We denote the discounted option value process as $\tilde{U}_t = U_t / S_t^0$ and the discounted payoff process as $\tilde{H}_t = H_t / S_t^0$.
+
+By rewriting the dynamic programming equation in terms of discounted quantities, we get:
+$$
+\tilde{U}_{t-1} = \max\left( \tilde{H}_{t-1}, \, \mathbb{E}^{\mathbb{Q}}\left[ \tilde{U}_t \Big| \mathcal{F}_{t-1} \right] \right)
+$$
+
+This immediately reveals a critical theoretical property of the American option price process under the risk-neutral measure.
+
+\begin{proposition}[Supermartingale Characterization]
+The discounted value process $(\tilde{U}_t)_{t=0, \dots, T}$ of the American option is a $\mathbb{Q}$-supermartingale. Furthermore, it is the \textit{smallest} supermartingale that dominates the discounted payoff process $(\tilde{H}_t)_{t=0, \dots, T}$ from above.
+\end{proposition}
+
+\begin{proof}
+By definition of a supermartingale, we need to show that for any time $t \in \{1,\dots,T\}$, 
+$$ \tilde{U}_{t-1} \geq \mathbb{E}^{\mathbb{Q}}\left[ \tilde{U}_t \Big| \mathcal{F}_{t-1} \right] $$ 
+
+Looking directly at the discounted dynamic programming equation:
+$$
+\tilde{U}_{t-1} = \max\left( \tilde{H}_{t-1}, \, \mathbb{E}^{\mathbb{Q}}\left[ \tilde{U}_t \Big| \mathcal{F}_{t-1} \right] \right)
+$$
+Because the maximum of two quantities must be greater than or equal to either of those individual quantities, it strictly follows that:
+$$ \tilde{U}_{t-1} \geq \mathbb{E}^{\mathbb{Q}}\left[ \tilde{U}_t \Big| \mathcal{F}_{t-1} \right] $$
+thus proving that $(\tilde{U}_t)$ is a $\mathbb{Q}$-supermartingale.
+
+Also, it is evident from the same $\max()$ function that:
+$$ \tilde{U}_{t-1} \geq \tilde{H}_{t-1} \quad \text{for all } t $$
+Hence, the discounted value $\tilde{U}_t$ always bounds the discounted intrinsic payoff $\tilde{H}_t$ from above.
+
+Finally, any other $\mathbb{Q}$-supermartingale $M_t$ that also dominates $\tilde{H}_t$ from above (i.e., $M_t \geq \tilde{H}_t$) will, by backward induction, be greater than or equal to $\tilde{U}_t$, proving that $\tilde{U}_t$ is the \textit{smallest} such supermartingale. We will formalize this concept rigorously in the upcoming sections under the terminology of the \textit{Snell envelope}.
+\end{proof}

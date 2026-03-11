@@ -1,0 +1,75 @@
+\documentclass[12pt, a4paper]{report}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% Geometry setup
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm
+}
+\setlength{\headheight}{30pt}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Stochastic Finance and Risk Modelling - Chapter 5},
+    pdfauthor={Laurence Carassus and Gaoyue Guo},
+}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{example}{Example}[chapter]
+\newtheorem{remark}[theorem]{Remark}
+
+% Layout/Style
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\leftmark}
+\lhead{}
+\cfoot{\thepage}
+
+\title{\textbf{Stochastic Finance and Risk Modelling} \\ \large Chapter 5: Multi-period model of financial market}
+\author{Based on slides by Ioane Muni-Toke \\ Laurence Carassus and Gaoyue Guo \\ \textit{Expanded Study Resource}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+This document serves as a comprehensive study guide for the course "Stochastic Finance and Risk Modelling". It expands upon the lecture slides relative to Chapter 5: "Multi-period model of financial market". 
+
+The goal of this text is to provide a rigorous mathematical foundation required for modern financial modeling in a multi-period discrete-time setting. We extend the concepts from one-period models to dynamic multi-period models. We cover the setup of the discrete-time market, the formal definition of self-financing strategies and portfolios, arbitrage opportunities, martingale measures, and the pricing and replication of European derivatives. The text concludes with an analysis of market completeness.
+
+\include{01_discrete_time_model}
+\include{02_arbitrage_martingale_measure}
+\include{03_payoffs_derivatives}
+\include{04_complete_market}
+
+\end{document}

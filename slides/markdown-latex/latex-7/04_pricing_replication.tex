@@ -1,0 +1,84 @@
+\chapter{Pricing and Replication of American Options}
+
+Having formally established the Snell envelope as the solution to the optimal stopping problem, we now return to our original financial objective: pricing and replicating American options in a discrete complete market.
+
+\section{American Options Value Process}
+
+The connection between the Snell envelope and American option pricing is immediate and direct. The dynamic programming principle introduced in the first section was simply the Snell envelope defined under the risk-neutral measure $\mathbb{Q}$.
+
+\begin{proposition}[American Option Pricing]
+Let $\mathcal{T}$ denote the collection of all valid stopping times taking values in $\{0, \dots, T\}$. 
+The discounted value process $(\tilde{U}_t)_{t=0, \dots, T}$ of an American option defined by recursion:
+$$
+\begin{cases}
+\tilde{U}_T = \tilde{H}_T \\
+\tilde{U}_{t-1} = \max\left( \tilde{H}_{t-1}, \, \mathbb{E}^{\mathbb{Q}}\left[ \tilde{U}_t \mid \mathcal{F}_{t-1} \right] \right), \quad t = 1, \ldots, T
+\end{cases}
+$$
+is exactly the Snell envelope of the discounted payoff process $(\tilde{H}_t)$.
+
+Therefore, it flawlessly constitutes the solution to the optimal stopping problem for the option holder. The fair initial price of the American option, $U_0$, is given by:
+$$
+U_0 = \sup_{\tau \in \mathcal{T}} \mathbb{E}^{\mathbb{Q}}\left[ \frac{H_\tau}{S_\tau^0} \right]
+$$
+where $S_0^0 = 1$. The holder's optimal exercise policy is given by the stopping time $\nu_0 = \inf\{t \geq 0 : \tilde{U}_t = \tilde{H}_t\}$, or equivalently, the very first time the option's holding value drops exactly matching its immediate intrinsic exercise value.
+\end{proposition}
+
+\section{American vs. European Options}
+
+A recurring question in quantitative finance is whether an American option should ever be exercised strictly before maturity, and how its value compares to an otherwise identical European option (which can only be exercised at maturity $T$).
+
+Let us denote:
+\begin{itemize}
+    \item $V^a_t$: The value of an American option at time $t$ with payoff stream $(H_0, \ldots, H_T)$.
+    \item $V^e_t$: The value of a European option at time $t$ with identical final payoff $H_T$.
+\end{itemize}
+
+\begin{proposition}[Value Comparison]
+The following relationships hold between American and European options:
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Early Exercise Premium:} The American option is never worth less than the European option at any time: 
+    $$ V^a_t \geq V^e_t \quad \text{for all } t \in \{0, \ldotp \ldots, T\} $$
+    This is intuitive: the American option gives the holder \textit{more} rights (early exercise), which must command a non-negative premium. Mathematically, for the European option, $T$ is just one specific stopping time within $\mathcal{T}$, hence the supremum over all $\mathcal{T}$ cannot be lower than the expectation evaluated at one specific stopping time $T$.
+    \item \textbf{Condition for Equality:} If the current intrinsic payoff is always less than or equal to the European holding value, i.e., $H_t \leq V^e_t$ for all $t$, then early exercise is never optimal. Consequently, the options have exactly the same price process:
+    $$ V^a_t = V^e_t \quad \text{for all } t $$
+\end{enumerate}
+\end{proposition}
+
+\subsection{The Case of Call and Put Options}
+
+This equality condition leads us to an extremely famous result regarding regular call options on non-dividend-paying stocks.
+
+\begin{corollary}[Non-optimality of Early Exercise for Calls]
+For the case of a standard American call option, the payoff is $H_u = (S_u - K)^+$. If the risk-free interest rate is non-negative ($r \geq 0$), then an American call option should never be exercised early. Hence, its value exactly matches the European call:
+$$ V^a_t = V^e_t \quad \text{for all } t $$
+\end{corollary}
+
+\textbf{Intuition:} If you exercise it early, you receive $S_t - K$ immediately. However, if you instead sell the option, its time value (especially given interest $r \geq 0$ bounds the strike present value from below) ensures $V^e_t > S_t - K$. A rational investor would sell the option in the open market rather than exercise it and destroy that time value.
+
+\begin{remark}
+This result is \textbf{no longer true} for an American put option ($H_t = (K - S_t)^+$). Due to the time value of money, receiving $K$ today is worth strictly more than receiving $K$ at maturity. If the asset price drops to 0 immediately, the put holder wants their $K$ right now to start earning interest. Hence, an American put is strictly more valuable than a European put ($V^a_t > V^e_t$), confirming the existence of a positive early exercise premium. Similar deviations occur for calls on dividend-paying stocks.
+\end{remark}
+
+\section{Replication of American Options}
+
+In a complete market, any European derivative can be replicated. Replicating American derivatives is far more complex due to the embedded optimal exercise choice. Let $U_t$ be the value of an American option at time $t$. 
+
+\begin{proposition}[Seller and Buyer Replication Dynamics]
+Assume the market is complete. Then the following properties describe replication:
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Existence of a super-replicating strategy:} The Snell envelope's supermartingale property implies by the Doob-Meyer decomposition that there exists a trading strategy $(\xi^0_t, \xi_t)$ whose portfolio value process $V_t$ perfectly satisfies:
+    $$ V_t = U_t + A_t $$
+    where $A_t$ is a \textit{predictable, non-decreasing} consumption process, with $A_0 = 0$.
+    
+    \item \textbf{Seller's perspective (Perfect Replication):} From the seller's point of view, they must be prepared to pay out at any time the option buyer demands it. The seller can set up a portfolio costing $U_0$ initially and follow the strategy $(\xi^0_t, \xi_t)$. As long as the buyer holds the option, the seller's portfolio value $V_t \geq U_t$. If the buyer exercises optimally at $\tau$, the seller's portfolio covers the payoff perfectly ($V_\tau \geq U_\tau = H_\tau$).
+    
+    \item \textbf{Buyer's perspective (Optimal Exercise):} On behalf of the buyer, the optimal stopping time $\tau$ dictates they exercise exactly when the intrinsic payoff equals the option value: $H_\tau = U_\tau$. 
+    Furthermore, they must not wait so long that the consumption process $A_t$ ticks upwards. They should exercise before or precisely when time decay completely erodes the option advantage over payoff:
+    $$ \tau \leq \inf \{ k \geq 0 : A_{k+1} > 0 \} $$
+
+    \item \textbf{Suboptimal Execution Penalty:} If the buyer does \textit{not} exercise at an optimal time (for instance, they hold it too long or exercise prematurely), the predictable process $A_t$ accumulates strictly positive value. Since the seller is executing a perfect super-replicating strategy, this discrepancy ($A_t > 0$) strictly becomes a risk-free monetary gain (arbitrage profit) for the seller at the expense of the irrational buyer.
+\end{enumerate}
+\end{proposition}
+
+This completes our comprehensive mathematical review of American option pricing in discrete time, providing exact formulations based on backward induction, Snell envelopes, and optimal stopping algorithms.

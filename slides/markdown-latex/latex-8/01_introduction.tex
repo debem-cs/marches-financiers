@@ -1,0 +1,103 @@
+\chapter{Introduction to Financial Risks}
+
+The landscape of modern finance has been frequently punctuated by severe losses suffered by financial institutions and industrial companies alike. These events, notably the Global Financial Crisis of 2007-2009, have emphatically shown the necessity for all participants in financial markets—ranging from intermediaries to regulatory and supervisory authorities—to deeply understand the risks intertwined with their financial activities. 
+
+Mere awareness of risk is insufficient; it needs to be strictly \textbf{measured, monitored, and managed}. The rigor and quality of internal control within any institution depend substantially on a robust and mathematically sound understanding of these risks. The crisis highlighted that traditional risk measures are often poorly suited for times of extreme distress, necessitating more robust metrics to assess potential disaster scenarios.
+
+\section{Taxonomy of Risks in Financial Institutions}
+
+The activities of financial institutions are exposed to several classes of risk. According to standard definitions (e.g., Jorion, 2007), these can be primarily divided into four categories:
+
+\begin{enumerate}
+    \item \textbf{Market Risk:} This is the focal point of the current chapter. Market risk arises from unfavorable variations in macroeconomic variables that directly dictate asset pricing. This includes shocks to equity prices, fluctuating interest rates, foreign exchange rate movements, varying market indices, shifts in volatilities, and changing correlation structures among varying assets. 
+    \begin{itemize}
+        \item \textit{Example:} A sudden crash in equity prices directly depletes the mark-to-market value of an investment portfolio containing widespread stocks.
+    \end{itemize}
+    
+    \item \textbf{Liquidity Risk:} The risk stemming from an institution's inability to fulfill its short-term financial obligations. This normally is not caused by fundamental insolvency, but rather poor synchronization of cash inflows and outflows (funding liquidity risk), or the inability to execute a transaction at current market prices due to lack of market depth (market liquidity risk).
+    \begin{itemize}
+        \item \textit{Example:} A classic "bank run," where a myriad of customers simultaneously attempt to withdraw deposits, and the bank does not have enough immediate cash on hand to service them, despite owning lucrative long-term assets.
+    \end{itemize}
+
+    \item \textbf{Credit Risk:} This involves the possibility of loss due to a counterparty's failure to meet their contractual obligations, specifically regarding the payment of interest or the restitution of principal.
+    \begin{itemize}
+        \item \textit{Example:} A corporate bond issuer defaulting on its obligations, or an insolvent bank failing to return funds deposited by a client.
+    \end{itemize}
+
+    \item \textbf{Operational Risk:} The hazard of loss resulting from inadequate or failed internal processes, human error, system failures, or external events (fraud, cyber attacks, legal risks).
+    \begin{itemize}
+        \item \textit{Example:} A "fat-finger" error where a trader accidentally inputs an extra zero, purchasing ten times the nominal amount of securities intended, at incorrectly computed limit prices.
+    \end{itemize}
+\end{enumerate}
+
+\section{Focus on Market Risk}
+
+We narrow our focus down to Market Risk, as its direct derivation from asset prices makes it particularly receptive to stochastic and probabilistic modeling. Market risk inherently differs depending on the precise nature of the underlying asset targeted:
+
+\begin{itemize}
+    \item \textbf{Currency Risk (Foreign Exchange Risk):} This arises from exposure to fluctuations in the exchange rates between currencies. It heavily affects multinational corporations that hold raw materials or revenues in foreign denominations.
+    \item \textbf{Interest Rate Risk:} Variations in the interest rate structure drastically affect any agent engaged in lending, borrowing, or holding fixed-income instruments. Bonds specifically have prices that move inversely to the interest rate.
+    \item \textbf{Equity Risk:} Directly relates to holding stocks. The price of an individual share behaves stochastically, influenced by the specifics of the issuing firm and encompassing macroeconomic trends.
+    \item \textbf{Other Residual Risks:} This captures secondary exposure metrics. A prime example is \textbf{Volatility Risk}, which drastically affects traders of non-linear derivatives (such as options), as option prices scale with the volatility assumption (Vega exposure). Another form is \textbf{Basis Risk}, which frequently transpires in hedging mechanisms. It describes the risk incurred when the hedging instrument and the hedged asset do not behave identically (e.g., trying to hedge corporate bond exposure by shorting risk-free sovereign bonds, leaving the trader exposed to the corporate credit spread).
+\end{itemize}
+
+Furthermore, market risk can be monitored under two primary paradigms:
+\begin{itemize}
+    \item \textbf{Absolute Risk:} Evaluating potential losses purely in fixed denomination terms (e.g., estimating a potential portfolio drop of \$5,000,000 over ten days). This looks into the actual probability distribution of total underlying returns.
+    \item \textbf{Relative Risk:} Evaluating potential losses relative to an underlying benchmark index. In this framing, the absolute return matters less than the \textit{tracking error}. An institutional investor might suffer absolute losses, but if these losses are lesser than those of the benchmark, the relative risk profile handles it as an outperformance.
+\end{itemize}
+
+Institutions manage their market risk profiles using fixed limits on notionals, gross and net exposure caps, Value at Risk (VaR) ceilings, and robust supervision facilitated by independent risk management units.
+
+\section{The Practical Necessity of Risk Measurement}
+
+Carefully estimating the risk landscape surrounding the use of modern financial instruments is absolutely vital for several pragmatic purposes:
+
+\begin{enumerate}
+    \item \textbf{Optimal Allocation of Regulatory Capital:} Equity is a heavily constrained and expensive resource for banks. Financial institutions must reserve sufficient capital (often termed Tier 1 or Tier 2 capital) proportionate to the riskiness of their holdings as a bankruptcy buffer. Precise risk measures prevent the unnecessary hoarding of idle capital.
+    \item \textbf{Risk Monitoring and Hedging:} Having a quantified mathematical measure enables the construction of limits (like "traffic light" systems—green for safe, yellow for cautionary, red for immediate liquidation limits) for trading desks, specifically targeting highly leveraged, illiquid, or complex derivative assets.
+    \item \textbf{Compliance:} Conformity with strict guidelines issued by national banking authorities, financial supervisory committees, and international directives cannot be maintained without standardized mechanisms for computing theoretical downside variations.
+\end{enumerate}
+
+\section{The Regulatory Environment}
+
+Financial regulations function concurrently across multiple layers:
+
+\begin{itemize}
+    \item \textbf{National Level:} Central banks, financial stability boards, and domestic clearinghouses impose stringent checks to assure systemic stability concerning the activities within their specific jurisdictions.
+    \item \textbf{International Level (Basel Committee):} Beginning with its "Capital Adequacy Directive" of 1995, the \textbf{Basel Committee on Banking Supervision} advocated the widespread employment of formal methods for quantifying market risk. Their approach fundamentally endorsed the employment of the \textbf{Value at Risk (VaR)} metric through banks' sophisticated internal models.
+\end{itemize}
+
+Subsequent iterations, notably the \textbf{Basel II} frameworks (2004) and more recently \textbf{Basel III/IV}, have progressively refined these directives. The recent revisions heavily incorporated lessons extracted from the 2007-2009 collapse, aiming to curb excessive leverage and require capitalization against not just standardized VaR, but also Stressed VaR and broader, cohesive Expected Shortfall metrics that catch "tail events."
+
+\section{Primer on Value at Risk (VaR) and Associated Critiques}
+
+Driven to enormous popularity by J.P. Morgan in the early 1990s through their "RiskMetrics" system, the \textbf{Value at Risk (VaR)} endeavors to condense the holistic risk affecting a massively complex, multi-asset portfolio into a simple, single, explainable cash value understandable by standard executives.
+
+At a given statistical \textit{confidence interval} (such as $95\%$ or $99\%$), VaR attempts to quantify the maximum potential amount of loss an institution could face over a prescribed short period (for instance, $1$ day or $10$ days) assuming "normal" market conditions. The psychological ancestry of VaR links back to the "probability of ruin" theory utilized heavily by actuarial scientists and insurance firms.
+
+While theoretically simple at heart—interpretable precisely as a specific \textit{quantile} of an estimated loss distribution—its calculation procedure rapidly balloons in complexity when assessing highly non-linear products (like path-dependent exotic options) or dealing with unpredictable empirical correlations between thousands of assets in a global portfolio.
+
+Despite its industry dominance, the VaR possesses monumental theoretical and practical flaws:
+\begin{itemize}
+    \item It disregards entirely the magnitude of losses \textit{exceeding} the specific quantile target. Thus, a portfolio holding an asset that causes a \$1 million loss with 1\% probability is viewed inversely identical to one causing a \$100 billion loss with 1\% probability via the lens of a $99\%$ VaR.
+    \item It is often mathematically blind to diversification benefits, violating basic theoretical axioms of risk evaluation.
+\end{itemize}
+
+These profound deficiencies catalyzed the widespread development and endorsement of superior indicators—principally the \textbf{Expected Shortfall (ES)}—which we will meticulously explore in coming sections.
+
+\section{Key Investor Information Document (KIID) and Retail Communication}
+
+Risk measures are not strictly tools nested within the complex quantitative desks of investment banks; they are a direct tool for retail client communication as mandated by European regulatory frameworks (such as UCITS and PRIIPs).
+
+A typical retail fund is obligated to issue a \textit{Key Investor Information Document (KIID)}. The KIID exhibits a visually prominent \textbf{Synthetic Risk and Reward Indicator (SRRI)}, categorizing the fund upon a scale from 1 (lowest risk/reward) to 7 (highest risk/reward).
+
+\textit{Note on Interpretation:} The KIID graphic utilizes historically captured annualized volatility over trailing periods (commonly 5 years). A score of 1 does not infer "guaranteed safety," but rather extremely compressed volatility bands.
+
+The KIID will also append vital qualitative warnings reflecting risks that synthetic, historical quantiles inherently fail to project:
+\begin{itemize}
+    \item \textbf{Credit Event Risk:} Sudden multi-notch downgrade of counterparties.
+    \item \textbf{Liquidity Freezes:} An abrupt evaporation of quoting volume, forcing substantial pricing hits if liquidation is forcefully necessary.
+    \item \textbf{Counterparty Failure:} In specifically structured swaps or total return structures.
+    \item \textbf{Emerging Markets Profile:} Emphasizing unique external constraints such as systemic political instability or unrefined legal recourse structures, which mathematically escape simple pricing variance metrics computed over benign economic epochs.
+\end{itemize}

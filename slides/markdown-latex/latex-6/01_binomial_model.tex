@@ -1,0 +1,128 @@
+\chapter{The Binomial Model}
+
+\section{Description and Market Setup}
+
+The binomial model, largely popularized by the seminal 1979 paper by John Cox, Stephen Ross, and Mark Rubinstein, represents one of the most elegant and fundamental discrete-time models in financial mathematics. Its power lies in its simplicity: at any given time step, the asset price can only move to one of two possible states (up or down). While initially designed as a discretized approximation of the continuous-time Black-Scholes-Merton model, the binomial model stands on its own as a robust logical framework for illustrating the core principles of no-arbitrage, risk-neutral valuation, and dynamic hedging.
+
+We consider a discrete-time financial market running up to a deterministic finite horizon $T \in \mathbb{N}$. That is, trading occurs at times $t \in \{0, 1, \dots, T\}$. For the sake of simplicity and illustrative clarity, we restrict our market to contain exactly two assets: one riskless asset (e.g., a bank account or a zero-coupon bond) and $d=1$ risky asset (e.g., a stock).
+
+\subsection{The Riskless Asset}
+The riskless asset, denoted by $S^0 = (S^0_t)_{t=0,1,\dots,T}$, grows at a constant deterministic interest rate $r \geq 0$. We normalize its initial value to $S^0_0 = 1$. The value of the riskless asset at time $t$ is therefore given by the compounded growth:
+\begin{equation}
+    S^0_t = (1+r)^t, \quad \text{for } t = 0, 1, \dots, T.
+\end{equation}
+Consequently, the one-period simple return on the riskless asset at any time $t \in \{1, \dots, T\}$ is deterministic and equal to $r$:
+\begin{equation}
+    R^0_t := \frac{S^0_t - S^0_{t-1}}{S^0_{t-1}} = \frac{(1+r)^t - (1+r)^{t-1}}{(1+r)^{t-1}} = \frac{(1+r)^{t-1}((1+r) - 1)}{(1+r)^{t-1}} = r.
+\end{equation}
+
+\subsection{The Risky Asset}
+The risky asset is denoted by a stochastic process $S = (S_t)_{t=0,1,\dots,T}$. Its initial price is a known constant $S_0 = s > 0$. Its value at any subsequent time step is uncertain and modeled mathematically as a random variable. The one-period simple return of the risky asset at time $t$ is defined as:
+\begin{equation}
+    R_t := \frac{S_t - S_{t-1}}{S_{t-1}}.
+\end{equation}
+Equivalently, the price transitions recursively according to:
+\begin{equation}
+    S_t = S_{t-1}(1 + R_t).
+\end{equation}
+The defining characteristic of the binomial model is the assumption that the one-period returns $R_t$ can only take one of two possible values at any step. Specifically, we assume that with probability 1:
+\begin{equation}
+    R_t \in \{d, u\}, \quad \text{for } t=1, \dots, T
+\end{equation}
+where $d$ and $u$ are real numbers representing the "down" and "up" scenarios, respectively. To ensure that the asset price remains strictly positive ($S_t > 0$ almost surely) and that the "up" movement is strictly greater than the "down" movement, we impose the strict inequality:
+\begin{equation}
+    -1 < d < u.
+\end{equation}
+
+\section{Probability Space and Information Structure}
+
+To formally ground the binomial model in measure-theoretic probability, we must define the triplet $(\Omega, \mathcal{F}, \mathbb{P})$ and the corresponding filtration $\mathbb{F} = (\mathcal{F}_t)_{t=0}^T$.
+
+\subsection{The Sample Space}
+Since there are $T$ trading periods and exactly 2 possible outcomes for the return in each period, the sample space $\Omega$ simply consists of all possible sequences of length $T$ composed of the letters $u$ and $d$. Thus,
+\begin{equation}
+    \Omega := \{d, u\}^T.
+\end{equation}
+A typical element $\omega \in \Omega$ represents a complete path of the market up to maturity $T$, denoted as $\omega = (\omega_1, \omega_2, \dots, \omega_T)$. Since $\Omega$ is finite, it contains $2^T$ distinct paths. The natural choice for the $\sigma$-algebra $\mathcal{F}$ is the power set, which contains all possible subsets of $\Omega$:
+\begin{equation}
+    \mathcal{F} := 2^{\Omega}.
+\end{equation}
+
+\subsection{Random Variables and Filtration}
+We define the single-period return at time $t$ by evaluating the coordinate projection mapping $R_t : \Omega \to \{d, u\}$ given by:
+\begin{equation}
+    R_t(\omega) := \omega_t, \quad \text{for all } \omega = (\omega_1, \dots, \omega_T) \in \Omega.
+\end{equation}
+The strictly positive risky asset price $S_t$ is therefore explicitly defined as a cumulative product of these returns:
+\begin{equation}
+    S_t(\omega) = S_0 \prod_{k=1}^t (1 + R_k(\omega)) = S_0 \prod_{k=1}^t (1 + \omega_k).
+\end{equation}
+
+Information is revealed dynamically over time. At time $t=0$, nothing has happened yet, so the initial $\sigma$-algebra models total uncertainty to the observer outside of deterministic initial values: $\mathcal{F}_0 = \{\emptyset, \Omega\}$. For any $t \in \{1, \dots, T\}$, the information available incorporates all the historical returns observed up to time $t$. The filtration is defined to represent this information accumulation:
+\begin{equation}
+    \mathcal{F}_t := \sigma(R_1, \dots, R_t).
+\end{equation}
+
+\begin{remark}
+    By construction, $\mathcal{F}_t = \sigma(S_1, \dots, S_t)$. To verify this, notice that $S_k = S_{k-1}(1+R_k)$. If we observe the returns $\{R_1, \dots, R_t\}$, we can compute the path of prices $\{S_1, \dots, S_t\}$. Conversely, if we strictly observe prices $\{S_1, \dots, S_t\}$ along with the deterministic initial price $S_0$, we can deduce the exact historical returns recursively using $R_k = \frac{S_k}{S_{k-1}} - 1$. Because the transformation is bijective, they generate functionally identical $\sigma$-algebras. Furthermore, $\mathcal{F}_T = \mathcal{F}$, confirming that all systemic uncertainty is strictly resolved at maturity $T$.
+\end{remark}
+
+\subsection{Reference Probability Measure}
+We endow the finite measurable space $(\Omega, \mathcal{F})$ with an objective probability measure $\mathbb{P} \in \mathscr{P}(\Omega, \mathcal{F})$. Our only baseline assumption on the physical measure $\mathbb{P}$ is that every path is theoretically possible. Thus, we strongly enforce $\mathbb{P}(\{\omega\}) > 0$ for every specific path $\omega \in \Omega$.
+
+\section{No-Arbitrage and Completeness}
+
+The principle of no-arbitrage rests as the foundational qualitative assumption in modern finance. It broadly guarantees that it is impossible to orchestrate a sophisticated trading strategy to yield a strictly positive riskless profit from zero initial capital investment.
+
+\begin{theorem}[No-Arbitrage Condition in the Binomial Model]
+    The binomial model is strictly arbitrage-free if and only if the prevailing interest rate lies strictly between the boundaries of the downward and upward asset returns:
+    \begin{equation}
+        d < r < u. \label{eq:no_arb_condition}
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    We can derive this intuition quite simply from a one-period perspective. If $r \leq d < u$, the risky asset deterministically yields a return at least equal to, and frequently strictly greater than, the riskless asset. An aggressive investor could borrow limitless cash at rate $r$ to blindly buy the stock, generating a strictly positive riskless windfall. Specifically, taking a loan of $\$1$ at time $t-1$ requires repaying $(1+r)$ at time $t$. The purchased stock is physically worth $(1+R_t)$ at time $t$. The net profit resolves to $1+R_t - (1+r) = R_t - r \geq d - r \geq 0$, and with $R_t = u > r$, the specific profit stretches strictly positive. Since $\mathbb{P}(R_t=u) > 0$, an arbitrage violently materializes.
+    
+    Conversely, if $d < u \leq r$, the riskless asset rigidly dominates the risky asset. Short-selling the stock to strategically invest the proceeds into the bank account secures an identical absolute arbitrage. The only mathematical mechanism capable of eliminating these structural disparities is enforcing tight boundaries around the riskless return between the two possible states of the risky return: $d < r < u$.
+\end{proof}
+
+When the structural condition of no-arbitrage seamlessly holds, the discrete-time First Fundamental Theorem of Asset Pricing guarantees the abstract existence of an Equivalent Martingale Measure (EMM) $\mathbb{Q}$. In the deeply restricted binomial framework, this EMM exhibits a highly analytical definition. Furthermore, the abstract Second Fundamental Theorem asserts structural market completeness strictly derived from the absolute uniqueness of $\mathbb{Q}$.
+
+\begin{theorem}[Completeness and the Risk-Neutral Measure]
+    If $d < r < u$ securely holds, the binomial model represents a \textbf{complete} market. Additionally, there exists a strictly \textbf{unique} equivalent martingale measure $\mathbb{Q}$, defined functionally by the explicit property that the coordinate returns $R_1, \dots, R_T$ are aggressively independent and identically distributed (i.i.d.) under $\mathbb{Q}$ strictly satisfying:
+    \begin{equation}
+        \mathbb{Q}[R_t = u] = \frac{r - d}{u - d} := q \in (0, 1), \quad \text{for every } t = 1, \dots, T.
+    \end{equation}
+    As a consequential corollary, the underlying price process $(S_t)_{t=0, \dots, T}$ forms a structural Markov process rigidly under $\mathbb{Q}$.
+\end{theorem}
+
+\begin{proof}
+    By the canonical definition, $\mathbb{Q}$ acts as an EMM if and only if the underlying discounted price process evaluated as $\widetilde{S}_t := S_t / (1+r)^t$ behaves exactly as a martingale under $\mathbb{Q}$. Translated mathematically:
+    \begin{equation}
+        \mathbb{E}^\mathbb{Q} \left[ \widetilde{S}_t \mid \mathcal{F}_{t-1} \right] = \widetilde{S}_{t-1}.
+    \end{equation}
+    Directly substituting the recursive definition into the expectation:
+    \begin{equation}
+        \mathbb{E}^\mathbb{Q} \left[ \frac{S_{t-1}(1+R_t)}{(1+r)^t} \mid \mathcal{F}_{t-1} \right] = \frac{S_{t-1}}{(1+r)^{t-1}}.
+    \end{equation}
+    Because structural information up to time $t-1$ precisely determines $S_{t-1}$ (i.e., it holds as strongly $\mathcal{F}_{t-1}$-measurable), we definitively extract it directly from the conditional expectation:
+    \begin{equation}
+        \frac{S_{t-1}}{(1+r)^t} \mathbb{E}^\mathbb{Q} \left[ 1+R_t \mid \mathcal{F}_{t-1} \right] = \frac{S_{t-1}}{(1+r)^{t-1}}.
+    \end{equation}
+    Safely dividing $S_{t-1}$ from both symmetrical sides (given $S_{t-1} > 0$ strictly) and clearing the discounting term algebraically:
+    \begin{equation}
+        \mathbb{E}^\mathbb{Q} \left[ 1+R_t \mid \mathcal{F}_{t-1} \right] = 1+r \implies \mathbb{E}^\mathbb{Q} \left[ R_t \mid \mathcal{F}_{t-1} \right] = r.
+    \end{equation}
+    To extract profound intuition, expand this explicit expectation forcefully across the two finite states of $R_t \in \{u, d\}$. Defining conditionally $q_t(\omega) = \mathbb{Q}[R_t=u \mid \mathcal{F}_{t-1}](\omega)$. We reduce to:
+    \begin{equation}
+        q_t u + (1-q_t) d = r.
+    \end{equation}
+    Resolving strictly to locate $q_t$ evaluates rapidly:
+    \begin{equation}
+        q_t(u - d) = r - d \implies q_t = \frac{r-d}{u-d}.
+    \end{equation}
+    We powerfully note that the analytically derived probability $q_t$ manifests purely as a deterministic constant! It completely avoids inheriting any variance from historical pathing dependencies via $\mathcal{F}_{t-1}$ and remains static across all structural times $t$. We categorically conclude that under $\mathbb{Q}$, isolated one-period returns actively operate wholly independent of preceding history, proving their explicit i.i.d. nature securely under $\mathbb{Q}$. Conditioned purely upon securely maintaining $d < r < u$, the mathematical parameter guarantees boundaries strictly holding as $q \in (0,1)$.
+    
+    Given $\mathbb{Q}$ possesses solitary unique status (which mathematically locks down the underlying completeness theorem natively, definitively empowering arbitrary payoff synthesis), we subsequently resolve that sequential transitions for strictly recursive variables heavily matching $S_t = S_{t-1}(1+R_t)$ function with flawless Markov property under $\mathbb{Q}$.
+\end{proof}

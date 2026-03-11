@@ -1,0 +1,112 @@
+\chapter{Stopping Time and Stopped Processes}
+
+To rigorously define the action of ''choosing when to exercise'' an American option, we must introduce the mathematical concept of a stopping time. Because an investor relies strictly on information obtained up to the present moment, they cannot base their exercise decision on future events (i.e., they possess no clairvoyance).
+
+\section{Stopping Time}
+
+\begin{definition}[Stopping Time]
+A random variable $\tau : \Omega \to \{0, 1, \dots, T\} \cup \{+\infty\}$ is called an $\mathbb{F}$-stopping time if for every integer $t \in \{0, \dots, T\}$, the event that the stopping time has occurred by time $t$ belongs to the information set available at time $t$. Mathematically, this is expressed as:
+$$ \{\tau \leq t\} \in \mathcal{F}_t \quad \text{for every } t \in \{0, 1, \dots, T\}. $$
+\end{definition}
+
+\textbf{Interpretation (No-anticipation):}
+This elegantly formalizes the principle of no-anticipation. If an investor uses a trading strategy, they must decide whether to stop (or exercise) at time $t$ using only the information available in the market up to time $t$, encapsulated by the $\sigma$-algebra $\mathcal{F}_t$. They are forbidden from peeking at $\mathcal{F}_{t+1}$ to make a decision at time $t$.
+
+\begin{proposition}[Properties of Stopping Times]
+The following fundamental properties hold true:
+\begin{enumerate}[label=(\alph*)]
+    \item Every deterministic constant time $t \in \{0, \ldots, T\}$ is trivially a stopping time.
+    \item A random variable $\tau$ taking values in $\{0, 1, \dots, T\}$ is a stopping time if and only if its precise occurrence event is measurable at that time:
+    $$ \{\tau = t\} \in \mathcal{F}_t \quad \text{for every } t = 0, \ldots, T. $$
+    \item If $\tau_1$ and $\tau_2$ are both stopping times, their minimum $\tau_1 \wedge \tau_2 = \min(\tau_1, \tau_2)$ and their maximum $\tau_1 \vee \tau_2 = \max(\tau_1, \tau_2)$ are also valid stopping times.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Let us provide a detailed proof for these essential properties.
+\begin{enumerate}[label=(\alph*)]
+    \item Let $\tau(\omega) = t_0$ for all $\omega \in \Omega$, where $t_0$ is a constant. Then, for any $t$:
+    $$ 
+    \{\tau \leq t\} = 
+    \begin{cases} 
+    \Omega & \text{if } t_0 \leq t \\
+    \emptyset & \text{if } t_0 > t
+    \end{cases}
+    $$
+    Since both $\Omega$ and $\emptyset$ belong to every $\sigma$-algebra $\mathcal{F}_t$, the condition $\{\tau \leq t\} \in \mathcal{F}_t$ is unconditionally met.
+
+    \item Let us prove the equivalence (\textbf{if and only if}):
+    \begin{itemize}
+        \item $(\implies)$ Assume $\tau$ is a stopping time, so $\{\tau \leq t\} \in \mathcal{F}_t$. Then, the event $\{\tau = t\} = \{\tau \leq t\} \setminus \{\tau \leq t-1\}$.
+        Since $\mathbb{F}$ is a filtration, $\mathcal{F}_{t-1} \subseteq \mathcal{F}_t$, meaning $\{\tau \leq t-1\} \in \mathcal{F}_{t-1} \subseteq \mathcal{F}_t$. Since $\sigma$-algebras are closed under set difference, $\{\tau \leq t\} \setminus \{\tau \leq t-1\} \in \mathcal{F}_t$. Hence, $\{\tau = t\} \in \mathcal{F}_t$.
+        \item $(\impliedby)$ Assume $\{\tau = k\} \in \mathcal{F}_k$ for all $k$. We want to show $\{\tau \leq t\} \in \mathcal{F}_t$. Note that:
+        $$ \{\tau \leq t\} = \bigcup_{k=0}^t \{\tau = k\} $$
+        For every $k \leq t$, we have $\{\tau = k\} \in \mathcal{F}_k \subseteq \mathcal{F}_t$. Since $\sigma$-algebras are closed under countable unions, it follows that their union must belong to $\mathcal{F}_t$. Thus, $\{\tau \leq t\} \in \mathcal{F}_t$.
+    \end{itemize}
+
+    \item Consider the minimum $\tau_1 \wedge \tau_2$. For $\{ \tau_1 \wedge \tau_2 > t \}$, this occurs if and only if both stopping times are strictly greater than $t$:
+    $$ \{\tau_1 \wedge \tau_2 > t\} = \{\tau_1 > t\} \cap \{\tau_2 > t\} $$
+    Taking the complement, we have:
+    $$ \{\tau_1 \wedge \tau_2 \leq t\} = \{\tau_1 \leq t\} \cup \{\tau_2 \leq t\} $$
+    Since both $\tau_1$ and $\tau_2$ are stopping times, both sets on the RHS are in $\mathcal{F}_t$. The union is also in $\mathcal{F}_t$. Thus $\tau_1 \wedge \tau_2$ is a stopping time.
+
+    For the maximum $\tau_1 \vee \tau_2$, this is even more straightforward:
+    $$ \{\tau_1 \vee \tau_2 \leq t\} = \{\tau_1 \leq t\} \cap \{\tau_2 \leq t\} $$
+    The intersection of two sets in $\mathcal{F}_t$ is also in $\mathcal{F}_t$. Thus $\tau_1 \vee \tau_2$ is a stopping time.
+\end{enumerate}
+\end{proof}
+
+\section{Stopped Processes (Processus Arrêté)}
+
+If we monitor a stochastic process $(X_t)_{0 \leq t \leq T}$ (like an option value or a stock price) and we decide to halt our observation or trading at a specific random stopping time $\tau$, we create a new mathematically defined process called the stopped process.
+
+\begin{definition}[Stopped Process]
+Let $\tau$ be a stopping time and let $X = (X_t)_{t \in \{0, \dots, T\}}$ be a stochastic process. The process stopped at $\tau$, denoted by $X^\tau = (X_{t \wedge \tau})_{0 \leq t \leq T}$, is defined point-wise for all $\omega \in \Omega$ as:
+$$
+X_{t \wedge \tau}(\omega) =
+\begin{cases}
+X_t(\omega) & \text{if } t < \tau(\omega) \\
+X_{\tau(\omega)}(\omega) & \text{if } t \geq \tau(\omega)
+\end{cases}
+$$
+\end{definition}
+This essentially means that the process evolves normally up to the random time $\tau$, after which it is ''frozen'' and takes a constant value equal to the value the process had at precisely the stopping time instance $X_\tau$.
+
+One of the most powerful theorems relating to stopping times revolves around the preservation of martingale properties. Doob's Optional Stopping Theorem (for bounded variables) assures us that martingales have no deterministic drift over time, even when stopped randomly, as long as the stopping rule does not ''cheat'' by looking into the future.
+
+\begin{proposition}[Preservation of Martingale Properties]
+Let $(X_t)_{t=0, \dots, T}$ be a stochastic process and let $\tau$ be a stopping time. Then the stopped process $(X_{t \wedge \tau})_{t=0, \dots, T}$ inherits the martingale properties of the original process. Specifically:
+\begin{enumerate}[label=(\alph*)]
+    \item If $(X_t)_t$ is an $\mathbb{F}$-adapted process, then the stopped process $(X_{t \wedge \tau})_t$ remains $\mathbb{F}$-adapted.
+    \item If $(X_t)_t$ is a martingale, the stopped process $(X_{t \wedge \tau})_t$ is a martingale.
+    \item If $(X_t)_t$ is a submartingale, the stopped process $(X_{t \wedge \tau})_t$ is a submartingale.
+    \item If $(X_t)_t$ is a supermartingale, the stopped process $(X_{t \wedge \tau})_t$ is a supermartingale.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+While a fully rigorous general proof involves indicator functions and optional sampling paradigms, we can construct an intuitive algebraic proof for discrete time.
+
+First, observe that we can rewrite the increment of the stopped process algebraically:
+$$ X_{t \wedge \tau} - X_{(t-1) \wedge \tau} = (X_t - X_{t-1}) \mathbf{1}_{\{\tau \geq t\}} $$
+Why? If $\tau \geq t$, the stopped process has not frozen yet, so both side match: $X_t - X_{t-1}$. 
+If $\tau < t$ (i.e. $\tau \leq t-1$), the process has already frozen. Thus $X_{t \wedge \tau} = X_{\tau}$ and $X_{(t-1) \wedge \tau} = X_\tau$, making the increment $0$, matching the right side where the indicator is $0$.
+
+Now, let's take the conditional expectation of the stopped process:
+\begin{align*}
+\mathbb{E}\left[ X_{t \wedge \tau} \mid \mathcal{F}_{t-1} \right] &= \mathbb{E}\left[ X_{(t-1) \wedge \tau} + (X_t - X_{t-1}) \mathbf{1}_{\{\tau \geq t\}} \mid \mathcal{F}_{t-1} \right] \\
+&= X_{(t-1) \wedge \tau} + \mathbb{E}\left[ (X_t - X_{t-1}) \mathbf{1}_{\{\tau \geq t\}} \mid \mathcal{F}_{t-1} \right] \\
+\end{align*}
+Because $\tau$ is a stopping time, the event $\{\tau \geq t\}$ is exactly the complement of $\{\tau \leq t-1\}$. Since $\{\tau \leq t-1\} \in \mathcal{F}_{t-1}$, its complement $\{\tau \geq t\}$ is also in $\mathcal{F}_{t-1}$. 
+Therefore, the indicator function $\mathbf{1}_{\{\tau \geq t\}}$ is $\mathcal{F}_{t-1}$-measurable. By standard properties of conditional expectation, it can be pulled out of the expectation:
+$$
+\mathbb{E}\left[ X_{t \wedge \tau} \mid \mathcal{F}_{t-1} \right] = X_{(t-1) \wedge \tau} + \mathbf{1}_{\{\tau \geq t\}} \mathbb{E}\left[ X_t - X_{t-1} \mid \mathcal{F}_{t-1} \right]
+$$
+
+This equation completely resolves the proof for cases (b), (c), and (d):
+\begin{itemize}
+    \item \textbf{(b) Martingale:} $\mathbb{E}[X_t - X_{t-1} \mid \mathcal{F}_{t-1}] = 0$. Hence, $\mathbb{E}[X_{t \wedge \tau} \mid \mathcal{F}_{t-1}] = X_{(t-1) \wedge \tau}$. The stopped process is a martingale.
+    \item \textbf{(c) Submartingale:} $\mathbb{E}[X_t - X_{t-1} \mid \mathcal{F}_{t-1}] \geq 0$. Because $\mathbf{1}_{\{\tau \geq t\}} \geq 0$, the second term is non-negative. Hence, $\mathbb{E}[X_{t \wedge \tau} \mid \mathcal{F}_{t-1}] \geq X_{(t-1) \wedge \tau}$. The stopped process is a submartingale.
+    \item \textbf{(d) Supermartingale:} $\mathbb{E}[X_t - X_{t-1} \mid \mathcal{F}_{t-1}] \leq 0$. Thus, $\mathbb{E}[X_{t \wedge \tau} \mid \mathcal{F}_{t-1}] \leq X_{(t-1) \wedge \tau}$. The stopped process is a supermartingale.
+\end{itemize}
+\end{proof}

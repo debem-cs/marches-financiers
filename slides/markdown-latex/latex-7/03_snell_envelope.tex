@@ -1,0 +1,109 @@
+\chapter{Snell Envelope and Optimal Stopping}
+
+The Snell envelope is a profound mathematical construct in stochastic analysis, directly formulated to solve optimal stopping problems. We have already seen its precursor intuitively in the dynamic programming equation of the American option.
+
+\section{Definition and Construction}
+
+Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a generic probability space equipped with a discrete filtration $\mathbb{F} = (\mathcal{F}_{n})_{n=0, \dots, N}$. Let $(Z_n)_{n=0, \dots, N}$ be an $\mathbb{F}$-adapted process taking positive values. In our financial context, you should immediately think of $\mathbb{P}$ as the risk-neutral measure $\mathbb{Q}$, $n$ as the time step $t$, and $Z_n$ as the discounted payoff $\tilde{H}_t$, although the Snell envelope formulation is entirely general.
+
+\begin{definition}[Snell Envelope]
+The Snell envelope of the process $(Z_n)_{n=0, \dots, N}$ is the stochastic process $(E_n)_{n=0, \dots, N}$ defined recursively backwards in time by the following dynamic programming equations:
+$$
+\begin{cases}
+E_N = Z_N, \\
+E_n = \max\left( Z_n, \, \mathbb{E}\left[ E_{n+1} \mid \mathcal{F}_n \right] \right), \quad n = 0, \ldots, N-1.
+\end{cases}
+$$
+\end{definition}
+
+As derived intuitively in the first section regarding discounted prices, this construction naturally leads to a minimal bounding property.
+
+\begin{theorem}[Smallest Dominating Supermartingale]
+The Snell envelope $(E_n)_{n=0, \dots, N}$ is a supermartingale. Furthermore, it is the \textit{smallest} supermartingale that dominates $(Z_n)_{n=0, \dots, N}$ from above.
+\end{theorem}
+
+\begin{proof}
+By definition of the Snell envelope, $E_n = \max( Z_n, \mathbb{E}[ E_{n+1} \mid \mathcal{F}_n ] )$. 
+Since the maximum of two numbers is greater than or equal to both numbers, it trivially holds that:
+\begin{enumerate}
+    \item $E_n \geq \mathbb{E}[ E_{n+1} \mid \mathcal{F}_n ]$, proving $(E_n)$ is a supermartingale.
+    \item $E_n \geq Z_n$, proving $(E_n)$ dominates the process $(Z_n)$ from above.
+\end{enumerate}
+
+To prove it is the \textbf{smallest} such process, let $(M_n)_{n=0,\dots,N}$ be \textit{any} other supermartingale that dominates $(Z_n)$ from above (i.e., $M_n \geq Z_n$ for all $n$). We proceed by backward induction down from $N$:
+\begin{itemize}
+    \item \textbf{Base Case ($n = N$):} $E_N = Z_N$. Since $M_N \geq Z_N$, we have $M_N \geq E_N$.
+    \item \textbf{Inductive Step:} Assume $M_{n+1} \geq E_{n+1}$ almost surely. We must prove $M_n \geq E_n$.
+    Because $(M_n)$ is a supermartingale, $M_n \geq \mathbb{E}[ M_{n+1} \mid \mathcal{F}_n ]$. 
+    By the inductive hypothesis and the monotonicity of conditional expectations:
+    $$ \mathbb{E}[ M_{n+1} \mid \mathcal{F}_n ] \geq \mathbb{E}[ E_{n+1} \mid \mathcal{F}_n ] $$
+    So, $M_n \geq \mathbb{E}[ E_{n+1} \mid \mathcal{F}_n ]$. 
+    By the dominating assumption, we also have $M_n \geq Z_n$. 
+    Therefore, since $M_n$ is greater than both components inside the maximum:
+    $$ M_n \geq \max\left( Z_n, \, \mathbb{E}\left[ E_{n+1} \mid \mathcal{F}_n \right] \right) = E_n $$
+\end{itemize}
+Thus, $M_n \geq E_n$ for all $n$, confirming $E_n$ is indeed the smallest dominating supermartingale.
+\end{proof}
+
+\section{The Optimal Stopping Problem}
+
+The fundamental problem we are trying to solve is optimizing an expected payoff if we can stop at any valid stopping time. 
+
+Let $\mathcal{V}(0, N)$ denote the collection of all possible stopping times taking values in $\{0, 1, \ldots, N\}$. We want to find a stopping time $\nu_0$ that maximizes the expected payoff evaluated at time $0$:
+$$ \sup_{\nu \in \mathcal{V}(0,N)} \mathbb{E}\left[ Z_\nu \mid \mathcal{F}_0 \right] $$
+
+This theoretical supremum represents the highest average value an optimal participant could extract from the game. How do we find this optimal stopping time $\nu_0$? The Snell envelope provides the exact recipe.
+
+\begin{definition}[Optimal Stopping Time]
+Define the random variable $\nu_0$ as the \textit{first} time the Snell envelope process equals the underlying payoff process:
+$$ \nu_0 = \inf \{ n \geq 0 : E_n = Z_n \} $$
+\end{definition}
+
+\begin{lemma}
+$\nu_0$ is a valid stopping time, and the stopped Snell envelope process $(E_{n \wedge \nu_0})_{n=0, \dots, N}$ is a true martingale.
+\end{lemma}
+
+\textbf{Intuition for the Martingale property:} Recall that $E_n = \max(Z_n, \mathbb{E}[E_{n+1}\mid \mathcal{F}_n])$. As long as we haven't stopped (i.e., for $n < \nu_0$), it means $E_n > Z_n$. Hence, the maximum evaluates strictly to the expectation:
+$$ E_n = \mathbb{E}[E_{n+1} \mid \mathcal{F}_n] \quad \text{for } n < \nu_0 $$
+This is the definition of a martingale! The Snell Envelope stops "decaying" (losing supermartingale value) while we hold out for the optimal time. 
+
+\begin{theorem}[Resolution of the Optimal Stopping Problem]
+The stopping time $\nu_0$ satisfies the optimal stopping problem. Evaluated at time 0, we have:
+$$ E_0 = \mathbb{E}\left[ Z_{\nu_0} \mid \mathcal{F}_0 \right] = \sup_{\nu \in \mathcal{V}(0,N)} \mathbb{E}\left[ Z_\nu \mid \mathcal{F}_0 \right] $$
+\end{theorem}
+
+\begin{proof}
+Let's break this down into two necessary steps:
+\begin{enumerate}
+    \item \textbf{Show that $E_0 \geq \mathbb{E}[Z_\nu \mid \mathcal{F}_0]$ for \textit{any} stopping time $\nu$:}
+    Because $(E_n)$ is a supermartingale, Optional Stopping tells us that $\mathbb{E}[E_\nu \mid \mathcal{F}_0] \leq E_0$. 
+    Furthermore, because the Snell envelope dominates $Z_n$ everywhere, $E_\nu \geq Z_\nu$. 
+    Thus:
+    $$ E_0 \geq \mathbb{E}[E_\nu \mid \mathcal{F}_0] \geq \mathbb{E}[Z_\nu \mid \mathcal{F}_0] $$
+    Since this holds for any $\nu$, it must hold for the supremum:
+    $$ E_0 \geq \sup_{\nu \in \mathcal{V}(0,N)} \mathbb{E}[ Z_\nu \mid \mathcal{F}_0 ] $$
+    
+    \item \textbf{Show that $\nu_0$ achieves this value exactly:}
+    From the previous Lemma, $(E_{n \wedge \nu_0})$ is a martingale. Therefore, its expectation does not drift:
+    $$ E_0 = \mathbb{E}[E_{\nu_0 \wedge N} \mid \mathcal{F}_0] $$
+    But since $\nu_0$ can be at most $N$ (because $E_N = Z_N$, ensuring the set $\{n: E_n = Z_n\}$ is never empty), $\nu_0 \wedge N = \nu_0$.
+    Thus:
+    $$ E_0 = \mathbb{E}[E_{\nu_0} \mid \mathcal{F}_0] $$
+    By definition of $\nu_0$, evaluated precisely at time $\nu_0$, $E_{\nu_0} = Z_{\nu_0}$. Therefore:
+    $$ E_0 = \mathbb{E}[Z_{\nu_0} \mid \mathcal{F}_0] $$
+\end{enumerate}
+Combining both parts shows that $E_0$ is the supremum and $\nu_0$ is the optimal stopping time achieving that supremum.
+\end{proof}
+
+\subsection{Generalization to Intermediate Times}
+
+This logic can be applied not just at time 0, but starting from any time $n$. We can define intermediate optimal stopping times $\nu_n$ indicating the optimal time to stop given we have already reached time $n$ without stopping.
+
+We can define it as:
+$$ \nu_n := \inf \left\{ k \geq n : E_k = Z_k \right\} $$
+
+Analogous to the time 0 case, we find the dynamic value:
+$$ E_n = \sup_{\nu \in \mathcal{V}(n,N)} \mathbb{E}\left[ Z_\nu \mid \mathcal{F}_n \right] = \mathbb{E}\left[ Z_{\nu_n} \mid \mathcal{F}_n \right] $$
+where $\mathcal{V}(n, N)$ represents the collection of stopping times taking values in the future range $\{n, n+1, \ldots, N\}$.
+
+This concludes the pure mathematical framework. The value of an optimally timed opportunity is exactly its Snell envelope. We will now apply this rigorously back to American Options.

@@ -1,0 +1,189 @@
+\chapter{Axiomatic Definitions and Properties of Risk Measures}
+
+To navigate risk analytically, we must transition from vague, abstract notions of "danger" toward an exact, measurable numeric representation. The mathematical framework developed extensively over the previous two decades provides an axiomatic set of conditions that an objectively "good" risk measure should satisfy. 
+
+\section{Framework and Notation}
+
+We focus primarily on addressing the risk affecting the mark-to-market value of a specified long position. Let us formulate the base variables upon a complete measurable space $(\Omega, \mathcal{F})$. Then we define:
+\begin{itemize}
+    \item $V_0$: the currently known deterministic value (at time $t=0$) of the portfolio.
+    \item $V_h$: the stochastic random variable outlining the terminal value of the portfolio evaluated precisely at a continuous horizon $h$ (for example, $h = 10$ trading days).
+    \item $L := V_0 - V_h$: the theoretical \textbf{loss} between $t=0$ and terminal horizon $t=h$. Thus, $L$ acts as a random variable where a strictly positive realization represents a pure monetary loss, whilst a negative realization mathematically signifies a monetary gain.
+\end{itemize}
+
+The fundamental danger inherent in the portfolio is dictated totally by the probabilistic spectrum of $L$.
+By denoting its Cumulative Distribution Function as $F_L(x) = \mathbb{P}(L \leq x)$, we attempt to construct an indicator function, called a \textit{risk measure}, commonly dubbed $\rho(L)$, that condenses the portfolio's entire riskiness profile into a singular, unambiguous scalar number. 
+
+Trivially, the "riskier" an entire position behaves structurally—involving higher likelihoods of catastrophic $L > 0$ realizations—the numerically higher $\rho(L)$ must be. We can contextualize the output of any given generic $\rho(L)$ functionally via absolute capital requirements:
+\begin{enumerate}
+    \item $\rho(L) > 0$: The portfolio is overly risky. $\rho(L)$ fundamentally signifies the exact amount of buffer cash capital the participating agent \textbf{must inject} directly alongside the risky position to downgrade its risk level such that it behaves as a perfectly acceptable position per internal protocols.
+    \item $\rho(L) = 0$: The portfolio behaves at the precise equilibrium of accepted boundaries. It flawlessly satisfies immediate capital risk requisites without excess cushion.
+    \item $\rho(L) < 0$: The portfolio behaves exceptionally safely. The output $-\rho(L)$ structurally represents the surplus monetary quantity that can be cleanly \textbf{extracted} away from the position without violating capital requirement stipulations, allowing that cash to be invested into higher-yielding ventures.
+\end{enumerate}
+
+\section{Preliminary Examples of Proposed Risk Measures}
+
+We constrain our analysis exclusively to bounded financial scenarios. We define $L^\infty$ as the constrained set of theoretical positions $L$ strictly conforming to the bound:
+$$
+\|L\|_\infty = \sup_{\omega \in \Omega} |L(\omega)| < +\infty.
+$$
+
+Let any general function $\rho: A \subseteq L^\infty \to \mathbb{R}$ dictate our "risk". Across classical financial literature, numerous simplistic attempts have populated risk departments:
+
+\begin{enumerate}
+    \item \textbf{Maximum Loss Method:} $\rho_{\max}(L) = \sup_{\omega \in \Omega} L(\omega)$. This evaluates purely the worst-case imaginable scenario. Unfortunately, this forms a horribly terrible implementation as it completely neuters trading; its overarching focus on infinite disaster necessitates locking up vast sums of idle collateral, making it "too conservative."
+    \item \textbf{Expected Loss:} $\rho(L) = \mathbb{E}_{\mathbb{P}}[L]$ explicitly dictates risk according to the average expectation under probability measure $\mathbb{P}$. Alternatively, a broader extension encompasses supreme uncertainty via $\rho(L) = \sup_{\mathbb{P} \in \mathcal{P}} \mathbb{E}_{\mathbb{P}}[L]$, with $\mathcal{P} \subset \mathcal{M}_1$ modeling ambiguity around exact probability measures.
+    \item \textbf{Quadratic Risk and Variance:} Taking theoretical roots from standard Modern Portfolio Theory (Markowitz), utilizing the quadratic risk $\mathbb{E}[L^2]$ or simply variance $\text{Var}[L] = \mathbb{E}[L^2] - (\mathbb{E}[L])^2$.
+    \item \textbf{Semi-Variance:} Fixing standard variance penalties on gains by strictly isolating adverse fluctuations: $\mathbb{E}[L_+^2] - (\mathbb{E}[L_+])^2$ where $L_+ = \max\{L, 0\}$.
+    \item \textbf{Value at Risk (VaR):} Highly standardized framework capturing the explicit tail quantile of the expected loss parameter, functionally given as $\text{VaR}_\alpha(L) = F_L^{-1}(\alpha)$.
+\end{enumerate}
+
+To understand which amongst these proposed methods behaves mathematically "soundly," the academic community led famously by Artzner, Delbaen, Eber, and Heath (1999) codified a formal suite of specific axiomatic parameters.
+
+\section{Monetary Risk Measures and Properties}
+
+\begin{definition}[Monetary Risk Measure]
+A function $\rho: L^\infty \to \mathbb{R}$ mathematically constitutes a \textbf{monetary risk measure} if it satisfies two distinct fundamental axioms:
+
+\begin{enumerate}
+    \item \textbf{Monotonicity:} By definition, an inherently riskier asset necessitates a heavier risk metric.
+    $$
+    \text{If } L_1 \leq L_2 \text{ across all realizations, then } \rho(L_1) \leq \rho(L_2).
+    $$
+    \item \textbf{Cash Invariance (Translation Invariance):} Adding pure, risk-free monetary amounts to the portfolio linearly depletes the risk equivalent.
+    $$
+    \forall m \in \mathbb{R}, \quad \rho(L + m) = \rho(L) + m.
+    $$
+\end{enumerate}
+\end{definition}
+
+One beautiful mechanistic consequence produced directly by the \textit{Cash Invariance} property is that it allows us to precisely balance capital buffers. By simply injecting exactly $\rho(L)$ of riskless cash collateral right into the position, the net risk metric collapses beautifully to zero:
+$$
+\rho(L - \rho(L)) = \rho(L) - \rho(L) = 0.
+$$
+This directly satisfies the premise that the risk measure evaluates total requisite capital precisely. Note that the sign flips because $m = -\rho(L)$ acts as a loss mitigator (a direct cash influx subtracts away from total evaluated potential loss).
+
+\subsection{Normalization}
+
+Typically, we strictly postulate a boundary condition named \textbf{Normalization}, wherein carrying absolutely nothing carries absolutely zero financial risk: $\rho(0) = 0$.
+Should a measure $\rho$ arbitrarily deviate here, we easily standardize it by forging $\tilde{\rho}(x) = \rho(x) - \rho(0)$. Applying normalization concurrent with basic translation invariance swiftly guarantees that a pristine risk-free position holding solely rigid cash $k$ possesses exactly risk $k$:
+$$
+\text{If } k \in \mathbb{R}, \text{ then } \rho(k) = \rho(0 + k) = \rho(0) + k = k.
+$$
+
+\subsection{Lipschitz Continuity}
+
+Every properly defined monetary risk measure automatically shares extremely strong continuous behavior, bound tightly within the parameters enveloping the loss deviations.
+
+\begin{proposition}[Lipschitz Property]
+Every strictly monetary risk measure $\rho$ follows absolute Lipschitz continuity:
+$$
+|\rho(L_2) - \rho(L_1)| \leq \|L_2 - L_1\|_\infty.
+$$
+\end{proposition}
+
+\begin{proof}
+Consider two arbitrary loss profiles $L_1$ and $L_2$. To formalize the limits structurally, we can bound the raw differential:
+$$
+L_2 = L_1 + (L_2 - L_1) \leq L_1 + \|L_2 - L_1\|_\infty.
+$$
+Invoking straightforward Monotonicity juxtaposed simultaneously upon Cash Invariance:
+$$
+\rho(L_2) \leq \rho(L_1 + \|L_2 - L_1\|_\infty) = \rho(L_1) + \|L_2 - L_1\|_\infty.
+$$
+Equating algebraically forces the boundary shift:
+$$
+\rho(L_2) - \rho(L_1) \leq \|L_2 - L_1\|_\infty.
+$$
+Symmetrically swapping the positions symmetrically enforces $L_1 = L_2 + (L_1 - L_2) \leq L_2 + \|L_1 - L_2\|_\infty$. Hence:
+$$
+\rho(L_1) - \rho(L_2) \leq \|L_1 - L_2\|_\infty \implies \rho(L_2) - \rho(L_1) \geq -\|L_2 - L_1\|_\infty.
+$$
+This binds both sides seamlessly matching precisely the formulated Lipschitz boundary:
+$$
+-\|L_2 - L_1\|_\infty \leq \rho(L_2) - \rho(L_1) \leq \|L_2 - L_1\|_\infty.
+$$
+\end{proof}
+
+\section{Convexity, Homogeneity, and Coherence}
+
+Moving beyond baseline translation mechanics, managing wide-sweeping portfolios emphasizes critically the interactions among diversified assets.
+
+\begin{definition}[Convexity]
+A monetary risk measure $\rho$ exhibits \textbf{convexity} if, for any scaling parameter $\theta \in [0, 1]$:
+$$
+\rho(\theta L_1 + (1 - \theta) L_2) \leq \theta \rho(L_1) + (1 - \theta) \rho(L_2).
+$$
+\end{definition}
+
+This axiom encapsulates the quintessential bedrock of modern financial dogma: \textit{Diversification universally reduces total risk}. A convex structure strictly incentivizes merging decoupled portfolios rather than keeping massive concentrated islands of equity separated.
+
+\begin{definition}[Positive Homogeneity]
+A function maintains \textbf{positive homogeneity} mapping linearly if:
+$$
+\forall \lambda \geq 0, \quad \rho(\lambda L) = \lambda \rho(L).
+$$
+\end{definition}
+
+In genuine extreme-scale liquidity events, positive homogeneity occasionally fails physically—selling ten times the equity block volume often induces chaotic spread collapses exceeding exactly ten times standard slippage loss, causing actual risk equations mapping closer to $\rho(\lambda L) \geq \lambda \rho(L)$ for large $\lambda \geq 1$. This non-linear exacerbation characterizes \textbf{Concentration Risk}. However, within idealized baseline calculations, homogeneity simplifies broad assessments effectively.
+
+\subsection{Coherent Risk Measures}
+
+We culminate these foundational axioms to explicitly define the "gold standard" of quantitative risk functions.
+
+\begin{definition}[Coherent Risk Measure]
+A function $\rho: L^\infty \to \mathbb{R}$ rightfully claims the theoretical title of a \textbf{Coherent Risk Measure} if it satisfies completely the following four interdependent requirements:
+\begin{enumerate}
+    \item \textbf{Monotone} (increasing relative to riskier profiles).
+    \item \textbf{Cash Invariant} (direct linear subtraction via cash offsets).
+    \item \textbf{Positively Homogeneous} (linearly scalable relative offsets).
+    \item \textbf{Convex} (satisfies diversification bonuses).
+\end{enumerate}
+\end{definition}
+
+A profound equivalence binds together Positive Homogeneity and Convexity directly into the simplified condition of Subadditivity.
+
+\begin{proposition}[Subadditivity equivalence]
+Assume $\rho$ strictly is definitively established as positively homogeneous. Under this explicit structural assumption, the function $\rho$ is definitively Convex if and only if it strictly aligns with widespread \textbf{Subadditivity}:
+$$
+\rho(L_1 + L_2) \leq \rho(L_1) + \rho(L_2).
+$$
+\end{proposition}
+
+\begin{proof}
+First, suppose $\rho$ strictly satisfies broad subadditivity mappings. Using subadditivity immediately applied over a linear convex blend structured across $\theta \in [0, 1]$:
+$$
+\rho(\theta L_1 + (1 - \theta)L_2) \leq \rho(\theta L_1) + \rho((1 - \theta)L_2).
+$$
+Because the function inherently satisfies positive homogeneity cleanly as $\lambda$ operators:
+$$
+\rho(\theta L_1) + \rho((1 - \theta)L_2) = \theta \rho(L_1) + (1 - \theta)\rho(L_2).
+$$
+Transitively mapping this yields $\rho(\theta L_1 + (1 - \theta) L_2) \leq \theta \rho(L_1) + (1 - \theta) \rho(L_2)$, confirming explicit convexity.
+
+Conversely, assume standard convexity fully applies overall. Choose specifically the exact scaling modifier $\theta = \frac{1}{2}$. We rewrite algebraically:
+$$
+\rho\left(\frac{1}{2} L_1 + \frac{1}{2} L_2\right) \leq \frac{1}{2}\rho(L_1) + \frac{1}{2}\rho(L_2).
+$$
+Now extract simultaneously across the homogeneity vector constraint referencing $\lambda = \frac{1}{2}$:
+$$
+\rho\left(\frac{1}{2}(L_1 + L_2)\right) = \frac{1}{2}\rho(L_1 + L_2).
+$$
+Hence plugging effectively yields directly the target equivalency parameter boundaries:
+$$
+\frac{1}{2}\rho(L_1 + L_2) \leq \frac{1}{2}\rho(L_1) + \frac{1}{2}\rho(L_2) \implies \rho(L_1 + L_2) \leq \rho(L_1) + \rho(L_2).
+$$
+This establishes strictly validated subadditivity behavior.
+\end{proof}
+
+\subsection{Categorizing Initial Examples via Coherence Axioms}
+
+To conclude the axiomatic evaluations, let us broadly review the initial theoretical baseline components suggested earlier against the rigid "coherent" mathematical constraints:
+
+\begin{itemize}
+    \item The absolute supreme loss estimator $\rho_{\max}(L)$ acts completely securely as a fully \textbf{coherent} measure. As stated previously, it serves explicitly as the \textit{most conservative} conceptual coherent bound applicable. By proxy parameter logic, for identically evaluated loss fields, if generic metric $\eta$ also behaves coherently, it must functionally obey the systemic cap parameter constraint $\eta(L) \leq \rho_{\max}(L)$.
+    \item The maximal expected loss equation given over varying ambiguous subsets $\rho(L) = \sup_{\mathbb{P} \in \mathcal{P}} \mathbb{E}_{\mathbb{P}}[L]$ perfectly mirrors \textbf{coherent} functional mappings simultaneously across all conditions.
+    \item Applying raw unassigned \textit{Quadratic Risk} drastically violates coherence, frequently punishing large offsets aggressively due explicitly to lacking base homogeneity constraints mathematically.
+    \item Utilizing classical \textit{Variance} entirely fails coherence mandates definitively; fundamentally, standard variance utterly lacks necessary overarching translation invariance characteristics (dumping constant cash into a profile doesn't magically shrink variance bounds uniformly). Identically, the standard deviation broadly shares mapping violations.
+    \item Finally, while standard \textit{Value at Risk (VaR)} rigidly captures proper increasing and linearly homogenizing shifts cleanly combined with invariant offsets, it disastrously generally violates structural \textbf{Convexity bounds (Subadditivity)} constraints. Subadditivity failures fundamentally break portfolio logic structures systematically, a critical fatal flaw examined broadly in ensuing sections.
+\end{itemize}

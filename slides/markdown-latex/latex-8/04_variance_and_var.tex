@@ -1,0 +1,175 @@
+\chapter{Evaluations of Standard Risk Measures: Variance and Value at Risk}
+
+The search for an ideal, functional risk measure involves numerous iterations and continuous theoretical evaluations to discern fatal flaws under differing market conditions. We will historically analyze the foundation laid by Variance, subsequently tearing down its flaws, which led directly to the explosive popularity—and eventual critique—of Value at Risk (VaR).
+
+\section{The Variance Paradigm}
+
+The first truly synthetic indicator formulating portfolio risk arrived categorically via Harry Markowitz's Modern Portfolio Theory (1952). The Markowitz thesis aggressively advocated that investors primarily must care regarding the total holistic risk affecting a comprehensive portfolio and correctly acknowledge how offsetting asset covariances drive explicit diversification benefits. 
+
+The mechanism utilized heavily by this original theory anchored tightly upon the explicit \textbf{Standard Deviation} (or Variance evaluated quadratically) governing portfolio valuation mapping precisely per a \textit{Mean-Variance} decision paradigm:
+$$
+\sigma_L = \sqrt{\text{Var}(L)}.
+$$
+
+\subsection{Fundamental Drawbacks of Variance}
+
+Although computationally straightforward and natively handling explicit diversification (by factoring generic correlation matrices naturally into joint variances), standard deviation harbors mathematically toxic structural disadvantages regarding true financial "danger."
+
+\textbf{Symmetry Nullification:} True financial risk focuses aggressively upon systemic downside failure. Standard deviation symmetrically interprets \textit{every} solitary deviation separated far from the mean as inherently "risky". A sudden, massive, unexpected monetary \textit{gain} behaves mathematically equivalently identically to a massive monetary \textit{loss} of exactly the same raw numeric magnitude under pure quadratic evaluation constraints.
+
+Without complete external confirmation defining the exact shape controlling the $L$ distribution entirely, standard deviation metrics fail unambiguously to correlate strictly with genuine loss probabilities.
+\begin{enumerate}
+    \item \textit{Graphical Counter-Example:} Consider two symmetrically inverted density profiles $L$ and $L'$ featuring perfectly equivalent means ($\mu < 0$) alongside matching standard deviations ($\sigma$). Suppose $L$ isolates the profile strictly bounded entirely into the negative quadrant (meaning positive probability bounds cap completely at exactly zero loss). Standard variance aggressively treats $L$ and $L'$ equally "risky", blatantly ignoring that holding profile $L$ strictly shields an investor comprehensively from any true financial destruction ($L > 0$), unlike $L'$.
+\end{enumerate}
+
+\begin{example}[Normal versus Log-Normal Distributions]
+Assume a portfolio loss random variable $L$ follows broadly a theoretical \textbf{Normal Distribution} dictating an inherent expected average mapping to a generalized gain of $1$ Million Euros (thus precisely meaning $\mu_L = -1 \text{ M \euro{}}$). Further assume its explicit tracking standard deviation holds $\sigma_L = 3 \text{ M \euro{}}$. Evaluating cleanly utilizing a standardized Gaussian variable $N$:
+$$
+\mathbb{P}(L > 2) = \mathbb{P}\left(\frac{L - (-1)}{3} > \frac{2 - (-1)}{3}\right) = \mathbb{P}(N > 1) = 1 - \Phi(1) \approx 0.1587.
+$$
+Under the normality assumption, the trader faces an enormous $15.87\%$ probability that direct realized losses aggressively burst past $2 \text{ M \euro{}}$. 
+
+Conversely, directly override the assumption modeling the asset gain profile $G = -L$ utilizing a pure \textbf{Log-Normal Distribution}. A Log-Normal bounds naturally above pure zero constraints ($G > 0$). Instantly, the rigid loss structure universally collapses to precisely zero probability facing overall loss magnitudes exceeding $0$ Euros ($\mathbb{P}(L > 0) = 0$).
+
+Therefore, enforcing strict Variance measures upon distributions strictly violating Gaussian normality constraints actively propagates massively skewed risk bounds, structurally poisoning management decision vectors.
+\end{example}
+
+\section{Value at Risk (VaR)}
+
+Introduced prominently into commercial trading hubs fundamentally by J.P. Morgan's RiskMetrics methodology spanning the early 1990s, the Value at Risk attempts mathematically to replace crude symmetric variance with precisely tailored distribution boundary targeting.
+
+\subsection{Definition and Basic Interpretation}
+
+\begin{definition}[Value at Risk]
+The \textbf{Value at Risk} evaluated strictly at mapping horizon timescale $h$ targeting probability tolerance threshold bound $\alpha \in (0, 1)$ precisely encapsulates the mathematical $\alpha$-quantile of the underlying generated loss variable $L$:
+$$
+\text{VaR}_\alpha(L) = F_L^{-1}(\alpha), \quad \text{where } F_L(x) = \mathbb{P}(L \leq x).
+$$
+\end{definition}
+
+This straightforwardly denotes mathematically that total generated financial loss manifesting broadly throughout the temporal period $h$ will rigidly hold bounds strictly beneath the quantified VaR constraint accompanying overall mapping probability $\alpha$ (which routinely operates pegged around $95\%$ or $99\%$ internally):
+$$
+\mathbb{P}(L \leq \text{VaR}_\alpha(L)) = \alpha.
+$$
+Equivalently interpreted, institutional managers suffer a precisely $1 - \alpha$ percentage likelihood that broad market shocks breach completely past the specific protective VaR bounds internally aggregated.
+
+\begin{remark}
+In theoretical constructs targeting generalized horizons mapping explicitly short-term limits (e.g., $h = 1$ to $10$ days), the temporal discounting factor acts essentially functionally equivalent to unity ($1.00$), permitting analysts realistically to map future valuations directly utilizing current numeric parameters. 
+Additionally, managing discretely scattered sample distributions typically prohibits perfectly fetching absolute integer probability matching $\alpha\%$. Thus, manual implementation overrides dynamically round parameter matching pessimistically upward or optimistically downward based dynamically upon strict institutional compliance risk hunger.
+\end{remark}
+
+\subsection{Properties of Value at Risk}
+
+Let us map VaR sequentially against the strict monetary measure properties earlier enumerated:
+
+\begin{itemize}
+    \item \textbf{Increasing (Monotone):} Standard property verification cleanly maps; if asset vector $L_1 \leq L_2$ intrinsically generates, then mapping equivalent density functions ensures bound inequalities rigidly forcing $F_{L_1}(x) \geq F_{L_2}(x)$. Functionally reversing explicitly validates bounds:
+    $$
+    F_{L_1}^{-1}(\alpha) \leq F_{L_2}^{-1}(\alpha) \implies \text{VaR}_\alpha(L_1) \leq \text{VaR}_\alpha(L_2).
+    $$
+    \item \textbf{Translation Invariance:} Shifting base collateral directly updates metrics perfectly cleanly:
+    \begin{align*}
+        \text{VaR}_\alpha(L + m) &= \inf \{x \in \mathbb{R} : \mathbb{P}(L + m \leq x) \geq \alpha\} \\
+        &= \inf \{x - m \in \mathbb{R} : \mathbb{P}(L \leq x - m) \geq \alpha\} + m \\
+        &= \text{VaR}_\alpha(L) + m.
+    \end{align*}
+    \item \textbf{Positively Homogeneous:} Scalar resizing universally scales internal bounds strictly harmoniously for scaling scalar $\lambda > 0$:
+    \begin{align*}
+        \text{VaR}_\alpha(\lambda L) &= \inf \{x \in \mathbb{R} : \mathbb{P}(\lambda L \leq x) \geq \alpha\} \\
+        &= \lambda \inf \{x/\lambda \in \mathbb{R} : \mathbb{P}(L \leq x/\lambda) \geq \alpha\} \\
+        &= \lambda \text{VaR}_\alpha(L).
+    \end{align*}
+    For specific zero limits, trivially assigning $\lambda = 0$ perfectly maps to boundary condition $0$.
+\end{itemize}
+
+\subsection{The Absolute Failure of VaR Convexity (Sub-additivity violation)}
+
+The most notorious critique leveraged mathematically against standard VaR mechanics universally surrounds its explicit failure structurally to guarantee basic Convexity limits systematically, fundamentally invalidating it from serving structurally as a \textbf{Coherent Risk Measure}.
+
+Because positive homogeneity correctly maps out VaR, a broad systemic convex violation dynamically corresponds equivalently to a functional \textbf{Subadditivity} violation:
+$$
+\text{VaR}_\alpha(L_1 + L_2) \text{ may frequently exceed } \text{VaR}_\alpha(L_1) + \text{VaR}_\alpha(L_2).
+$$
+
+\begin{example}[Subadditivity Failure Counter-Example]
+Construct $X$ and $Y$ mirroring purely unlinked independent stochastic variables strictly conforming completely to standard Bernoulli distribution mappings parametrized fundamentally upon explicit parameter $p \in (0, 1)$. The internal bound distribution forces mapping bounds exactly at:
+$$
+\text{VaR}_\alpha(X) = \text{VaR}_\alpha(Y) = 
+\begin{cases} 
+0 & \text{if } \alpha \leq 1 - p \\ 
+1 & \text{if } \alpha > 1 - p 
+\end{cases}
+$$
+Generate aggregate mixture portfolio combining average bounds symmetrically framing $\frac{X + Y}{2}$:
+$$
+\frac{X + Y}{2} = 
+\begin{cases} 
+0 & \text{with aggregate likelihood bounds mapping precisely } (1 - p)^2 \\ 
+\frac{1}{2} & \text{with aggregate likelihood bounds mapping precisely } 2p(1 - p) \\ 
+1 & \text{with aggregate likelihood bounds mapping precisely } p^2 
+\end{cases}
+$$
+Extract structurally the corresponding generated distribution map:
+$$
+\text{VaR}_\alpha\left(\frac{X + Y}{2}\right) = 
+\begin{cases} 
+0 & \text{if } \alpha \in (0, (1 - p)^2] \\ 
+\frac{1}{2} & \text{if } \alpha \in ((1 - p)^2, 1 - p^2] \\ 
+1 & \text{if } \alpha \in (1 - p^2, 1] 
+\end{cases}
+$$
+Evaluate dynamically placing probability scaling specifically around $(1 - p)^2 < \alpha < 1 - p$. The independent unmixed variables map firmly securely at zero boundaries: $\text{VaR}_\alpha(X) = \text{VaR}_\alpha(Y) = 0$. However, the mixed portfolio structurally forces higher penalty parameters mapping precisely:
+$$
+\text{VaR}_\alpha\left(\frac{X + Y}{2}\right) = \frac{1}{2} > \frac{1}{2}(\text{VaR}_\alpha(X) + \text{VaR}_\alpha(Y)) = 0.
+$$
+This decisively verifies numerically that strict diversification mapping mathematically amplifies, rather than functionally minimizing, total aggregated risk metrics—a catastrophic systemic structural error.
+\end{example}
+
+\section{Mathematical Permutations and Analytical Forms of VaR}
+
+VaR structures commonly transform algebraically isolating varying asset tracking parameters efficiently instead of standard crude offset losses directly. Let $G$ specify generic positive generated absolute gains explicitly modeled as $G = V_h - V_0 = -L$. Let internal parameter bounds match specifically:
+$$
+\mathbb{P}(G \leq -\text{VaR}_\alpha(L)) = 1 - \alpha \implies \text{VaR}_\alpha(L) = -F_G^{-1}(1 - \alpha).
+$$
+
+Alternatively mapping purely normalized linear returns natively via relative parameter $R = \frac{V_h - V_0}{V_0} = -\frac{L}{V_0}$, explicitly formatting directly evaluates structurally toward:
+\begin{align*}
+    \mathbb{P}(L \leq \text{VaR}_\alpha(L)) = \alpha &\iff \mathbb{P}\left(R \geq -\frac{\text{VaR}_\alpha(L)}{V_0}\right) = \alpha \\
+    &\iff \text{VaR}_\alpha(L) = -V_0 \cdot q_{1-\alpha}^R
+\end{align*}
+where dynamically $q^R$ indicates raw linear return quantile structures internally modeled. By similarly isolating specific continuous log-return structures parametrically set by $V_h = V_0 e^{R'}$, dynamic limits rewrite exactly mapping limits logically:
+$$
+\text{VaR}_\alpha(L) = V_0 \left(1 - \exp\left(q_{1-\alpha}^{R'}\right)\right).
+$$
+
+\subsection{Gaussian Analytic Distribution (Normal Returns)}
+
+Assuming loss random variables rigorously constrain mapping exclusively normal parameters exactly $L \sim \mathcal{N}(\mu, \sigma^2)$, direct inversion forces algebraically clean parameters linking directly matching typical base models cleanly:
+$$
+\text{VaR}_\alpha(L) = \mu + \sigma \cdot z_\alpha
+$$
+with explicit bounds defining precisely $z_\alpha$ mapping purely the standard $\alpha$-quantile matching $\mathcal{N}(0, 1)$ precisely. 
+
+Mapping natively via generic pure linear returns strictly matching $R \sim \mathcal{N}(\mu', \sigma'^2)$ universally yields precisely matching algebraic limits algebraically shifting:
+$$
+\text{VaR}_\alpha(L) = -V_0 \left(\mu' + \sigma' \cdot z_{1-\alpha}\right)
+$$
+because standard Gaussian intrinsic symmetry mathematically mandates boundaries $z_\alpha = -z_{1-\alpha}$. 
+
+\subsection{Log-Normal Approximation}
+
+Given log-normal density preferences aggressively favored modern theoretical financial modeling, mapping explicitly $V_h = V_0 e^R$ intrinsically assumes strictly that base relative parameter $R \sim \mathcal{N}(\mu', \sigma'^2)$. Tracking exact loss boundaries correctly shifts directly parameter boundaries cleanly:
+$$
+\text{VaR}_\alpha(L) = V_0(1 - e^{q_{1-\alpha}^R}) = V_0\left(1 - \exp(\mu' + \sigma' z_{1-\alpha})\right) = V_0\left(1 - \exp(\mu' - \sigma' z_\alpha)\right).
+$$
+
+\section{Systematic Failures and Practical Challenges of VaR}
+
+Alongside VaR's catastrophic inability enforcing structural coherence constraints globally, numerous internal systemic implementation complexities poison broad adoption parameters universally mapping:
+
+\begin{enumerate}
+    \item \textbf{Leptokurtic empirical returns:} Actual short-term trading environments strictly map massively "fat-tailed" leptokurtic distribution events wildly breaching standard Gaussian boundaries completely. Extreme deviations occur universally frequently far beyond generic analytical threshold modeling limits structurally enforcing normal log-return boundaries strictly.
+    \item \textbf{Liquidity collapse disconnects:} The generalized metric fundamentally assumes asset portfolios perfectly smoothly liquidate efficiently seamlessly under normal generic operating constraints—a fundamentally mutually exclusive concept considering theoretical systemic meltdown scenarios actively mapping. 
+    \item \textbf{Misguided correlation estimations:} Aggregating varying asset boundaries correctly structurally requires mathematically flawless multivariate dependencies cleanly connecting matrices purely flawlessly mapping boundaries smoothly. Real systemic panics instantaneously flip parameter constraints uniformly toward massive positive correlations globally fundamentally erasing baseline mathematical diversification buffering broadly natively modeled internally.
+    \item \textbf{Magnitude Blindness:} Conceptually mapping definitively, finding single rigid static values mathematically upon specific internal cumulative density mapping limits definitively ignores totally internal distribution structuring occurring explicitly beyond boundary bounds purely. Tracking simply generic $\alpha$ cutoff occurrences universally fails describing purely exact magnitude dimensions structurally devastating global underlying portfolios entirely.
+\end{enumerate}

@@ -1,0 +1,80 @@
+\documentclass[12pt, a4paper]{report}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% Geometry setup
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm
+}
+\setlength{\headheight}{30pt}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Stochastic Finance and Risk Modelling - Chapter 6},
+    pdfauthor={Laurence Carassus and Gaoyue Guo},
+}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{example}{Example}[chapter]
+\newtheorem{remark}[theorem]{Remark}
+
+% Layout/Style
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\leftmark}
+\lhead{}
+\cfoot{\thepage}
+
+\title{\textbf{Stochastic Finance and Risk Modelling} \\ \large Chapter 6: The Binomial Model}
+\author{Based on slides by Ioane Muni-Toke \\ Laurence Carassus and Gaoyue Guo \\ \textit{Expanded Study Resource}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+This document serves as a comprehensive study guide for the course "Stochastic Finance and Risk Modelling", functioning as a complete substitute for the lecture slides related to Chapter 6: "The Binomial Model".
+
+The celebrated Cox-Ross-Rubinstein (CRR) binomial model, introduced in 1979, is one of the foundational frameworks in modern financial mathematics. Despite its simplicity, it illustrates the core mechanics of arbitrage pricing theory in discrete time. In this chapter, we formally define the binomial market setup for a risky and a riskless asset. We then formulate the probability space and natural filtration associated with the price process, verify the conditions for no-arbitrage, and compute the unique equivalent martingale measure. Finally, we explore derivative pricing through backward induction, demonstrate how any European derivative can be replicated, and establish why the binomial model is intrinsically a complete market. 
+
+To aid intuition, rigorous mathematical derivations, detailed explanations, and worked-out proofs of the main theorems have been fully developed to bridge conceptual gaps left by the slides.
+
+\include{01_binomial_model}
+\include{02_pricing_derivatives}
+\include{03_replication_derivatives}
+\include{04_structure_complete_market}
+
+\end{document}
