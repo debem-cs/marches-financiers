@@ -61,6 +61,27 @@ The expectation of a random variable $X: \Omega \to \mathbb{R}^d$ is defined as 
 \]
 \end{definition}
 
+\paragraph{Decoding $\mathbb{P}(d\omega)$:}
+The term $\mathbb{P}(d\omega)$ represents the \textbf{probability measure} (the "weight") of an infinitesimally small piece of the sample space $d\omega$. 
+\begin{itemize}
+    \item When the variable is discrete, this integral becomes a standard sum: $\sum X(\omega_i) \mathbb{P}(\omega_i)$.
+    \item When the variable is continuous on the real numbers ($\Omega = \mathbb{R}$), we typically know its Probability Density Function (PDF) $f(x)$. In this case, the infinitesimal probability of landing exactly in a tiny interval $dx$ is $f(x)dx$. Thus, $\mathbb{P}(dx) = f(x) dx$, transforming the abstract Lebesgue integral into a standard Riemann integral: $\int_{-\infty}^{\infty} x \cdot f(x) dx$.
+\end{itemize}
+
+\begin{example}[Continuous Expectation]
+Consider the waiting time for a bus that arrives exactly every 10 minutes. If you arrive at the stop at a random time, your waiting time $X$ is a continuous \textbf{Uniform Distribution} between $0$ and $10$ minutes ($\mathcal{U}(0, 10)$).
+\begin{enumerate}
+    \item \textbf{Sample Space:} $\Omega = [0, 10]$.
+    \item \textbf{Density:} $f(x) = \frac{1}{10-0} = \frac{1}{10}$.
+    \item \textbf{Measure:} $\mathbb{P}(dx) = f(x)dx = \frac{1}{10}dx$.
+\end{enumerate}
+Applying the expectation formula:
+\[
+\mathbb{E}[X] = \int_{\Omega} X(x) \mathbb{P}(dx) = \int_{0}^{10} x \left( \frac{1}{10} \right) dx = \frac{1}{10} \left[ \frac{x^2}{2} \right]_0^{10} = \frac{1}{10}\left( \frac{100}{2} \right) = 5.
+\]
+The expected waiting time is 5 minutes, which matches the geometric intuition of the uniform distribution's midpoint.
+\end{example}
+
 \subsection{Theorem of Transport (Transfer Theorem)}
 This fundamental theorem allows us to compute expectations without working directly with the abstract space $\Omega$. We can work solely with the distribution of $X$ on $\mathbb{R}^d$.
 

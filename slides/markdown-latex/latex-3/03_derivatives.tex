@@ -52,11 +52,16 @@ A forward contract is an agreement to buy an asset $S^i$ at time $T=1$ for a fix
 \begin{itemize}
     \item \textbf{Payoff}: $H^F = S_1^i - K$.
     \item Can be positive or negative.
-    \item \textbf{Replication}:
-    Buy 1 unit of asset $i$ and borrow $K/(1+r)$ at time 0.
-    At time 1, you own the asset $S_1^i$ and owe $K$.
-    Total value: $S_1^i - K$.
-    Initial cost: $S_0^i - \frac{K}{1+r}$. This is the arbitrage-free price.
+    \item \textbf{Replication}: To find the fair price of this payoff, we can build a portfolio at $t=0$ that exactly replicates the contract's outcome:
+    \begin{itemize}
+        \item \textbf{Buy 1 unit of asset $i$}: This costs $S_0^i$ today. At $t=1$, we own the asset, which will be worth $S_1^i$.
+        \item \textbf{Borrow the present value of $K$}: We borrow $\frac{K}{1+r}$ today. This is an inflow of money, so the initial "cost" is $-\frac{K}{1+r}$. At $t=1$, we must repay this debt with interest, meaning we owe exactly $\frac{K}{1+r} \times (1+r) = K$.
+    \end{itemize}
+    At time $T=1$, the total value of this portfolio is exactly $S_1^i - K$, perfectly matching the forward contract's payoff. 
+    By the Law of One Price (to avoid arbitrage), the arbitrage-free price of the forward contract at $t=0$ must equal the net initial cost of this replicating portfolio:
+    \begin{equation}
+        V_0^F = S_0^i - \frac{K}{1+r}
+    \end{equation}
 \end{itemize}
 
 \subsection{Call Option}

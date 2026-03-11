@@ -1,0 +1,176 @@
+\chapter{The Market Portfolio (Purely Risky Assets)}
+
+In this chapter, we restrict the investor's universe to only the $d$ risky assets. This means no cash is held in the bank account, or more formally, the weight assigned to the riskless asset is strictly zero:
+\begin{equation}
+    w^0 = 0.
+\end{equation}
+Because the sum of all portfolio weights must equal $1$, the condition $w^0 = 0$ is exactly equivalent to requiring that the weights of the risky assets sum up to $1$:
+\begin{equation}
+    w \cdot \mathbf{1} = \sum_{i=1}^d w^i = 1.
+\end{equation}
+
+Thus, the feasible set of trading strategies for the risky assets is constrained to the hyperplane $E_0$:
+\begin{equation}
+    E = E_0 := \{ w \in \mathbb{R}^d : w \cdot \mathbf{1} = 1 \}.
+\end{equation}
+
+Under this restriction, the three optimization problems formulated in the previous chapter specialize as follows:
+
+\paragraph{Formulation 1 (Variance Target $\sigma^2$):}
+\begin{equation}
+    f(\sigma) := \max_{w \in E_0} w \cdot R \quad \text{subject to} \quad w^T \Sigma w \leq \sigma^2. \label{eq:p1_market}
+\end{equation}
+
+\paragraph{Formulation 2 (Return Target $\mu$):}
+\begin{equation}
+    g(\mu) := \min_{w \in E_0} w^T \Sigma w \quad \text{subject to} \quad w \cdot R \geq \mu. \label{eq:p2_market}
+\end{equation}
+
+\paragraph{Formulation 3 (Utility with Risk Aversion $\lambda$):}
+\begin{equation}
+    \max_{w \in E_0} \left( w \cdot R - \frac{\lambda}{2} w^T \Sigma w \right). \label{eq:p3_market}
+\end{equation}
+
+These formulations characterize the \textbf{Mean-Variance Efficient Frontier}. The efficient frontier represents the set of optimal portfolios that offer the highest possible expected return for a given level of risk, or conversely, the lowest possible risk for a given level of expected return. Portfolios lying strictly below the frontier are considered sub-optimal because superior alternatives exist.
+
+\section{Optimization using Lagrange Multipliers}
+
+We will explicitly solve for the optimal weights using Formulation 2 via the method of Lagrange multipliers. To build intuition, we first solve an unconstrained version (omitting the $w \cdot \mathbf{1}=1$ requirement), and then tackle the fully constrained problem.
+
+\subsection{Unconstrained Optimization ($E = \mathbb{R}^d$)}
+Suppose temporarily that we do not enforce $w \cdot \mathbf{1} = 1$ (which means $w^0$ is arbitrary, functioning as a slack variable, but without assigning any explicit return to it). We wish to minimize variance while achieving a target return $\mu$:
+\begin{equation*}
+    \min_{w \in \mathbb{R}^d} w^T \Sigma w \quad \text{subject to} \quad w \cdot R = \mu.
+\end{equation*}
+Note we use the equality constraint $w \cdot R = \mu$ instead of the inequality constraint, as achieving the absolute minimum risk will naturally bind the return to exactly the target $\mu$.
+
+We introduce the \textbf{Lagrangian} with a single multiplier $\lambda$ corresponding to the target return constraint:
+\begin{equation}
+    L(w, \lambda) := w^T \Sigma w + \lambda(\mu - w \cdot R).
+\end{equation}
+
+By Fermat's theorem, optimal solutions must satisfy the First-Order Conditions (taking partial derivatives and equating to zero):
+\begin{align}
+    \nabla_w L(w, \lambda) &= 2\Sigma w - \lambda R = \mathbf{0}, \label{eq:foc_unconst_w} \\
+    \frac{\partial L}{\partial \lambda} &= \mu - w \cdot R = 0. \label{eq:foc_unconst_lambda}
+\end{align}
+Equation \eqref{eq:foc_unconst_w} yields an expression for $w$ in terms of $\lambda$:
+\begin{equation}
+    2\Sigma w = \lambda R \implies w = \frac{\lambda}{2} \Sigma^{-1} R. \label{eq:w_unconstrained}
+\end{equation}
+Substitute \eqref{eq:w_unconstrained} into the return constraint \eqref{eq:foc_unconst_lambda}:
+\begin{equation*}
+    \mu = w \cdot R = w^T R = \left( \frac{\lambda}{2} \Sigma^{-1} R \right)^T R = \frac{\lambda}{2} R^T (\Sigma^{-1})^T R.
+\end{equation*}
+Since $\Sigma$ is symmetric, its inverse $\Sigma^{-1}$ is also symmetric, so $(\Sigma^{-1})^T = \Sigma^{-1}$:
+\begin{equation}
+    \mu = \frac{\lambda}{2} R^T \Sigma^{-1} R \implies \frac{\lambda}{2} = \frac{\mu}{R^T \Sigma^{-1} R}.
+\end{equation}
+
+Finally, substituting $\frac{\lambda}{2}$ back into \eqref{eq:w_unconstrained} gives the optimal portfolio weights $\tilde{w}$ for this unconstrained setting:
+\begin{equation}
+    \tilde{w} = \mu \frac{\Sigma^{-1} R}{R^T \Sigma^{-1} R}.
+\end{equation}
+
+\subsection{Constrained Optimization ($E = E_0$)}
+We now solve the actual problem defined in \eqref{eq:p2_market}, restricting the riskless asset weight to zero by enforcing $w \cdot \mathbf{1} = 1$:
+\begin{equation}
+    \min_{w \in \mathbb{R}^d} w^T \Sigma w \quad \text{subject to} \quad w \cdot R = \mu \quad \text{and} \quad w \cdot \mathbf{1} = 1.
+\end{equation}
+
+The \textbf{Lagrangian} now requires two multipliers: $\lambda$ for the expected return constraint and $\theta$ for the portfolio budget constraint:
+\begin{equation}
+    L(w, \lambda, \theta) := w^T \Sigma w + \lambda(\mu - w \cdot R) + \theta(1 - w \cdot \mathbf{1}).
+\end{equation}
+
+The First-Order Conditions are:
+\begin{align}
+    \nabla_w L &= 2\Sigma w - \lambda R - \theta \mathbf{1} = \mathbf{0}, \label{eq:foc_const_w} \\
+    \frac{\partial L}{\partial \lambda} &= \mu - w \cdot R = 0, \label{eq:foc_const_lambda} \\
+    \frac{\partial L}{\partial \theta} &= 1 - w \cdot \mathbf{1} = 0. \label{eq:foc_const_theta}
+\end{align}
+
+From \eqref{eq:foc_const_w}, we solve for $w$:
+\begin{equation}
+    2\Sigma w = \lambda R + \theta \mathbf{1} \implies \tilde{w} = \frac{1}{2}\lambda \Sigma^{-1} R + \frac{1}{2}\theta \Sigma^{-1} \mathbf{1}. \label{eq:w_constrained_param}
+\end{equation}
+
+To find the optimal multipliers $\tilde{\lambda}$ and $\tilde{\theta}$, we substitute $\tilde{w}$ into the two constraints \eqref{eq:foc_const_lambda} and \eqref{eq:foc_const_theta}. Before doing so, it is extremely useful to define three scalar constants that encapsulate matrix-vector products:
+\begin{equation}
+    a := R^T \Sigma^{-1} R, \quad b := R^T \Sigma^{-1} \mathbf{1} = \mathbf{1}^T \Sigma^{-1} R, \quad c := \mathbf{1}^T \Sigma^{-1} \mathbf{1}.
+\end{equation}
+These scalars $a, b,$ and $c$ solely depend on the market parameters (expected returns $R$ and covariance matrix $\Sigma$) and are thus fixed constants for the optimization problem.
+
+Now substitute \eqref{eq:w_constrained_param} into constraint 1 ($R^T \tilde{w} = \mu$):
+\begin{align*}
+    R^T \left( \frac{1}{2}\lambda \Sigma^{-1} R + \frac{1}{2}\theta \Sigma^{-1} \mathbf{1} \right) &= \mu \\
+    \frac{1}{2}\lambda (R^T \Sigma^{-1} R) + \frac{1}{2}\theta (R^T \Sigma^{-1} \mathbf{1}) &= \mu \\
+    \frac{1}{2}\lambda a + \frac{1}{2}\theta b &= \mu. \quad \text{(Eq. A)}
+\end{align*}
+
+Substitute \eqref{eq:w_constrained_param} into constraint 2 ($\mathbf{1}^T \tilde{w} = 1$):
+\begin{align*}
+    \mathbf{1}^T \left( \frac{1}{2}\lambda \Sigma^{-1} R + \frac{1}{2}\theta \Sigma^{-1} \mathbf{1} \right) &= 1 \\
+    \frac{1}{2}\lambda (\mathbf{1}^T \Sigma^{-1} R) + \frac{1}{2}\theta (\mathbf{1}^T \Sigma^{-1} \mathbf{1}) &= 1 \\
+    \frac{1}{2}\lambda b + \frac{1}{2}\theta c &= 1. \quad \text{(Eq. B)}
+\end{align*}
+
+This gives a 2x2 linear system in terms of the variables $(\frac{\lambda}{2}, \frac{\theta}{2})$:
+\begin{equation*}
+    \begin{pmatrix} a & b \\ b & c \end{pmatrix} \begin{pmatrix} \lambda/2 \\ \theta/2 \end{pmatrix} = \begin{pmatrix} \mu \\ 1 \end{pmatrix}
+\end{equation*}
+
+Solving via Cramer's rule or direct substitution gives the optimal multipliers:
+\begin{equation}
+    \tilde{\lambda} = 2 \frac{\mu c - b}{ac - b^2}, \quad \quad \tilde{\theta} = 2 \frac{a - \mu b}{ac - b^2}. \label{eq:optimal_multipliers}
+\end{equation}
+The denominator is the determinant of the $2 \times 2$ matrix: $\Delta = ac - b^2$. By the Cauchy-Schwarz inequality applied to the positive definite metric given by $\Sigma^{-1}$, one can show that $ac > b^2$, so the determinant is always strictly positive ($ac - b^2 > 0$).
+
+Substituting the expressions for $\tilde{\lambda}$ and $\tilde{\theta}$ \eqref{eq:optimal_multipliers} back into \eqref{eq:w_constrained_param} provides the exact optimal portfolio weights:
+\begin{equation}
+    \tilde{w} = \frac{\mu c - b}{ac - b^2} \Sigma^{-1} R + \frac{a - \mu b}{ac - b^2} \Sigma^{-1} \mathbf{1}. \label{eq:w_optimal_unsimplified}
+\end{equation}
+
+\section{The Two-Fund Separation Theorem}
+
+We analyze the structure of the optimal portfolio $\tilde{w}$ derived above by grouping the terms that depend on the target return $\mu$ and those that do not.
+Expanding \eqref{eq:w_optimal_unsimplified}:
+\begin{align}
+    \tilde{w} &= \frac{\mu c \Sigma^{-1} R - b \Sigma^{-1} R + a \Sigma^{-1} \mathbf{1} - \mu b \Sigma^{-1} \mathbf{1}}{ac - b^2} \notag \\
+    &= \mu \left( \frac{c \Sigma^{-1} R - b \Sigma^{-1} \mathbf{1}}{ac - b^2} \right) + \left( \frac{a \Sigma^{-1} \mathbf{1} - b \Sigma^{-1} R}{ac - b^2} \right).
+\end{align}
+
+Let us define two specific, constant vectors $g$ and $h$ in $\mathbb{R}^d$:
+\begin{equation}
+    h := \frac{c \Sigma^{-1} R - b \Sigma^{-1} \mathbf{1}}{ac - b^2} \quad \text{and} \quad g := \frac{a \Sigma^{-1} \mathbf{1} - b \Sigma^{-1} R}{ac - b^2}.
+\end{equation}
+Crucially, vectors $h$ and $g$ consist solely of the market parameters $R$ and $\Sigma$; they are entirely independent of the investor's specific target return $\mu$.
+
+Using these definitions, the optimal portfolio can be elegantly rewritten as an affine function of $\mu$:
+\begin{equation}
+    \tilde{w}(\mu) = \mu h + g. \label{eq:two_fund_separation}
+\end{equation}
+
+\subsection{Interpretation of $g$ and $h$}
+Equation \eqref{eq:two_fund_separation} is a powerful result known as the \textbf{Two-Fund Separation Theorem} (or Mutual Fund Theorem).
+It states that \textit{every} optimal portfolio on the efficient frontier is merely a linear combination of two fixed portfolios: $g$ and $h$. Thus, an investor does not need to separately analyze and invest in all $d$ individual underlying stocks. They only need access to two ``mutual funds'' constructed according to the weights $g$ and $h$, respectively. They achieve their desired risk-return profile simply by scaling their investment amounts in these two funds based on their personal target $\mu$.
+
+Specifically:
+\begin{itemize}
+    \item $g$ is exactly the portfolio weights required to achieve an expected return of $\mu = 0$ (set $\mu=0$ in the equation).
+    \item $g+h$ represents the portfolio weights corresponding to an expected return of $\mu = 1$.
+\end{itemize}
+
+\section{Visualizing the Frontier: The Markowitz Bullet}
+
+When we compute the minimum variance required $g(\mu)$ for various levels of $\mu$ and plot standard deviation $\sigma = \sqrt{g(\mu)}$ on the horizontal x-axis and expected return $\mu$ on the vertical y-axis, the resulting locus of points traces out a hyperbola in the variance-return ($\sigma^2$-$\mu$) space, or a hyperbolic shape in the standard deviation-return ($\sigma$-$\mu$) space known as the \textbf{Markowitz bullet}.
+
+The left-most point on this curve denotes the \textbf{Global Minimum Variance Portfolio (GMVP)}. This portfolio achieves the absolute lowest possible risk across the entire trading universe $E_0$, without any specific constraint on return.
+
+The frontier is split into two halves:
+\begin{itemize}
+    \item \textbf{The Efficient Frontier}: The upper limb of the hyperbola, above the GMVP. These portfolios offer the maximum return for a given level of risk. This is the only portion relevant to rational investors.
+    \item \textbf{The Inefficient Frontier}: The lower limb below the GMVP. A rational investor would never choose a portfolio on this limb because there is always a corresponding vertical point on the upper limb offering higher returns for the exact same risk.
+\end{itemize}
+
+A sub-optimal generic portfolio (such as a totally un-diversified portfolio consisting of just a single stock, e.g. $w = (1, 0, 0)$) lies strictly to the right of the efficient frontier, inside the bullet envelope. This means the investor can improve their position by moving straight \textit{left} (minimizing variance while maintaining the same expected return via problem \eqref{eq:p2_market}) or moving straight \textit{up} (maximizing expected return while capping the variance at its current level via problem \eqref{eq:p1_market}) to reach the efficient frontier curve.

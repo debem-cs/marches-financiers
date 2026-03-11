@@ -122,8 +122,31 @@ We define the return of a portfolio $\phi$ (with $V_0^\phi \ne 0$) as:
 \begin{equation}
     R(\phi) = \frac{V_1^\phi - V_0^\phi}{V_0^\phi}.
 \end{equation}
-Under any risk-neutral measure $\mathbb{Q}$, the expected return of \textit{any} portfolio is equal to the risk-free rate $r$.
+
+Under any risk-neutral measure $\mathbb{Q}$, the expected return of \textit{any} portfolio is equal to the risk-free rate $r$. This can be shown by expanding the expectation. 
+
+Since the discounted wealth process $\tilde{V}_t^\phi = V_t^\phi / S_t^0$ of any self-financing portfolio $\phi$ is a martingale under $\mathbb{Q}$, we have:
+\begin{align}
+    \tilde{V}_0^\phi &= \mathbb{E}^\mathbb{Q}[\tilde{V}_1^\phi] \\
+    \frac{V_0^\phi}{S_0^0} &= \mathbb{E}^\mathbb{Q}\left[ \frac{V_1^\phi}{S_0^0(1+r)} \right]
+\end{align}
+
+Since the initial risk-free asset price $S_0^0$ and the interest rate $r$ are known constants at $t=0$, we can rearrange this as:
 \begin{equation}
-    \mathbb{E}^\mathbb{Q}[R(\phi)] = r.
+    V_0^\phi(1+r) = \mathbb{E}^\mathbb{Q}[V_1^\phi]
 \end{equation}
+
+Now, applying the expectation operator to the definition of the portfolio return, and using the linearity of expectation (keeping in mind that $V_0^\phi$ is a known constant at $t=0$):
+\begin{align}
+    \mathbb{E}^\mathbb{Q}[R(\phi)] &= \mathbb{E}^\mathbb{Q}\left[ \frac{V_1^\phi - V_0^\phi}{V_0^\phi} \right] \\
+    &= \frac{\mathbb{E}^\mathbb{Q}[V_1^\phi] - V_0^\phi}{V_0^\phi}
+\end{align}
+
+Substituting our result for $\mathbb{E}^\mathbb{Q}[V_1^\phi]$:
+\begin{align}
+    \mathbb{E}^\mathbb{Q}[R(\phi)] &= \frac{V_0^\phi(1+r) - V_0^\phi}{V_0^\phi} \\
+    &= \frac{V_0^\phi(1+r - 1)}{V_0^\phi} \\
+    &= r
+\end{align}
+
 This is a powerful result: under $\mathbb{Q}$, it doesn't matter how risky a portfolio is; its expected appreciation is simply the risk-free rate.

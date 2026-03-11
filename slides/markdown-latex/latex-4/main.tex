@@ -1,0 +1,76 @@
+\documentclass[12pt, a4paper]{report}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{mathrsfs} % For script fonts if needed
+
+% Geometry setup
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm
+}
+\setlength{\headheight}{30pt}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Stochastic Finance and Risk Modelling - Chapter 4},
+    pdfauthor={Laurence Carassus and Gaoyue Guo},
+}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{example}{Example}[chapter]
+\newtheorem{remark}[theorem]{Remark}
+
+% Layout/Style
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\leftmark}
+\lhead{}
+\cfoot{\thepage}
+
+\title{\textbf{Stochastic Finance and Risk Modelling} \\ \large Chapter 4: Optimal portfolios}
+\author{Based on slides by Romain Perchet \\ Laurence Carassus and Gaoyue Guo \\ \textit{Expanded Study Resource}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+This document serves as a comprehensive study guide for the course ``Stochastic Finance and Risk Modelling''. It expands upon the lecture slides relative to Chapter 4: ``Optimal portfolios''.
+
+In this chapter, we transition from the seller's perspective (which focuses on fair pricing through replication and risk-neutral measures) to the buyer's (investor's) perspective. The primary objective is to optimize a portfolio by maximizing the expected reward while controlling the associated risk. We define the reward and the variance of a portfolio and introduce the fundamental problems of optimal asset allocation. We first explore the Mean-Variance framework introduced by Harry Markowitz for a market containing only risky assets, leading to the concept of the Efficient Frontier. We then incorporate a riskless asset to define the general market portfolio and the Capital Market Line.
+
+\include{01_reward_and_risk}
+\include{02_market_portfolio}
+\include{03_general_portfolio}
+
+\end{document}

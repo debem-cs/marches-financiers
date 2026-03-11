@@ -1,0 +1,159 @@
+\chapter{Reward and Risk}
+
+\section{From Seller to Buyer Perspective}
+
+In the previous chapters, our analysis was framed within the context of the \textbf{seller} in a one-period model ($T=1$). A seller (e.g., a financial institution offering a derivative) aims to establish a ``fair'' pricing framework for trading financial products. This is achieved through the no-arbitrage condition, which guarantees the existence of a risk-neutral measure $\mathbb{Q}$ equivalent to the physical measure $\mathbb{P}$ ($\mathbb{Q} \sim \mathbb{P}$). Under $\mathbb{Q}$, all discounted asset prices are martingales, and the price of any contingent claim is given by its expected discounted payoff. The seller's primary goal is replication and hedging, seeking to eliminate risk entirely by replicating the payoff of the product sold.
+
+In this chapter, we shift our focus to the \textbf{buyer} (or investor). The buyer's objective is fundamentally different: they aim to build a portfolio of assets to optimize their ``utility.'' This utility is generally driven by two conflicting desires:
+\begin{enumerate}
+    \item \textbf{Maximizing Reward}: Achieving the highest possible return on the investment.
+    \item \textbf{Minimizing Risk}: Reducing the uncertainty or volatility associated with the return.
+\end{enumerate}
+Thus, optimal portfolio selection involves finding the best possible trade-off between reward and risk under the true probability measure $\mathbb{P}$, which models the actual observed behavior of the market.
+
+\section{Portfolio Construction and Weights}
+
+We consider a one-period financial market consisting of:
+\begin{itemize}
+    \item One riskless asset (e.g., a bank account or zero-coupon bond), denoted by $S^0 = (S_t^0)_{t=0,1}$. Its return is deterministic and denoted by $r$, such that $S_1^0 = S_0^0(1+r)$.
+    \item $d$ risky assets (e.g., stocks), denoted by $S = (S^1, \dots, S^d) = (S_t^1, \dots, S_t^d)_{t=0,1}$. These assets are modeled as random variables on a probability space $(\Omega, \mathcal{F}, \mathbb{P})$.
+\end{itemize}
+
+A typical portfolio is constructed at time $t=0$ and held until $t=1$. It is entirely characterized by a trading strategy $(\xi^0, \xi) \in \mathbb{R} \times \mathbb{R}^d$, where:
+\begin{itemize}
+    \item $\xi^0$ is the number of units held in the riskless asset $S^0$.
+    \item $\xi^i$ is the number of units held in the $i$-th risky asset $S^i$, for $i = 1, \dots, d$.
+\end{itemize}
+
+The \textbf{value of the portfolio} at time $t \in \{0, 1\}$ is simply the sum of the values of the individual holdings:
+\begin{equation}
+    V_t^{\xi^0, \xi} := \xi^0 S_t^0 + \xi \cdot S_t = \xi^0 S_t^0 + \sum_{i=1}^d \xi^i S_t^i, \quad t = 0, 1.
+\end{equation}
+Here, $V_0^{\xi^0, \xi}$ represents the initial wealth required to set up the portfolio.
+
+It is often more convenient and intuitive to work with portfolio proportions, or \textbf{weights}, rather than the absolute number of shares ($\xi^i$). Assuming the initial wealth is non-zero ($V_0^{\xi^0, \xi} \neq 0$), we define the weight $w^i$ as the fraction of the initial wealth invested in asset $i$:
+\begin{equation}
+    w^i := \frac{\xi^i S_0^i}{V_0^{\xi^0, \xi}} = \frac{\xi^i S_0^i}{\sum_{j=0}^d \xi^j S_0^j} \quad \text{for } i = 0, \dots, d.
+\end{equation}
+
+By definition, the sum of all weights must equal $1$, representing $100\%$ of the initial wealth:
+\begin{equation}
+    \sum_{i=0}^d w^i = 1.
+\end{equation}
+
+\begin{remark}[Interpretation of Weights]
+\leavevmode
+\begin{itemize}
+    \item If $w^i > 0$, the investor has a \textbf{long position} in asset $i$; they have purchased it.
+    \item If $w^i < 0$, the investor has a \textbf{short position} in asset $i$; they have borrowed and sold it, hoping for its price to drop. The cash generated from this short sale can be used to invest in other assets.
+\end{itemize}
+\end{remark}
+
+Using the weights, the portfolio value at time $t$ can be rewritten as:
+\begin{equation}
+    V_t^{\xi^0, \xi} = \sum_{i=0}^d \xi^i S_t^i = \sum_{i=0}^d \left( \frac{w^i V_0^{\xi^0, \xi}}{S_0^i} \right) S_t^i = V_0^{\xi^0, \xi} \sum_{i=0}^d w^i \frac{S_t^i}{S_0^i}, \quad t = 0, 1.
+\end{equation}
+
+Let $w := (w^1, \dots, w^d) \in \mathbb{R}^d$ be the vector of weights for the $d$ \textit{risky} assets. Let $\mathbf{1} := (1, \dots, 1)^T \in \mathbb{R}^d$ be the vector of ones. Then, the weight of the riskless asset can be expressed directly as a function of the risky portfolio weights:
+\begin{equation}
+    w^0 = 1 - \sum_{i=1}^d w^i = 1 - w \cdot \mathbf{1}.
+\end{equation}
+Because the entire portfolio composition is fully determined by the vector $w$ (since $w^0$ is dependent on it), we will henceforth denote the portfolio simply by $V^w$ instead of $V^{\xi^0, \xi}$.
+
+\section{Portfolio Return Formulation}
+
+The performance of a portfolio over the period $[0,1]$ is measured by its \textbf{return}. For a generic asset or portfolio $X$ with prices $X_0 \neq 0$ and $X_1$, its return is defined as:
+\begin{equation}
+    \rho(X) := \frac{X_1 - X_0}{X_0} = \frac{X_1}{X_0} - 1.
+\end{equation}
+
+Let us derive the return of the portfolio $V^w$. Using the definitions of the weights, we have:
+\begin{align}
+    \rho(V^w) &= \frac{V_1^w - V_0^w}{V_0^w} \notag \\
+    &= \frac{\xi^0 (S_1^0 - S_0^0) + \sum_{i=1}^d \xi^i (S_1^i - S_0^i)}{V_0^w} \notag \\
+    &= \frac{\xi^0 S_0^0}{V_0^w} \left( \frac{S_1^0 - S_0^0}{S_0^0} \right) + \sum_{i=1}^d \frac{\xi^i S_0^i}{V_0^w} \left( \frac{S_1^i - S_0^i}{S_0^i} \right) \notag \\
+    &= w^0 \rho(S^0) + \sum_{i=1}^d w^i \rho(S^i).
+\end{align}
+
+Recall that the return on the riskless asset is defined as $r$. For consistency with the notation in the subsequent formulas, let's designate the return of the riskless asset as $R^0 := \rho(S^0) = r$.
+Furthermore, let $\rho(S) := (\rho(S^1), \dots, \rho(S^d))^T$ be the random vector of returns for the $d$ risky assets. The portfolio return can thus be written compactly as a linear combination of individual asset returns:
+\begin{equation}
+    \rho(V^w) = w^0 R^0 + w \cdot \rho(S) = (1 - w \cdot \mathbf{1}) R^0 + w \cdot \rho(S).
+\end{equation}
+This demonstrates that the return of a portfolio is exactly the weighted sum of the returns of its constituent assets.
+
+\section{Quantifying Reward and Risk}
+
+To formulate an optimization problem, we need mathematical proxies for the investor's objectives (reward) and constraints/penalties (risk).
+
+\subsection{Expected Return (Reward)}
+The ``reward'' of a portfolio is universally measured by its \textbf{expected return} under the real-world probability measure $\mathbb{P}$. We denote the expected return of the $i$-th risky asset as $R_i$:
+\begin{equation}
+    R_i := \mathbb{E}^{\mathbb{P}}[\rho(S^i)] = \mathbb{E} \left[ \frac{S_1^i}{S_0^i} - 1 \right] \quad \text{for } i = 1, \dots, d.
+\end{equation}
+Let $R := (R_1, \dots, R_d)^T \in \mathbb{R}^d$ be the vector of expected returns for the risky assets. \textit{We assume that the vector $R$ is not collinear to the vector of ones $\mathbf{1}$ (i.e., not all risky assets have the exact same expected return, which avoids trivial uninteresting cases).}
+
+The expected return of the total portfolio $V^w$, denoted $r(V^w)$, follows from the linearity of the expectation operator:
+\begin{align}
+    r(V^w) &:= \mathbb{E}[\rho(V^w)] \notag \\
+    &= \mathbb{E}[(1 - w \cdot \mathbf{1}) R^0 + w \cdot \rho(S)] \notag \\
+    &= (1 - w \cdot \mathbf{1}) R^0 + w \cdot \mathbb{E}[\rho(S)] \notag \\
+    &= \mathbf{(1 - w \cdot \mathbf{1}) R^0 + w \cdot R}. \label{eq:expected_return}
+\end{align}
+
+\subsection{Variance (Risk)}
+In the classical Markowitz framework, ``risk'' is quantified by the \textbf{variance} of the portfolio's return. The variance measures the degree of dispersion or volatility away from the expected return. A higher variance implies greater uncertainty in the final payoff.
+
+Since the riskless asset return $R^0$ is a deterministic constant, its variance is zero, and it has zero covariance with all other assets. Therefore, the total variance of the portfolio depends exclusively on the risky assets' part: $\operatorname{Var}(\rho(V^w)) = \operatorname{Var}(w \cdot \rho(S) + \text{constant}) = \operatorname{Var}(w \cdot \rho(S))$.
+
+Let $\Sigma$ be the $d \times d$ \textbf{covariance matrix} of the risky asset returns. Its elements $\sigma_{i,j}$ are given by:
+\begin{equation}
+    \sigma_{i,j} := \operatorname{Cov}(\rho(S^i), \rho(S^j)) = \frac{\operatorname{Cov}(S_1^i, S_1^j)}{S_0^i S_0^j}, \quad \text{for } 1 \leq i, j \leq d.
+\end{equation}
+Note that the diagonal elements $\sigma_{i,i}$ correspond to the variances of the individual assets' returns ($\operatorname{Var}(\rho(S^i))$).
+
+The variance of the portfolio return can be calculated using the foundational properties of variance for linear combinations of random variables:
+\begin{align}
+    \operatorname{Var}(\rho(V^w)) &:= \mathbb{E}\left[ \left( \rho(V^w) - \mathbb{E}[\rho(V^w)] \right)^2 \right] \notag \\
+    &= \operatorname{Var}\left( \sum_{i=1}^d w^i \rho(S^i) \right) \notag \\
+    &= \sum_{i=1}^d \sum_{j=1}^d w^i w^j \operatorname{Cov}(\rho(S^i), \rho(S^j)) \notag \\
+    &= \mathbf{w^T \Sigma w}. \label{eq:portfolio_variance}
+\end{align}
+This fundamental quadratic form, $w^T \Sigma w$, sits at the heart of portfolio optimization.
+
+\vspace{0.3cm}
+\textbf{Assumption on $\Sigma$:} We assume that the covariance matrix $\Sigma$ is invertible and \textit{positive definite}. This means that for any non-zero allocation vector $w \neq \mathbf{0}$, the portfolio variance is strictly positive:
+\begin{equation*}
+    w \neq \mathbf{0} \implies w^T \Sigma w > 0.
+\end{equation*}
+Economically, this implies that it is impossible to construct a completely riskless portfolio using only the risky assets, assuming a non-trivial position is taken. In real markets, true zero-risk combinations of purely risky assets do not exist.
+
+\section{The General Optimization Objectives}
+
+With mathematical descriptions for reward and risk, the investor's problem can be formally modeled. The problem involves a trade-off: higher returns generally require accepting higher risks. We define a subset $E \subseteq \mathbb{R}^d$ which represents the feasible region for trading weights (e.g., $E = \mathbb{R}^d$ for unconstrained trading including short selling, or $E = \mathbb{R}^d_+$ if short selling is forbidden).
+
+There are three equivalent ways to formulate the mathematical optimization problem, yielding identical portfolios along the ``Efficient Frontier''.
+
+\paragraph{Formulation 1: Maximize Reward subject to a Risk Constraint}
+Let $\sigma > 0$ be the maximum acceptable portfolio variance (the risk budget). The investor seeks to maximize their expected return without exceeding this risk budget:
+\begin{equation}
+    \max_{w \in E} \left( (1 - w \cdot \mathbf{1}) R^0 + w \cdot R \right) \quad \text{subject to} \quad w^T \Sigma w \leq \sigma^2.
+\end{equation}
+
+\paragraph{Formulation 2: Minimize Risk subject to a Reward Constraint}
+Let $\mu \in \mathbb{R}$ be the desired target portfolio return. The investor seeks the safest possible way (lowest variance) to achieve at least this expected return:
+\begin{equation}
+    \min_{w \in E} w^T \Sigma w \quad \text{subject to} \quad (1 - w \cdot \mathbf{1}) R^0 + w \cdot R \geq \mu.
+\end{equation}
+
+\paragraph{Formulation 3: Maximize a Risk-Adjusted Reward (The Utility Formulation)}
+In modern finance, investors are often modeled using a combined objective function. Let $\lambda \ge 0$ denote the investor's \textbf{risk aversion parameter}. 
+\begin{itemize}
+    \item If $\lambda = 0$, the investor is risk-neutral and only cares about maximizing expected return.
+    \item If $\lambda \gg 1$, the investor is highly risk-averse, punishing variance heavily.
+\end{itemize}
+The unconstrained optimization problem seeks to maximize a penalized expected return function:
+\begin{equation}
+    \max_{w \in E} \left( (1 - w \cdot \mathbf{1}) R^0 + w \cdot R - \frac{\lambda}{2} w^T \Sigma w \right).
+\end{equation}
+The term $\frac{\lambda}{2} w^T \Sigma w$ represents the utility penalty exacted by risk. Varying $\lambda$ from $0$ to $\infty$ maps out the entire set of optimal portfolios.

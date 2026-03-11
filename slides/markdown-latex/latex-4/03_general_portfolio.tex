@@ -1,0 +1,111 @@
+\chapter{The General Portfolio (Adding a Riskless Asset)}
+
+We now return to the full unconstrained problem, allowing the investor's trading universe to include the \textbf{riskless asset} (such as a bank account or government bond) with a deterministic, guaranteed return rate $R^0 = r$. The addition of this asset fundamentally alters the shape of the efficient frontier and dramatically simplifies optimal portfolio selection.
+
+Recall the full, multi-asset portfolio weights are defined by $w^0$ for the riskless asset and $w = (w^1, \dots, w^d) \in \mathbb{R}^d$ for the risky assets, such that $w^0 + w \cdot \mathbf{1} = 1$. The investor is no longer restricted to the hyperplane $E_0$.
+
+Under this expanded universe, the \textbf{Formulation 2} optimization problem (minimizing variance for a target expected return $\mu$) becomes:
+\begin{equation}
+    \min_{(w^0, w) \in \mathbb{R} \times E} w^T \Sigma w \quad \text{subject to} \quad w^0 R^0 + w \cdot R \ge \mu, \quad \text{and} \quad w^0 + w \cdot \mathbf{1} = 1.
+\end{equation}
+
+Note the following crucial observations regarding the generalized problem:
+\begin{itemize}
+    \item The risk of the portfolio (the variance $w^T \Sigma w$) is still \textit{entirely determined} by the allocation vector $w$ of the risky assets. The riskless asset contributes zero variance, by definition.
+    \item Any optimal portfolio will always be a simple two-asset linear combination of:
+    \begin{enumerate}
+        \item A single, optimally constructed portfolio composed entirely of risky assets.
+        \item The riskless asset.
+    \end{enumerate}
+    \item Changing the target expected return $\mu$ merely alters the \textit{relative proportions} allocated between these two components, rather than changing the internal composition of the risky portfolio itself. 
+\end{itemize}
+
+\section{The Tangency Portfolio and the Market Portfolio}
+
+To formalize this two-component separation property, we decompose the total portfolio into risky and riskless parts. Assume $w^0 < 1$ (the investor is not 100\% invested in the riskless asset, so they must hold some risky assets). Let us denote the interval of meaningful riskless weights as $I := (-\infty, 1)$.
+
+For any allocation $w^0 \in I$, we can re-scale the risky asset weights to sum up to $1$. We define the normalized risky portfolio $\hat{w}$:
+\begin{equation*}
+    \hat{w} := \frac{w}{1 - w^0}.
+\end{equation*}
+By construction, this normalized portfolio satisfies $\hat{w} \cdot \mathbf{1} = \frac{w \cdot \mathbf{1}}{1 - w^0} = \frac{1 - w^0}{1 - w^0} = 1$. Therefore, $\hat{w}$ represents a purely risky portfolio that lies on the original (risky-only) efficient frontier defined in Chapter 2, i.e., $\hat{w} \in E_0$.
+
+The expected return constraint can also be rewritten in terms of this normalized portfolio. We need $w^0 R^0 + w \cdot R = \mu$. Substituting $w = (1 - w^0)\hat{w}$ gives:
+\begin{align*}
+    w^0 R^0 + (1 - w^0)\hat{w} \cdot R &= \mu \\
+    (1 - w^0)\hat{w} \cdot R &= \mu - w^0 R^0 \\
+    \hat{w} \cdot R &= \frac{\mu - w^0 R^0}{1 - w^0}.
+\end{align*}
+Let us define the target return \textit{required from the risky portion} as:
+\begin{equation}
+    \hat{\mu}(w^0) := \frac{\mu - w^0 R^0}{1 - w^0}.
+\end{equation}
+
+The optimization problem can now be viewed sequentially: for any chosen level of cash $w^0$, we must find the optimal purely risky portfolio $\hat{w}$ that minimizes variance while yielding the return $\hat{\mu}(w^0)$.
+Using the normalized weights, the variance objective function is:
+\begin{equation}
+    w^T \Sigma w = ((1-w^0)\hat{w})^T \Sigma ((1-w^0)\hat{w}) = (1-w^0)^2 \hat{w}^T \Sigma \hat{w}. \label{eq:var_normalized}
+\end{equation}
+Since $(1-w^0)^2$ is just a positive scalar constant for a fixed $w^0$, minimizing $(1-w^0)^2 \hat{w}^T \Sigma \hat{w}$ subject to $\hat{w} \cdot R \ge \hat{\mu}(w^0)$ is mathematically identical to solving the purely-risky Markowitz problem \eqref{eq:p2_market} for a target return of $\hat{\mu}(w^0)$!
+
+Thus, the global optimization problem simplifies to:
+\begin{align}
+    \min_{w^0 \in I} \left[ \min_{\hat{w} \in E_0 : \hat{w} \cdot R \ge \hat{\mu}(w^0)} (1-w^0)^2 \hat{w}^T \Sigma \hat{w} \right]
+    &= \min_{w^0 \in I} (1-w^0)^2 \left( \min_{\hat{w} \in E_0 : \hat{w} \cdot R \ge \hat{\mu}(w^0)} \hat{w}^T \Sigma \hat{w} \right) \notag \\
+    &= \min_{w^0 \in I} \left[ (1-w^0)^2 g(\hat{\mu}(w^0)) \right],
+\end{align}
+where $g(\cdot)$ is exactly the variance-minimizing function for purely risky assets derived in Chapter 2.
+
+This result implies that all \textit{globally} efficient portfolios (involving both riskless and risky assets) can be represented functionally as:
+\begin{equation}
+    \rho(V) = \tilde{w}^0 R^0 + (1 - \tilde{w}^0) \tilde{w} \cdot \rho(S).
+\end{equation}
+Here, $\tilde{w}$ denotes the fixed, unique optimal vector of risky asset weights (normalized so they sum to 1), and $\tilde{w}^0$ dictates the mix between cash and this single optimal risky portfolio. In the literature, this unique purely risky portfolio $\tilde{w}$ is called the \textbf{Market Portfolio} or the \textbf{Tangency Portfolio}, denoted $V_M$.
+\begin{equation*}
+    V_M := \tilde{w} \cdot S.
+\end{equation*}
+
+\section{The Capital Market Line (CML) and Conclusion}
+
+Graphically mapping standard deviation (risk, $\sigma$) on the x-axis against expected return ($\mu$) on the y-axis reveals the profound impact of the riskless asset.
+
+Because the riskless asset has zero variance and return $r = R^0$, it sits on the y-axis at $(0, r)$. An investor constructing a portfolio composed of fraction $w^0$ in the riskless asset and $(1-w^0)$ in any arbitrary risky portfolio $V_P$ will achieve an expected return and standard deviation that lie on a perfectly straight line connecting $(0, r)$ to the point representing $V_P$ structurally.
+
+To maximize return for any given risk level, the investor must select the specific risky portfolio $V_P$ that creates the steepest possible slope originating from the riskless point $(0, r)$. Geometrically, the line with the maximum possible slope must be \textit{tangent} to the upper envelope of the purely risky efficient frontier (the Markowitz bullet). The single touchpoint where this straight line is tangent to the hyperbola represents the \textbf{Tangency Portfolio} or \textbf{Market Portfolio} $V_M$.
+
+This tangent line dominates all other portfolios; we refer to this boundary as the \textbf{Capital Market Line (CML)}. The new Efficient Frontier is simply the CML itself. Every optimal strategy involves moving along this line by either:
+\begin{itemize}
+    \item \text{Lending (Holding cash):} Selecting a point on the line segment strictly between $(0, r)$ and $V_M$. The investor puts some money in the bank ($w^0 > 0$) and the rest into the exact combination of the market portfolio.
+    \item \text{Borrowing (Using leverage):} Selecting a point on the line extending past $V_M$ to the upper-right. The investor borrows cash at the riskless rate ($w^0 < 0$) and invests more than $100\%$ of their initial capital into the market portfolio to amplify their returns.
+\end{itemize}
+
+\subsection{Equation of the Capital Market Line}
+
+Let us derive the explicit formula for the CML. With the market portfolio defined as $V_M = \tilde{w} \cdot S$, any portfolio $V$ lying on the CML is a linear combination of the riskless asset and $V_M$:
+\begin{equation}
+    \rho(V) = \tilde{w}^0 \rho(S^0) + (1 - \tilde{w}^0) \rho(V_M).
+\end{equation}
+We evaluate the expected value (return) and the variance (risk) of this generic CML portfolio. First, the expected return $r(V)$:
+\begin{equation}
+    r(V) = \tilde{w}^0 R^0 + (1 - \tilde{w}^0) r(V_M) = R^0 + (1 - \tilde{w}^0) \big( r(V_M) - R^0 \big). \label{eq:cml_return}
+\end{equation}
+Second, the variance $\operatorname{Var}(\rho(V))$. Because the riskless asset has zero variance and zero covariance with $V_M$:
+\begin{equation}
+    \operatorname{Var}(\rho(V)) = (1 - \tilde{w}^0)^2 \operatorname{Var}(\rho(V_M)). \label{eq:cml_variance}
+\end{equation}
+
+By taking the square root of both sides, we can isolate the allocation term $(1 - \tilde{w}^0)$ as the ratio of standard deviations:
+\begin{equation*}
+    (1 - \tilde{w}^0) = \sqrt{ \frac{\operatorname{Var}(\rho(V))}{\operatorname{Var}(\rho(V_M))} } = \frac{\sigma_V}{\sigma_{M}}.
+\end{equation*}
+
+Substituting this ratio back into the expected return equation \eqref{eq:cml_return} yields the fundamental \textbf{Equation of the Capital Market Line}:
+\begin{equation}
+    r(V) = R^0 + \frac{r(V_M) - R^0}{\sqrt{\operatorname{Var}(\rho(V_M))}} \sqrt{\operatorname{Var}(\rho(V))}
+\end{equation}
+or, more simply in terms of standard deviations $\sigma$:
+\begin{equation}
+    \mu = R^0 + \frac{\mu_M - R^0}{\sigma_M} \cdot \sigma
+\end{equation}
+
+The slope of the line, $\frac{\mu_M - R^0}{\sigma_M}$, is known as the \textbf{Sharpe Ratio} of the market portfolio. It represents the investor's reward-to-risk ratio—the extra expected return earned per unit of standard deviation risk taken by moving away from the riskless baseline. Because the CML has the steepest possible slope, the tangency portfolio $V_M$ is precisely the specific blend of risky assets that provides the maximum possible Sharpe ratio.
