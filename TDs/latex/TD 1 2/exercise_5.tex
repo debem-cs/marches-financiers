@@ -1,0 +1,74 @@
+\section{Exercise 5: Transformation of Martingales}
+
+\textbf{Context:} We are given an $\mathbb{F}$-martingale $M = (M_n)_{n\in\mathbb{N}}$ and a bounded $\mathbb{F}$-predictable process $\xi = (\xi_n)_{n\in\mathbb{N}^*}$. We define a new process $X$ as:
+\begin{align*}
+X_0 &:= M_0, \\
+X_n &:= M_0 + \sum_{k=1}^n \xi_k(M_k - M_{k-1})
+\end{align*}
+This is the discrete-time equivalent of a stochastic integral, where $\xi$ represents a trading strategy \& $M$ represents the price process.
+
+\subsection{Part 1: Martingale Property of the Transform}
+
+\textbf{Question 1:} Show that $X = (X_n)_{n\in\mathbb{N}}$ is an $\mathbb{F}$-martingale.
+
+\textbf{Step-by-Step Explanation:}
+To show a process is a martingale, we must verify three properties: integrability, adaptedness, and the martingale conditional expectation property.
+
+\begin{enumerate}
+    \item \textbf{Integrability:} $X_n$ is a finite sum of products. Because $\xi$ is a bounded process, there is some constant $C$ such that $|\xi_k| \le C$. Since $M$ is a martingale, each $M_k$ is integrable. The product of a bounded random variable and an integrable random variable is integrable. Thus, $X_n$ is integrable.
+    
+    \item \textbf{Adaptedness:} For each $k \le n$, $M_k$ and $M_{k-1}$ are $\mathcal{F}_k$-measurable. Since $\xi$ is predictable, $\xi_k$ is $\mathcal{F}_{k-1}$-measurable (and thus $\mathcal{F}_k$-measurable). Therefore, the entire sum defining $X_n$ is $\mathcal{F}_n$-measurable, making $X$ an adapted process.
+
+    \item \textbf{Martingale Property:} We need to show that $E[X_n | \mathcal{F}_{n-1}] = X_{n-1}$. It is often easier to look at the increment $X_n - X_{n-1}$ and show its conditional expectation is 0.
+    
+    Notice that $X_n - X_{n-1}$ is simply the very last term of the sum:
+    \[ X_n - X_{n-1} = \xi_n(M_n - M_{n-1}) \]
+    
+    Taking the conditional expectation:
+    \[ E[X_n - X_{n-1} | \mathcal{F}_{n-1}] = E[\xi_n(M_n - M_{n-1}) | \mathcal{F}_{n-1}] \]
+    
+    Because $\xi$ is predictable, $\xi_n$ is known at time $n-1$, so we can pull it out of the conditional expectation:
+    \[ = \xi_n E[M_n - M_{n-1} | \mathcal{F}_{n-1}] \]
+    
+    Because $M$ is a martingale, we know $E[M_n | \mathcal{F}_{n-1}] = M_{n-1}$, which means the expected increment $E[M_n - M_{n-1} | \mathcal{F}_{n-1}]$ is exactly 0.
+    \[ = \xi_n \times 0 = 0 \]
+    
+    Therefore, $E[X_n | \mathcal{F}_{n-1}] = X_{n-1}$, proving $X$ is a martingale. Furthermore, taking the unconditional expectation gives $E[X_n] = E[X_0] = E[M_0]$.
+\end{enumerate}
+
+\subsection{Part 2: A Characterization of Martingales}
+
+\textbf{Question 2:} Let $Y = (Y_n)_{n\in\mathbb{N}}$ be $\mathbb{F}$-adapted and integrable. Show that the following two claims are equivalent:
+(i) $Y$ is an $\mathbb{F}$-martingale;
+(ii) For any bounded $\mathbb{F}$-predictable process $\theta = (\theta_n)_{n\in\mathbb{N}^*}$, one has $E\left[\sum_{k=1}^n \theta_k(Y_k - Y_{k-1})\right] = 0, \forall n \in \mathbb{N}$.
+
+\textbf{Step-by-Step Explanation:}
+We need to prove implication in both directions.
+
+\textbf{Proof that (i) implies (ii):}
+Suppose (i) holds, meaning $Y$ is a martingale. 
+Let's look at the expression in (ii). From Part 1, we already proved that if we transform a martingale $Y$ with a bounded predictable process $\theta$, the resulting process is also a martingale. 
+Let $Z_n = \sum_{k=1}^n \theta_k(Y_k - Y_{k-1})$. As shown in Part 1, $Z$ is a martingale starting at $Z_0 = 0$.
+The expected value of any martingale is constant over time, so $E[Z_n] = E[Z_0] = 0$. This exactly matches the formula in (ii). Thus, (i) $\implies$ (ii).
+
+\textbf{Proof that (ii) implies (i):}
+Suppose (ii) holds for \textit{any} bounded predictable process $\theta$. We want to prove $Y$ is a martingale, which means proving $E[Y_{n+1} - Y_n | \mathcal{F}_n] = 0$.
+The definition of conditional expectation $E[Y_{n+1} - Y_n | \mathcal{F}_n] = 0$ means that for any arbitrary event $A \in \mathcal{F}_n$, we must have:
+\[ E[1_A(Y_{n+1} - Y_n)] = 0 \]
+
+Because (ii) is true for \textit{any} predictable process, we can custom-build a process $\theta$ to isolate exactly this term. 
+Fix an arbitrary time $n$ and an arbitrary set $A \in \mathcal{F}_n$. We define our process $\theta$ as follows:
+\begin{itemize}
+    \item Let $\theta_{n+1} = 1_A$
+    \item Let $\theta_k = 0$ for all $k \neq n+1$
+\end{itemize}
+
+Is this $\theta$ predictable? Yes, because $\theta_{n+1} = 1_A$ depends only on information in $\mathcal{F}_n$. It is also bounded (since indicator functions only take values 0 or 1).
+
+Now plug this custom $\theta$ into the equation from (ii) evaluated at time $n+1$:
+\[ E\left[\sum_{k=1}^{n+1} \theta_k(Y_k - Y_{k-1})\right] = 0 \]
+Because all $\theta_k$ are 0 except for $k=n+1$, the sum collapses into a single term:
+\[ E[\theta_{n+1}(Y_{n+1} - Y_n)] = 0 \]
+Substitute $\theta_{n+1} = 1_A$:
+\[ E[1_A(Y_{n+1} - Y_n)] = 0 \]
+Since this holds for any $A \in \mathcal{F}_n$, it mathematically forces the conditional expectation $E[Y_{n+1} - Y_n | \mathcal{F}_n]$ to be exactly 0 almost surely. Therefore, $E[Y_{n+1} | \mathcal{F}_n] = Y_n$, proving $Y$ is a martingale.

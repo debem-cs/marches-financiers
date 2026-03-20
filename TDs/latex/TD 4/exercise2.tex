@@ -1,0 +1,140 @@
+\subsection*{1. Deriving the Expected Returns and Covariance Matrix}
+We are given the riskless rate $R^0 = 0.06$ and the relationship between the two risky assets:
+\[
+\rho(S^2) = 0.06 + 0.2\rho(S^1)
+\]
+The probability distribution for $\rho(S^1)$ is provided as follows:
+\begin{table}[H]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+$\rho(S^1)$ \& Probability \\
+\midrule
+0.6 \& 0.1 \\
+0.4 \& 0.2 \\
+0.3 \& 0.4 \\
+0.2 \& 0.2 \\
+-1  \& 0.1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.5em}
+\noindent \textbf{Expected Returns:}
+First, we calculate the expected return for the first asset, $\mathbb{E}[\rho(S^1)]$:
+\[
+\mathbb{E}[\rho(S^1)] = (0.6)(0.1) + (0.4)(0.2) + (0.3)(0.4) + (0.2)(0.2) + (-1)(0.1)
+\]
+\[
+\mathbb{E}[\rho(S^1)] = 0.06 + 0.08 + 0.12 + 0.04 - 0.10 = 0.2
+\]
+Using the linear relationship, we can directly find the expected return for the second asset, $\mathbb{E}[\rho(S^2)]$:
+\[
+\mathbb{E}[\rho(S^2)] = 0.06 + 0.2\mathbb{E}[\rho(S^1)] = 0.06 + 0.2(0.2) = 0.06 + 0.04 = 0.1
+\]
+Thus, the expected return vector is $R = \begin{pmatrix} 0.2 \\ 0.1 \end{pmatrix}$.
+
+\vspace{0.5em}
+\noindent \textbf{Covariance Matrix ($\Sigma$):}
+Next, we need the variance of $\rho(S^1)$. We first find $\mathbb{E}[\rho(S^1)^2]$:
+\[
+\mathbb{E}[\rho(S^1)^2] = (0.6^2)(0.1) + (0.4^2)(0.2) + (0.3^2)(0.4) + (0.2^2)(0.2) + (-1^2)(0.1)
+\]
+\[
+\mathbb{E}[\rho(S^1)^2] = 0.036 + 0.032 + 0.036 + 0.008 + 0.10 = 0.212
+\]
+Now, calculate the variance:
+\[
+V(S^1) = \mathbb{E}[\rho(S^1)^2] - (\mathbb{E}[\rho(S^1)])^2 = 0.212 - (0.2)^2 = 0.212 - 0.04 = 0.172
+\]
+Using the properties of variance and covariance with the linear relationship $\rho(S^2) = 0.06 + 0.2\rho(S^1)$:
+\[
+V(S^2) = V(0.06 + 0.2\rho(S^1)) = 0.2^2 V(S^1) = 0.04 \times 0.172 = 0.00688
+\]
+\[
+Cov(S^1, S^2) = Cov(\rho(S^1), 0.06 + 0.2\rho(S^1)) = 0.2 V(S^1) = 0.2 \times 0.172 = 0.0344
+\]
+This gives us the exact covariance matrix provided in the exercise:
+\[
+\Sigma = \begin{pmatrix} 0.172 \& 0.0344 \\ 0.0344 \& 0.00688 \end{pmatrix}
+\]
+Notice that the determinant of $\Sigma$ is zero ($0.172 \times 0.00688 - 0.0344^2 = 0$). The assets are perfectly positively correlated, meaning $\Sigma$ is not invertible and we cannot use the standard matrix optimization from Exercise 1.
+
+\subsection*{2. Minimum-Variance Portfolio (Long \& Short allowed)}
+We want to minimize portfolio variance $V(w)$ subject to $w_1 + w_2 = 1$. Let's express the portfolio return $V^w$ strictly in terms of $w_1$ and $\rho(S^1)$.
+
+Substitute $w_2 = 1 - w_1$ and $\rho(S^2) = 0.06 + 0.2\rho(S^1)$ into the portfolio return equation:
+\[
+V^w = w_1\rho(S^1) + w_2\rho(S^2) = w_1\rho(S^1) + (1 - w_1)(0.06 + 0.2\rho(S^1))
+\]
+Expand and factor by $\rho(S^1)$:
+\[
+V^w = w_1\rho(S^1) + 0.06 - 0.06w_1 + 0.2\rho(S^1) - 0.2w_1\rho(S^1)
+\]
+\[
+V^w = (w_1 + 0.2 - 0.2w_1)\rho(S^1) + 0.06(1 - w_1)
+\]
+\[
+V^w = (0.2 + 0.8w_1)\rho(S^1) + 0.06(1 - w_1)
+\]
+The variance of this portfolio is simply the variance of the random component:
+\[
+V(w) = Var(V^w) = (0.2 + 0.8w_1)^2 V(S^1) = (0.2 + 0.8w_1)^2 (0.172)
+\]
+To find the minimum variance, we can just set this squared term to zero (since variance cannot be negative):
+\[
+0.2 + 0.8w_1 = 0 \implies 0.8w_1 = -0.2 \implies \tilde{w}_1 = -0.25
+\]
+Since $w_1 + w_2 = 1$, we have:
+\[
+\tilde{w}_2 = 1 - (-0.25) = 1.25
+\]
+So the optimal weights are $\tilde{w} = (-0.25, 1.25)^T$. This means we short asset 1 and go long on asset 2.
+
+\vspace{0.5em}
+\noindent \textbf{Expected Value \& Variance:}
+By construction, the variance of this portfolio is zero:
+\[
+Var(V) = 0
+\]
+The expected return is:
+\[
+r(V) = \tilde{w}^T R = -0.25(0.2) + 1.25(0.1) = -0.05 + 0.125 = 0.075
+\]
+Notice that the risk-free rate is $R^0 = 0.06$, but we have created a portfolio with absolutely no risk ($Var(V) = 0$) that yields $0.075 > 0.06$. 
+
+\subsection*{3. Creating an Arbitrage Opportunity}
+Since we found a risk-free portfolio that pays more than the market risk-free rate, we can construct an arbitrage strategy.
+
+Let $\lambda > 0$ be some amount of capital. We construct our strategy at time $t=0$:
+\begin{enumerate}
+    \item Borrow $\lambda$ dollars at the risk-free rate $R^0 = 0.06$. (Cash flow: $+\lambda$)
+    \item Invest this $\lambda$ into our zero-variance portfolio. Since our weights are $\tilde{w}_1 = -0.25$ and $\tilde{w}_2 = 1.25$:
+    \begin{itemize}
+        \item Short sell $0.25\lambda$ worth of asset 1. (Cash flow: $+0.25\lambda$)
+        \item Buy $1.25\lambda$ worth of asset 2. (Cash flow: $-1.25\lambda$)
+    \end{itemize}
+\end{enumerate}
+Total initial cash flow at $t=0$ is: $\lambda + 0.25\lambda - 1.25\lambda = 0$. We need zero of our own money to start this operation.
+
+At time $t=1$, we liquidate the portfolio and pay back the loan:
+\begin{enumerate}
+    \item Pay back the borrowed money with interest: $-\lambda(1 + R^0) = -\lambda(1.06)$.
+    \item Repurchase asset 1 to close the short position: $-0.25\lambda(1 + \rho(S^1))$.
+    \item Sell asset 2 from our long position: $+1.25\lambda(1 + \rho(S^2))$.
+\end{enumerate}
+Let's calculate the total payoff at $t=1$, substituting $\rho(S^2) = 0.06 + 0.2\rho(S^1)$:
+\[
+\text{Payoff} = -\lambda(1.06) - 0.25\lambda(1 + \rho(S^1)) + 1.25\lambda(1 + 0.06 + 0.2\rho(S^1))
+\]
+\[
+\text{Payoff} = \lambda \left[ -1.06 - 0.25 - 0.25\rho(S^1) + 1.25(1.06) + 1.25(0.2)\rho(S^1) \right]
+\]
+\[
+\text{Payoff} = \lambda \left[ -1.31 - 0.25\rho(S^1) + 1.325 + 0.25\rho(S^1) \right]
+\]
+The $\rho(S^1)$ terms perfectly cancel out, mathematically proving our risk is strictly zero.
+\[
+\text{Payoff} = \lambda(-1.31 + 1.325) = 0.015\lambda
+\]
+Because $0.015\lambda$ is strictly positive and guaranteed regardless of what the market does, we have mathematically proven an arbitrage opportunity. The larger the $\lambda$ we borrow, the larger our risk-free profit becomes.

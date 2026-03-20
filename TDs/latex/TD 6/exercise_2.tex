@@ -1,0 +1,86 @@
+\section*{Exercise 2: Limit of binomial model}
+
+\subsection*{Context}
+We want to find an approximation of the terminal asset price $S_T$ when the number of periods $T$ becomes very large. This explores the connection between the discrete binomial model and continuous-time models.
+
+\subsection*{Question 1: Identifying the Law}
+\textbf{Goal:} Find the probability distribution (the law) of the random variable:
+\begin{equation*}
+    Y_T := \frac{\ln(S_T / (S_0(1+d)^T))}{\ln((1+u)/(1+d))}
+\end{equation*}
+under the risk-neutral measure $Q$.
+
+\vspace{0.5cm}
+\noindent \textbf{Step-by-step Solution:}
+\begin{enumerate}
+    \item \textbf{Expand the Asset Price:} The price at maturity $T$ is the initial price multiplied by the consecutive returns for each period.
+    \begin{equation*}
+        S_T = S_0 (1+R_1)(1+R_2)\dots(1+R_T) = S_0 \prod_{t=1}^T (1+R_t)
+    \end{equation*}
+    
+    \item \textbf{Apply Logarithms:} Take the natural logarithm of $S_T$ to turn the product into a sum.
+    \begin{equation*}
+        \ln(S_T) = \ln(S_0) + \sum_{t=1}^T \ln(1+R_t)
+    \end{equation*}
+    
+    \item \textbf{Substitute into the Target Expression:} We want to evaluate the numerator of $Y_T$. Notice that $\ln(S_0(1+d)^T) = \ln(S_0) + T\ln(1+d) = \ln(S_0) + \sum_{t=1}^T \ln(1+d)$.
+    \begin{align*}
+        \ln\left(\frac{S_T}{S_0(1+d)^T}\right) &= \ln(S_T) - \ln(S_0(1+d)^T) \\
+        &= \left( \ln(S_0) + \sum_{t=1}^T \ln(1+R_t) \right) - \left( \ln(S_0) + \sum_{t=1}^T \ln(1+d) \right) \\
+        &= \sum_{t=1}^T \big( \ln(1+R_t) - \ln(1+d) \big) \\
+        &= \sum_{t=1}^T \ln\left(\frac{1+R_t}{1+d}\right)
+    \end{align*}
+    
+    \item \textbf{Analyze the Summand:} Now we divide by the denominator to construct $Y_T$. Let us define a new random variable $X_t$ for each period $t$:
+    \begin{equation*}
+        X_t := \frac{\ln((1+R_t)/(1+d))}{\ln((1+u)/(1+d))}
+    \end{equation*}
+    So $Y_T = \sum_{t=1}^T X_t$. We know that $R_t$ can only take two values: $u$ or $d$. Let us evaluate $X_t$ for both cases:
+    \begin{itemize}
+        \item If $R_t = u$ (probability $q$): $X_t = \frac{\ln((1+u)/(1+d))}{\ln((1+u)/(1+d))} = 1$.
+        \item If $R_t = d$ (probability $1-q$): $X_t = \frac{\ln((1+d)/(1+d))}{\ln((1+u)/(1+d))} = \frac{\ln(1)}{\ln((1+u)/(1+d))} = 0$.
+    \end{itemize}
+    
+    \item \textbf{Conclusion:} Each $X_t$ is a Bernoulli random variable with parameter $q$. Since the returns $R_1, \dots, R_T$ are independent and identically distributed (i.i.d.) under $Q$, the sum $Y_T = \sum_{t=1}^T X_t$ represents the sum of $T$ i.i.d. Bernoulli random variables. Therefore, $Y_T$ follows a \textbf{Binomial distribution} with parameters $T$ and $q$: $Y_T \sim \mathcal{B}(T, q)$.
+\end{enumerate}
+
+\subsection*{Question 2: Applying the Central Limit Theorem (CLT)}
+\textbf{Goal:} Provide an approximation of the law of $S_T$ as $T \to \infty$.
+
+\vspace{0.5cm}
+\noindent \textbf{Step-by-step Solution:}
+\begin{enumerate}
+    \item \textbf{Formulate the CLT:} Since $Y_T$ is a sum of $T$ i.i.d. random variables with mean $E_Q[X_t] = q$ and variance $Var_Q(X_t) = q(1-q)$, its total mean is $Tq$ and total variance is $Tq(1-q)$. 
+    The Central Limit Theorem states that as $T \to \infty$, the standardized version of $Y_T$ converges in distribution to a standard normal random variable $G \sim \mathcal{N}(0,1)$:
+    \begin{equation*}
+        \frac{Y_T - Tq}{\sqrt{Tq(1-q)}} \approx G
+    \end{equation*}
+    
+    \item \textbf{Isolate $Y_T$:} Rearrange the approximation to express $Y_T$ in terms of $G$.
+    \begin{equation*}
+        Y_T \approx \sqrt{Tq(1-q)}G + Tq
+    \end{equation*}
+    
+    \item \textbf{Substitute $Y_T$ back into the original definition:} Recall our definition of $Y_T$ from Question 1.
+    \begin{equation*}
+        \frac{\ln(S_T / (S_0(1+d)^T))}{\ln((1+u)/(1+d))} \approx \sqrt{Tq(1-q)}G + Tq
+    \end{equation*}
+    
+    \item \textbf{Solve for $S_T$:} Now, we use algebra to isolate $S_T$. Multiply both sides by the denominator:
+    \begin{equation*}
+        \ln\left(\frac{S_T}{S_0(1+d)^T}\right) \approx \ln\left(\frac{1+u}{1+d}\right) \Big( \sqrt{Tq(1-q)}G + Tq \Big)
+    \end{equation*}
+    Take the exponential of both sides:
+    \begin{equation*}
+        \frac{S_T}{S_0(1+d)^T} \approx \exp\left[ \ln\left(\frac{1+u}{1+d}\right) \Big( \sqrt{Tq(1-q)}G + Tq \Big) \right]
+    \end{equation*}
+    Using the property $\exp(a \cdot b) = (\exp(a))^b = (e^{\ln(x)})^b = x^b$, we can rewrite the right side:
+    \begin{equation*}
+        \frac{S_T}{S_0(1+d)^T} \approx \left(\frac{1+u}{1+d}\right)^{\sqrt{Tq(1-q)}G + Tq}
+    \end{equation*}
+    Finally, multiply by $S_0(1+d)^T$ to get the approximation for $S_T$:
+    \begin{equation*}
+        S_T \approx S_0(1+d)^T \left(\frac{1+u}{1+d}\right)^{\sqrt{Tq(1-q)}G + Tq}
+    \end{equation*}
+    This shows that in the limit, the asset price $S_T$ follows a log-normal distribution, which is the foundational assumption of the Black-Scholes model.
+\end{enumerate}

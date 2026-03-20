@@ -1,0 +1,96 @@
+\section{Exercise 4: Doob's Decomposition}
+
+Context: Consider an $\mathbb{F}$-adapted process $S = (S_n)_{n\in\mathbb{N}}$.
+
+\subsection{Part 1: The General Decomposition}
+
+Assume that the process $S$ is integrable. We define a new process $A$ by setting $A_0 := 0$ and for each $n \ge 1$:
+\[ A_n := \sum_{k=1}^n E[S_k - S_{k-1} | \mathcal{F}_{k-1}] \]
+
+Question 1(a): Show that $(A_n)_{n\in\mathbb{N}}$ is $\mathbb{F}$-predictable.
+
+Step-by-Step Explanation:
+A process is predictable if its value at time $n$ is completely determined by the information available at time $n-1$. Let's look at the terms in the sum that defines $A_n$.
+The index $k$ runs from 1 up to $n$. The very last term in this sum is $E[S_n - S_{n-1} | \mathcal{F}_{n-1}]$.
+By definition, taking the conditional expectation given $\mathcal{F}_{n-1}$ results in a random variable that is $\mathcal{F}_{n-1}$-measurable. Since all previous terms (for $k < n$) are conditioned on even earlier information, they are also $\mathcal{F}_{n-1}$-measurable. 
+Because $A_n$ is a sum of $\mathcal{F}_{n-1}$-measurable terms, $A_n$ itself is $\mathcal{F}_{n-1}$-measurable. Therefore, $A$ is predictable.
+
+Question 1(b): Show that $S_n = S_0 + A_n + M_n$ for all $n \in \mathbb{N}$, where $M$ is an $\mathbb{F}$-martingale.
+
+Step-by-Step Explanation:
+We are forced to define $M_n$ by rearranging the target equation:
+\[ M_n = S_n - S_0 - A_n \]
+We need to prove this $M_n$ is a martingale. This means checking $E[M_n | \mathcal{F}_{n-1}] = M_{n-1}$. Let's calculate $E[M_n | \mathcal{F}_{n-1}]$:
+\[ E[M_n | \mathcal{F}_{n-1}] = E[S_n - S_0 - A_n | \mathcal{F}_{n-1}] \]
+By linearity, and knowing $S_0$ and $A_n$ are known at time $n-1$:
+\[ = E[S_n | \mathcal{F}_{n-1}] - S_0 - A_n \]
+Now, let's rewrite $A_n$ by pulling out its last term:
+\[ A_n = A_{n-1} + E[S_n - S_{n-1} | \mathcal{F}_{n-1}] = A_{n-1} + E[S_n | \mathcal{F}_{n-1}] - S_{n-1} \]
+Substitute this expression for $A_n$ back into our martingale equation:
+\[ E[M_n | \mathcal{F}_{n-1}] = E[S_n | \mathcal{F}_{n-1}] - S_0 - (A_{n-1} + E[S_n | \mathcal{F}_{n-1}] - S_{n-1}) \]
+The $E[S_n | \mathcal{F}_{n-1}]$ terms cancel out perfectly:
+\[ = S_{n-1} - S_0 - A_{n-1} \]
+Looking at our definition of $M$, this is exactly $M_{n-1}$. Thus, $M$ is a martingale.
+
+Question 1(c): Show that the above decomposition into $A$ and $M$ is (P-a.s.) unique.
+
+Step-by-Step Explanation:
+Suppose we have two such decompositions for the same process $S$:
+$S_n = S_0 + A_n + M_n$
+$S_n = S_0 + A'_n + M'_n$
+Subtract the second equation from the first:
+$0 = (A_n - A'_n) + (M_n - M'_n)$
+Rearranging gives:
+$M_n - M'_n = A'_n - A_n$
+The left side is the difference of two martingales, which is still a martingale. The right side is the difference of two predictable processes, which is still predictable. 
+This means the process $Y_n = M_n - M'_n$ is both a martingale \& predictable.
+Because it is a martingale, $E[Y_n | \mathcal{F}_{n-1}] = Y_{n-1}$.
+Because it is predictable, $E[Y_n | \mathcal{F}_{n-1}] = Y_n$.
+Therefore, $Y_n = Y_{n-1}$. The process is constant over time. Since both $M$ and $M'$ start at 0, their difference is 0 at time 0. Thus, $Y_n = 0$ for all $n$. This means $M_n = M'_n$ and $A_n = A'_n$, proving uniqueness.
+
+Question 1(d): Summarize the result.
+Every integrable adapted process $S$ can be uniquely written as the sum of its initial value, a predictable process starting at zero, and a martingale starting at zero.
+
+\subsection{Part 2: Submartingale Case}
+
+Assume further that $S$ is an $\mathbb{F}$-submartingale.
+
+Question 2(a): Show that $(A_n)_{n\in\mathbb{N}}$ is non-decreasing.
+
+Step-by-Step Explanation:
+Let's look at the difference between consecutive terms of $A$:
+$A_n - A_{n-1} = E[S_n - S_{n-1} | \mathcal{F}_{n-1}] = E[S_n | \mathcal{F}_{n-1}] - S_{n-1}$
+Because $S$ is a submartingale, we know by definition that $E[S_n | \mathcal{F}_{n-1}] \ge S_{n-1}$.
+Therefore, $E[S_n | \mathcal{F}_{n-1}] - S_{n-1} \ge 0$.
+Since $A_n - A_{n-1} \ge 0$, the process $A$ is non-decreasing.
+
+Question 2(b): Write down Doob's decomposition of $\mathbb{F}$-submartingales.
+Every integrable submartingale can be uniquely decomposed into a predictable, non-decreasing process (starting at 0) and a martingale (starting at 0).
+
+\subsection{Part 3: The Squared Martingale}
+
+Let $S = X^2$ where $X$ is a square integrable $\mathbb{F}$-martingale.
+
+Question 3(a): Show that $S$ is an $\mathbb{F}$-submartingale.
+
+Step-by-Step Explanation:
+We use Jensen's inequality with the convex function $f(x) = x^2$:
+\[ E[X_n^2 | \mathcal{F}_{n-1}] \ge (E[X_n | \mathcal{F}_{n-1}])^2 \]
+Because $X$ is a martingale, $E[X_n | \mathcal{F}_{n-1}] = X_{n-1}$. Substituting this in:
+\[ E[X_n^2 | \mathcal{F}_{n-1}] \ge X_{n-1}^2 \]
+Since $S_n = X_n^2$, this translates to $E[S_n | \mathcal{F}_{n-1}] \ge S_{n-1}$. Thus, $S$ is a submartingale.
+
+Question 3(b): Write $S_n = S_0 + A_n + M_n$ as shown in Doob's decomposition. Show $A_n - A_{n-1} = E[(X_n - X_{n-1})^2 | \mathcal{F}_{n-1}]$.
+
+Step-by-Step Explanation:
+Let's expand the expression we are trying to match:
+\[ E[(X_n - X_{n-1})^2 | \mathcal{F}_{n-1}] = E[X_n^2 - 2X_n X_{n-1} + X_{n-1}^2 | \mathcal{F}_{n-1}] \]
+Using linearity and the fact that $X_{n-1}$ is known at time $n-1$:
+\[ = E[X_n^2 | \mathcal{F}_{n-1}] - 2X_{n-1}E[X_n | \mathcal{F}_{n-1}] + X_{n-1}^2 \]
+Since $X$ is a martingale, $E[X_n | \mathcal{F}_{n-1}] = X_{n-1}$. Substitute this in:
+\[ = E[X_n^2 | \mathcal{F}_{n-1}] - 2X_{n-1}(X_{n-1}) + X_{n-1}^2 \]
+\[ = E[X_n^2 | \mathcal{F}_{n-1}] - 2X_{n-1}^2 + X_{n-1}^2 \]
+\[ = E[X_n^2 | \mathcal{F}_{n-1}] - X_{n-1}^2 \]
+Substituting $S$ back into the equation:
+\[ = E[S_n | \mathcal{F}_{n-1}] - S_{n-1} \]
+We already know from Question 2(a) that $E[S_n | \mathcal{F}_{n-1}] - S_{n-1}$ is exactly the formula for $A_n - A_{n-1}$ in Doob's decomposition. This completes the proof.

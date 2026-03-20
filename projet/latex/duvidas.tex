@@ -1,0 +1,525 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage[bookmarks=false, colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
+
+\title{Dúvidas: Mercados Financeiros}
+\author{Anotações de Estudo}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% ============================================================
+\section{Dúvida 1: A Propriedade da Torre das Esperanças Condicionais}
+
+\textbf{Pergunta:} Eu não entendi por que $\mathbb{E}_t[\text{Payoff}] = \mathbb{E}_t[\mathbb{E}_{t+1}[\text{Payoff}]]$.
+
+\textbf{Explicação:}
+
+A equação trata da \textbf{Propriedade da Torre das Esperanças Condicionais} (ou Lei das Expectativas Iteradas). É um dos conceitos fundamentais em matemática financeira e precificação de ativos.
+
+Vamos desconstruir a equação $\mathbb{E}_t[\text{Payoff}] = \mathbb{E}_t[\mathbb{E}_{t+1}[\text{Payoff}]]$ para entender de forma intuitiva o porquê dela ser verdade:
+
+\subsection{1. O que os símbolos significam?}
+\begin{itemize}
+    \item \textbf{$\mathbb{E}_t[\dots]$} significa a expectativa (ou previsão) de algo \textbf{dada toda a informação disponível hoje (no momento $t$)}. Em linguagem matemática mais rigorosa, é $\mathbb{E}[\dots | \mathcal{F}_t]$.
+    \item \textbf{$\mathbb{E}_{t+1}[\text{Payoff}]$} é a expectativa do Payoff \textbf{usando toda a informação que se terá amanhã (no momento $t+1$)}.
+    \item Observe que, olhando na perspectiva de hoje ($t$), a sua previsão de amanhã ($\mathbb{E}_{t+1}[\text{Payoff}]$) ainda é incerta (é uma variável aleatória), porque entre hoje e amanhã vão surgir novas notícias e informações no mercado.
+\end{itemize}
+
+\subsection{2. A intuição por trás da igualdade}
+Imagine que o Payoff seja o preço de uma ação na sexta-feira. E vamos definir os dias:
+\begin{itemize}
+    \item $t$ = hoje (quarta-feira).
+    \item $t+1$ = amanhã (quinta-feira).
+\end{itemize}
+
+Veja o que cada lado da equação diz:
+\begin{itemize}
+    \item \textbf{Lado esquerdo ($\mathbb{E}_t[\text{Payoff}]$):} Qual é a sua melhor estimativa \textit{hoje} para o preço de sexta-feira?
+    \item \textbf{Lado direito ($\mathbb{E}_t[\mathbb{E}_{t+1}[\text{Payoff}]]$):} Qual é a sua melhor estimativa \textit{hoje} sobre qual será a sua estimativa \textit{amanhã}?
+\end{itemize}
+
+\textbf{A lógica da propriedade da torre é:} a sua melhor previsão hoje sobre qual será a sua própria previsão amanhã\dots \textbf{tem que ser igual a sua previsão de hoje!}
+
+\subsection{3. Por que não faria sentido ser diferente? (O argumento financeiro)}
+Se você acha hoje que amanhã terá motivos para revisar sua projeção de preço ``para cima'', isso significa que você \textit{hoje} já tem uma informação otimista. Se você já tem essa informação com você, a sua estimativa de hoje já deveria estar mais alta para incorporar essa expectativa!
+
+\subsection{4. Resumo Matemático (Filtragem de Informação)}
+A informação no momento $t$ (chamamos de conjunto ou sigma-álgebra $\mathcal{F}_t$) é um subconjunto da informação em $t+1$ ($\mathcal{F}_t \subseteq \mathcal{F}_{t+1}$). Isso quer dizer que o tempo não anda para trás: você não esquece as coisas amanhã que sabe hoje.
+
+Quando você aplica primeiro o operador $\mathbb{E}_{t+1}$ você tira a incerteza do que acontece depois de $t+1$. Quando você aplica o $\mathbb{E}_t$ por fora, você está tirando a incerteza do que acontece entre $t$ e $t+1$. O resultado é simplesmente tirar \textbf{toda} a incerteza futura e projetar para o tempo $t$, ou seja, $\mathbb{E}_t[\text{Payoff}]$.
+
+É por causa dessa propriedade que o preço dos ativos descontados são modelados através do conceito de \textbf{Martingal}.
+
+% ============================================================
+\section{Dúvida 2: O que é Payoff e a Relação do Preço Hoje vs. Amanhã}
+
+\textbf{Pergunta:} Defina payoff e como o valor de hoje está relacionado ao de amanhã.
+
+\textbf{Explicação:}
+
+Nas finanças, a relação entre o preço de \textbf{hoje} e o valor de \textbf{amanhã} gira em torno de dois conceitos centrais: o \textbf{Payoff} (fluxo de caixa futuro) e o \textbf{Fator de Desconto Estocástico} (SDF - \textit{Stochastic Discount Factor}).
+
+\subsection{1. O que é o Payoff?}
+
+O \textbf{Payoff} (muitas vezes denotado por $X_{t+1}$ ou $V_{t+1}$) é pura e simplesmente \textbf{tudo o que o ativo te paga no futuro} (no momento $t+1$).
+
+Se você compra um ativo hoje ($t$), no período seguinte ($t+1$) você terá direito ao valor de revenda desse ativo (o preço em $t+1$) mais qualquer rendimento extra que ele distribuiu no período (como dividendos ou cupons de juros).
+
+Formulando matematicamente, para uma ação cujo preço é $P$ e que paga um dividendo $D$:
+\begin{equation}
+    \text{Payoff}_{t+1} = X_{t+1} = P_{t+1} + D_{t+1}
+\end{equation}
+
+O \textit{Payoff} é uma \textbf{variável aleatória} vista do momento $t$. Você não tem certeza hoje de quanto a ação vai valer amanhã, nem exatamente de quanto vai ser o dividendo.
+
+\subsection{2. Como o valor de hoje se relaciona com o de amanhã?}
+
+A regra de ouro de precificação de qualquer ativo na economia é: \textbf{O preço de hoje de um ativo é o valor esperado do seu \textit{payoff} de amanhã, descontado para o presente.}
+
+No entanto, como o \textit{payoff} do futuro é incerto (tem risco), você não pode simplesmente descontá-lo pela taxa de juros livre de risco. Você usa algo chamado \textbf{Fator de Desconto Estocástico ($M_{t+1}$)}.
+
+A Equação Fundamental de Apreçamento de Ativos (Fundamental Pricing Equation) é:
+\begin{equation}
+    P_t = \mathbb{E}_t [ M_{t+1} \cdot X_{t+1} ]
+\end{equation}
+
+Onde:
+\begin{itemize}
+    \item \textbf{$P_t$}: É o preço que você paga pelo ativo hoje.
+    \item \textbf{$X_{t+1}$}: É o Payoff amanhã (Preço futuro + Dividendos).
+    \item \textbf{$M_{t+1}$}: É o Fator de Desconto Estocástico. Ele faz o papel duplo de desvalorizar o dinheiro no tempo (como uma taxa de juros) e penalizar os estados do mundo onde a economia vai mal (ajuste de risco).
+    \item \textbf{$\mathbb{E}_t[\dots]$}: É a esperança (média probabilística) usando todas as informações que você tem hoje ($t$).
+\end{itemize}
+
+\subsection{3. Resumo da Intuição Econômica}
+
+Em termos econômicos, a relação $P_t = \mathbb{E}_t [ M_{t+1} \cdot X_{t+1} ]$ significa que o investidor olha para todos os cenários possíveis de amanhã. Para cada cenário, ele pondera quanto o ativo vai pagar ($X_{t+1}$) multiplicado pelo quanto de ``fome'' (utilidade marginal, embutida no $M_{t+1}$) ele terá naquele cenário.
+
+Se o ativo paga muito exatamente quando a economia vai mal (quando o investidor mais precisa de dinheiro), o preço de hoje ($P_t$) será \textbf{alto} (ativo de proteção/hedge). Se o ativo paga muito quando a economia vai bem, e cai quando vai mal (como a maioria das ações da bolsa), o investidor exige pagar mais \textbf{barato} hoje (prêmio de risco).
+
+% ============================================================
+\section{Dúvida 3: Qual a Variável que está sendo Integrada?}
+
+\textbf{Contexto:} Na seção 4.4 do projeto, a esperança condicionada é escrita explicitamente como:
+\begin{align}
+    &\mathbb{E}\left[V_{t+1}(S_{t+1}, e_{t+1}) \mid S_t = x,\, e_t = e,\, b_t = a\right] \tag{7} \\
+    &= \int_{\mathbb{R}^N} V_{t+1}\!\left(x + \xi + a,\; e \odot \mathbb{1}_{\{x+\xi+a>0\}}\right) dF_{X_{t+1}}(\xi) \tag{8}
+\end{align}
+
+\textbf{Pergunta:} Qual a variável que está sendo integrada?
+
+\subsection{1. A variável de integração é \texorpdfstring{$\xi$}{xi} (xi)}
+
+A variável que está sendo integrada é $\boldsymbol{\xi}$, que representa cada \textbf{realização possível do vetor de choques} $X_{t+1}$.
+
+O símbolo $dF_{X_{t+1}}(\xi)$ é a notação de \textbf{integração de Stieltjes} em relação à função de distribuição acumulada $F_{X_{t+1}}$. Isso significa: para cada possível valor $\xi$ que o choque $X_{t+1}$ pode assumir, pegamos o valor da função $V_{t+1}$ naquele ponto e ponderamos pela \textit{probabilidade} de o choque assumir aquele valor.
+
+\subsection{2. Decomposição da Equação (8)}
+
+Identificando cada parte da integral:
+\begin{itemize}
+    \item \textbf{$\xi \in \mathbb{R}^N$}: É \textit{cada possível realização} do vetor de choques.
+    \item \textbf{$x + \xi + a$}: É o valor da carteira \textit{após} o choque $\xi$ se materializar, dado que hoje a carteira vale $x$ e a ação tomada foi $a$.
+    \item \textbf{$\mathbb{1}_{\{x+\xi+a>0\}}$}: É uma função indicadora que vale 1 se a carteira permanecer solvente (valor positivo) e 0 caso contrário.
+    \item \textbf{$dF_{X_{t+1}}(\xi)$}: É a medida de probabilidade. Diz: ``qual a chance de o vetor de choques assumir o valor $\xi$?''.
+\end{itemize}
+
+\subsection{3. Conexão com a Esperança}
+
+A escrita integral é apenas a forma explícita da esperança (equação 7). Em notação compacta:
+\begin{equation}
+    \mathbb{E}_\xi\!\left[V_{t+1}(x + \xi + a,\; e \odot \mathbb{1}_{\{x+\xi+a>0\}})\right]
+\end{equation}
+onde a esperança $\mathbb{E}_\xi$ indica que a média é calculada sobre a distribuição do choque $\xi$.
+
+\subsection{4. Por que é difícil de computar?}
+
+A integral é sobre $\mathbb{R}^N$ (alta dimensionalidade), contém funções indicadoras (não suave) e requer conhecer $V_{t+1}$ em todo o espaço de estados. Por isso a solução prática é a \textbf{aproximação de Monte Carlo}: sortear amostras aleatórias de $\xi$ segundo a distribuição $F_{X_{t+1}}$ e calcular a média empírica de $V_{t+1}$.
+
+% ============================================================
+\section{Dúvida 4: Na Aproximação Linear, as Features Dependem de Valores Presentes ou Futuros?}
+
+\textbf{Pergunta:} Na aproximação linear da função valor, nossas features dependem apenas de valores presentes, ou também de valores futuros?
+
+\subsection{1. As features dependem apenas do estado presente}
+
+Na aproximação linear da função valor, as features dependem \textbf{apenas dos valores do estado presente}. A aproximação é escrita como:
+\begin{equation}
+    V_t(s) \approx \theta^\top \phi(s)
+\end{equation}
+onde $\phi(s)$ é um vetor de features computadas a partir do \textbf{estado atual} $s = (S_t, e_t)$ --- por exemplo, o valor corrente da carteira, o regime econômico atual, os preços atuais dos ativos, etc.
+
+Não é possível usar valores futuros nas features porque:
+\begin{enumerate}
+    \item No momento da decisão $t$, os valores futuros ($S_{t+1}, e_{t+1}, \xi_{t+1}$) são \textbf{desconhecidos} --- são exatamente as variáveis aleatórias sobre as quais se calcula a esperança.
+    \item A função valor $V_t$ existe precisamente para \textbf{resumir} a incerteza futura em um único número que depende apenas do estado presente. Usar valores futuros nas features seria circular.
+\end{enumerate}
+
+\subsection{2. Como o futuro entra na aproximação?}
+
+O futuro entra \textbf{implicitamente}, através da equação de Bellman:
+\begin{equation}
+    V_t(s) = \max_a \left\{ u(a) + \beta \cdot \mathbb{E}_t\!\left[V_{t+1}(S_{t+1}, e_{t+1})\right] \right\}
+\end{equation}
+
+A esperança $\mathbb{E}_t[V_{t+1}(\ldots)]$ captura o futuro, mas ela é \textbf{integrada via Monte Carlo} --- amostrando realizações do choque futuro $\xi$ --- de modo que, ao ser avaliada, se torna apenas um número que depende do estado e da ação presentes.
+
+\subsection{3. Resumo}
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+\textbf{Componente} & \textbf{Depende de...} \\
+\hline
+Features $\phi(s)$ & Estado \textbf{presente} $(S_t, e_t)$ \\
+$\mathbb{E}_t[V_{t+1}(\ldots)]$ & Estado presente + Monte Carlo sobre $\xi$ futuro \\
+Valores futuros $S_{t+1}, e_{t+1}$ & Gerados durante a simulação, não entram nas features \\
+\hline
+\end{tabular}
+\end{center}
+
+Em suma: \textbf{features = estado presente. O futuro é tratado pelo passo de esperança/Monte Carlo.}
+
+% ============================================================
+\section{Dúvida 5: Qual o Propósito do Algoritmo de Computação de Targets? O que é \texorpdfstring{$Q_a$}{Qa} e \texorpdfstring{$\max_a Q_a$}{max Qa}?}
+
+\textbf{Pergunta:} Não estou conseguindo entender o propósito desse algoritmo. O que é $Q_a$ e a operação $\max_a Q_a$?
+
+\subsection{1. O que é \texorpdfstring{$Q_a$}{Qa}?}
+
+$Q_a$ é o \textbf{valor esperado de estar no estado $(x^{(n)}, e^{(n)})$ e tomar a ação $a$} --- ou seja, é a \textbf{Q-function} (função de valor de ação):
+\begin{equation}
+    Q_a \approx \mathbb{E}\!\left[V_{t+1}(S_{t+1}, e_{t+1}) \mid S_t = x^{(n)},\; e_t = e^{(n)},\; b_t = a\right]
+\end{equation}
+
+Em palavras: \textit{``Se hoje minha carteira vale $x^{(n)}$ e eu comprar/vender $a$ unidades de ativo, quanto vale o meu futuro em média?''}
+
+O algoritmo \textbf{estima essa esperança por Monte Carlo}: sorteia $M$ choques $\xi^{(n,m)}$, calcula o estado futuro $S^{(m)}$ para cada um, avalia $V_{t+1}$ naquele estado via aproximação linear $\langle \theta_{t+1}, \phi^{(m)} \rangle$, e tira a média:
+\begin{equation}
+    Q_a = \frac{1}{M} \sum_{m=1}^{M} \left\langle \theta_{t+1},\; \phi\!\left(S^{(m)}, e^{(m)}\right) \right\rangle
+\end{equation}
+
+\subsection{2. O que é \texorpdfstring{$\max_a Q_a$}{max Qa}?}
+
+Após calcular $Q_a$ para \textbf{cada ação possível} $a \in \mathcal{A}_{\text{discrete}}$, pega-se o máximo:
+\begin{equation}
+    Y^{(n)} = \max_a Q_a
+\end{equation}
+
+Isso é a \textbf{equação de Bellman na prática}: o valor ótimo do estado atual é o valor esperado do futuro, \textbf{maximizado sobre as ações disponíveis}. É a melhor decisão possível dado o estado $(x^{(n)}, e^{(n)})$.
+
+\subsection{3. Propósito geral do algoritmo}
+
+O algoritmo computa o \textbf{target} $Y^{(n)}$ --- o valor ``correto'' que a função valor deveria ter no estado $(x^{(n)}, e^{(n)})$. Esse $Y^{(n)}$ será usado para \textbf{atualizar os coeficientes} $\theta_t$ da aproximação linear por regressão. É o passo \textit{backward} da \textbf{Programação Dinâmica Aproximada (ADP)}.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+\textbf{Símbolo} & \textbf{Significado} \\
+\hline
+$Q_a$ & Valor esperado do futuro dado o estado atual e a ação $a$ (estimado por Monte Carlo) \\
+$\max_a Q_a$ & Melhor $Q_a$ entre todas as ações --- aplica a equação de Bellman \\
+$Y^{(n)}$ & Target: o valor ótimo estimado para o estado $n$, usado para ajustar $\theta_t$ \\
+\hline
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Dúvida 6: O que é o Índice \texorpdfstring{$n$}{n}? As Maximizações São Independentes?}
+
+\textbf{Pergunta:} O que é $n$? É cada banco? Encontramos um $a$ diferente para cada banco? Podemos resolver múltiplos problemas de maximização independentemente e vai dar tudo certo?
+
+\subsection{1. O que é o índice \texorpdfstring{$n$}{n}?}
+
+$n = 1, \ldots, N$ indexa os \textbf{pontos de amostra do espaço de estados} usados para treinar a regressão. Cada $n$ corresponde a um estado amostrado $(x^{(n)}, e^{(n)})$, onde:
+\begin{itemize}
+    \item $x^{(n)}$ = um possível valor de carteira hoje
+    \item $e^{(n)}$ = um possível estado econômico hoje
+\end{itemize}
+
+Não é necessariamente ``cada banco'' --- é cada \textbf{cenário de estado} que o algoritmo usa como dado de treino para ajustar $\theta_t$.
+
+\subsection{2. Encontramos um \texorpdfstring{$a^*$}{a*} diferente para cada \texorpdfstring{$n$}{n}?}
+
+Tecnicamente \textbf{sim}: para cada estado $n$, o $\arg\max_a Q_a$ pode retornar uma ação ótima diferente, porque o estado $(x^{(n)}, e^{(n)})$ é diferente. No entanto, o que o algoritmo \textbf{salva} não é a ação ótima $a^*$, mas o \textbf{valor ótimo} $Y^{(n)} = \max_a Q_a$. Esse $Y^{(n)}$ é o \textit{target} da regressão.
+
+\subsection{3. As maximizações são independentes entre si?}
+
+\textbf{Sim para a maximização, não para a regressão.} O fluxo é o seguinte:
+
+\begin{enumerate}
+    \item \textbf{Maximizações independentes:} Para cada $n$, calcula-se $Q_a$ para cada $a$ e tira-se o máximo. Essa etapa não depende dos outros $n$'s --- pode ser paralelizada.
+
+    \item \textbf{Acoplamento na regressão:} Após obter todos os pares $(x^{(n)}, Y^{(n)})$, resolve-se \textbf{um único problema de regressão} para ajustar os coeficientes $\theta_t$:
+    \begin{equation}
+        \theta_t = \arg\min_{\theta} \sum_{n=1}^{N} \left( Y^{(n)} - \theta^\top \phi(x^{(n)}, e^{(n)}) \right)^2
+    \end{equation}
+    Esse passo acopla todos os $n$'s --- o $\theta_t$ aprendido deve funcionar bem para \textbf{todos} os estados simultaneamente.
+\end{enumerate}
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+\textbf{Etapa} & \textbf{Natureza} \\
+\hline
+Maximização $\max_a Q_a$ para cada $n$ & \textbf{Independente} (paralelizável) \\
+Regressão sobre todos os $(x^{(n)}, Y^{(n)})$ & \textbf{Acoplada} (um único $\theta_t$) \\
+\hline
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Dúvida 7: O que é uma Rollout Policy?}
+
+\textbf{Pergunta:} O que é uma \textit{rollout policy}?
+
+\subsection{1. Definição}
+
+Uma \textbf{rollout policy} (política de rollout) é uma \textbf{regra de decisão simples e predefinida} usada para simular trajetórias futuras do sistema e estimar o valor de um dado estado, quando a função valor ótima ainda não está disponível.
+
+Em termos formais, ao seguir a rollout policy $\pi^{\text{rollout}}$ a partir do estado $s$ no tempo $t$:
+\begin{equation}
+    V_t^{\text{rollout}}(s) \approx \mathbb{E}\!\left[\sum_{\tau=t}^{T} \beta^{\tau-t} u(a_\tau) \;\Bigg|\; s_t = s,\; a_\tau = \pi^{\text{rollout}}(s_\tau)\right]
+\end{equation}
+
+\subsection{2. Por que usar?}
+
+Você não tem $V_{t+1}$ durante as primeiras iterações do treinamento, então precisa de \textbf{alguma} forma de avaliar estados futuros. A rollout policy (por exemplo: ``manter a carteira atual'', ``portfolio de pesos iguais'', ou uma heurística simples) fornece um \textbf{limitante inferior} ao valor ótimo real --- é subótima, mas computável e serve como ponto de partida.
+
+\subsection{3. Papel no algoritmo ADP}
+
+A rollout policy é usada principalmente como \textbf{inicialização}: no tempo terminal $T$, o valor é conhecido (e.g. $V_T = 0$ ou valor de liquidação). Nas iterações iniciais, antes de $\theta_{t+1}$ estar bem treinado, a rollout policy funciona como um \textit{warm start} para estabilizar o treinamento.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+\textbf{Conceito} & \textbf{Significado} \\
+\hline
+$\pi^{\text{rollout}}$ & Regra de decisão fixa e simples \\
+Valor de rollout & Recompensa esperada ao seguir $\pi^{\text{rollout}}$ a partir de $s$ \\
+Propósito & Aproximar $V_{t+1}$ quando a aproximação aprendida não está disponível \\
+\hline
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Dúvida 8: Como Chegamos nas Injeções a Partir do \texorpdfstring{$\theta$}{theta}?}
+
+\textbf{Pergunta:} Depois de encontrarmos o $\theta$, como chegamos nas injeções?
+
+\subsection{1. O que você tem após o treinamento}
+
+Após o algoritmo ADP rodar para trás de $t = T$ até $t = 0$, você obtém um conjunto de parâmetros para cada período:
+\begin{equation}
+    \theta_0, \theta_1, \ldots, \theta_{T-1}
+\end{equation}
+Cada $\theta_t$ define a função valor aproximada $V_t(s) \approx \theta_t^\top \phi(s)$.
+
+\subsection{2. Simulação forward: como obter as injeções}
+
+Agora você \textbf{simula para frente} a partir do estado inicial real $(S_0, e_0)$. Em cada período $t$:
+
+\begin{enumerate}
+    \item \textbf{Observe o estado atual} $(S_t, e_t)$.
+
+    \item \textbf{Calcule $Q_a$ para cada ação possível} $a \in \mathcal{A}_{\text{discrete}}$ usando Monte Carlo com o $\theta_{t+1}$ já aprendido:
+    \begin{equation}
+        Q_a = \frac{1}{M}\sum_{m=1}^{M} \theta_{t+1}^\top \phi\!\left(S_t + \xi^{(m)} + a,\; e^{(m)}\right)
+    \end{equation}
+
+    \item \textbf{Escolha a injeção ótima}:
+    \begin{equation}
+        a_t^* = \arg\max_{a \in \mathcal{A}_{\text{discrete}}} Q_a
+    \end{equation}
+
+    \item \textbf{Execute a ação}: injete $a_t^*$ de capital. O choque real $\xi_{t+1}$ se realiza e o sistema transita para o estado $S_{t+1}$.
+
+    \item \textbf{Repita} para $t+1$ usando $\theta_{t+2}$.
+\end{enumerate}
+
+\subsection{3. Resumo do fluxo completo}
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+\textbf{Fase} & \textbf{Direção} & \textbf{O que produz} \\
+\hline
+Treinamento (ADP) & $t = T \to 0$ (backward) & $\theta_T, \theta_{T-1}, \ldots, \theta_0$ \\
+Execução (simulação) & $t = 0 \to T$ (forward) & Injeções $a_0^*, a_1^*, \ldots, a_{T-1}^*$ \\
+\hline
+\end{tabular}
+\end{center}
+
+A \textbf{injeção} $a_t^*$ é simplesmente a ação que maximiza o valor esperado do futuro dado o estado presente --- o $\arg\max_a Q_a$ avaliado no estado real do sistema naquele instante.
+
+% ============================================================
+\section{Resumo: O Algoritmo Completo Passo a Passo}
+
+O algoritmo resolve o problema de \textbf{injeção ótima de capital} em um sistema bancário sujeito a choques aleatórios. Ele combina Programação Dinâmica Aproximada (ADP) com aproximação linear da função valor e Monte Carlo.
+
+\subsection{Visão Geral em Duas Fases}
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+\textbf{Fase} & \textbf{Direção} & \textbf{Objetivo} \\
+\hline
+1. Treinamento (ADP) & $t = T \to 0$ (backward) & Aprender $\theta_0, \ldots, \theta_{T-1}$ \\
+2. Execução & $t = 0 \to T$ (forward) & Gerar injeções $a_0^*, \ldots, a_{T-1}^*$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Fase 1: Treinamento (Backward)}
+
+\textbf{Inicialização:} No tempo terminal $T$, define-se $V_T(s)$ com um valor conhecido (e.g., $V_T = 0$ ou valor de liquidação), e $\theta_T$ é inicializado por regressão ou por rollout policy.
+
+\textbf{Para cada período $t = T-1, T-2, \ldots, 0$:}
+
+\begin{enumerate}
+    \item \textbf{Amostrar estados de treinamento.} Sortear $N$ estados $(x^{(n)}, e^{(n)})$ representativos do espaço de estados. Esses são os pontos de treino da regressão.
+
+    \item \textbf{Para cada estado $n$, computar o target $Y^{(n)}$} (Algoritmo 1):
+    \begin{enumerate}
+        \item Sortear $M$ choques i.i.d.: $\xi^{(n,1)}, \ldots, \xi^{(n,M)} \sim F_X$.
+        \item Para cada ação $a \in \mathcal{A}_{\text{discrete}}$, calcular a Q-function por Monte Carlo:
+        \begin{equation}
+            Q_a = \frac{1}{M} \sum_{m=1}^{M} \left\langle \theta_{t+1},\; \phi\!\left(x^{(n)} + \xi^{(n,m)} + a,\; e^{(n)} \odot \mathbb{1}_{\{x^{(n)}+\xi^{(n,m)}+a > 0\}}\right) \right\rangle
+        \end{equation}
+        \item Escolher o target como o valor ótimo:
+        \begin{equation}
+            Y^{(n)} = \max_{a \in \mathcal{A}_{\text{discrete}}} Q_a
+        \end{equation}
+    \end{enumerate}
+
+    \item \textbf{Atualizar $\theta_t$ por regressão.} Usar todos os pares $\{(x^{(n)}, e^{(n)}), Y^{(n)}\}_{n=1}^N$:
+    \begin{equation}
+        \theta_t = \arg\min_{\theta} \sum_{n=1}^{N} \left( Y^{(n)} - \theta^\top \phi(x^{(n)}, e^{(n)}) \right)^2
+    \end{equation}
+    Isso define a nova aproximação $V_t(s) \approx \theta_t^\top \phi(s)$.
+\end{enumerate}
+
+\subsection{Fase 2: Execução (Forward)}
+
+\textbf{Para cada período $t = 0, 1, \ldots, T-1$:}
+
+\begin{enumerate}
+    \item \textbf{Observar o estado atual} $(S_t, e_t)$.
+    \item \textbf{Calcular $Q_a$ para cada ação} $a \in \mathcal{A}_{\text{discrete}}$ usando Monte Carlo com $\theta_{t+1}$.
+    \item \textbf{Injetar o capital ótimo}: $a_t^* = \arg\max_{a} Q_a$
+    \item \textbf{Realizar o choque} $\xi_{t+1} \sim F_X$ e atualizar o estado: $S_{t+1} = S_t + \xi_{t+1} + a_t^*$
+\end{enumerate}
+
+\subsection{Diagrama do Algoritmo Completo}
+
+\begin{center}
+\begin{tabular}{|l|}
+\hline
+\textbf{FASE 1 --- TREINAMENTO (backward: $t = T \to 0$)} \\
+\hline
+Inicializar $\theta_T$ (rollout policy ou valor terminal) \\
+\textbf{Para} $t = T-1$ \textbf{até} $0$: \\
+\quad Amostrar $N$ estados $(x^{(n)}, e^{(n)})$ do espaço de estados \\
+\quad \textbf{Para} cada $n$: \\
+\quad \quad Sortear $M$ choques $\xi^{(n,m)} \sim F_X$ \\
+\quad \quad \textbf{Para} cada $a \in \mathcal{A}$: calcular $Q_a$ por Monte Carlo \\
+\quad \quad $Y^{(n)} \leftarrow \max_a Q_a$ \\
+\quad Resolver regressão $\to$ obter $\theta_t$ \\
+\hline
+\textbf{FASE 2 --- EXECUÇÃO (forward: $t = 0 \to T$)} \\
+\hline
+Observar estado inicial $(S_0, e_0)$ \\
+\textbf{Para} $t = 0$ \textbf{até} $T-1$: \\
+\quad Calcular $Q_a$ para cada $a$ usando $\theta_{t+1}$ \\
+\quad $a_t^* \leftarrow \arg\max_a Q_a$ \quad (injeção ótima) \\
+\quad Aplicar $a_t^*$, observar choque $\xi_{t+1}$, transitar para $S_{t+1}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Dúvida 9: Como Escolhemos os \texorpdfstring{$x^{(n)}$}{x(n)} para Cada Instante \texorpdfstring{$t$}{t}? O que Muda na Regressão?}
+
+\textbf{Pergunta:} Como escolhemos os $x^{(n)}$ para cada instante $t$? Não deveríamos ir de trás para frente (de $x_T$ até $x_0$)? Por que não usar a ação ótima calculada por Monte Carlo em vez da rollout policy? E se os $x^{(n)}$ são sempre da mesma distribuição, o que muda entre $t$ e $t+1$?
+
+\subsection{1. Como são escolhidos os \texorpdfstring{$x^{(n)}$}{x(n)}?}
+
+Os $x^{(n)}$ \textbf{não vêm de uma trajetória específica} --- eles são amostrados de uma \textbf{distribuição que cobre o espaço de estados} relevante. Estratégias comuns:
+\begin{itemize}
+    \item Grade regular de valores plausíveis de carteira
+    \item Amostragem uniforme num intervalo $[x_{\min}, x_{\max}]$
+    \item Simulações forward prévias (\textit{experience replay})
+\end{itemize}
+
+O objetivo é que $\theta_t$ aprenda $V_t(s)$ para \textbf{qualquer} $s$ possível, não apenas ao longo de uma trajetória. Durante a execução, o sistema pode estar em qualquer estado, então a função valor precisa generalizar.
+
+\subsection{2. Não deveríamos ir de \texorpdfstring{$x_T$}{xT} até \texorpdfstring{$x_0$}{x0} no espaço de estados?}
+
+Há uma distinção importante aqui. O que vai de trás para frente \textbf{é o tempo $t$}, não o espaço de estados:
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Backward em $t$ & $\theta_{T-1} \to \theta_{T-2} \to \cdots \to \theta_0$ \\
+Em cada $t$ & os $x^{(n)}$ são amostrados independentemente \\
+\hline
+\end{tabular}
+\end{center}
+
+Uma abordagem alternativa chamada \textit{in-sample ADP} faz exatamente o que o aluno intui: simula trajetórias forward de $x_0$ até $x_T$ primeiro, salva os estados visitados, e usa esses estados como $x^{(n)}$ no passo backward. Isso funciona, mas exige simulação prévia e tem trade-offs de cobertura do espaço.
+
+\subsection{3. Por que usar rollout policy e não a ação ótima?}
+
+É um problema de \textbf{galinha e ovo}:
+\begin{itemize}
+    \item Para usar a ação ótima ao gerar estados no instante $t$, você precisaria de $\theta_t$ para tomar a decisão ótima em $t-1$...
+    \item Mas $\theta_t$ é exatamente o que você ainda está calculando!
+\end{itemize}
+
+A rollout policy quebra esse ciclo: ela é uma \textbf{política fixa e pré-definida} que não depende de nada que ainda está sendo aprendido. Além disso, usar a política ótima corrente criaria um \textbf{viés de distribuição} --- os estados amostrados seriam concentrados apenas nas regiões que essa política visita, prejudicando a generalização de $\theta_t$.
+
+\subsection{4. Se os \texorpdfstring{$x^{(n)}$}{x(n)} são idênticos para todo \texorpdfstring{$t$}{t}, o que muda na regressão?}
+
+Esta é a questão mais sutil. Os \textbf{inputs} $x^{(n)}$ podem ser iguais, mas os \textbf{targets $Y^{(n)}$ são completamente diferentes}:
+
+\textbf{No instante $t+1$} (já calculado):
+\begin{equation}
+    Y^{(n)} = \max_a \frac{1}{M}\sum_m \langle \theta_{t+2},\, \phi(x^{(n)}+\xi^m+a) \rangle
+\end{equation}
+
+\textbf{No instante $t$} (sendo calculado agora):
+\begin{equation}
+    Y^{(n)} = \max_a \frac{1}{M}\sum_m \langle \theta_{t+1},\, \phi(x^{(n)}+\xi^m+a) \rangle
+\end{equation}
+
+Como $\theta_{t+1} \neq \theta_{t+2}$, os targets são diferentes, e portanto a regressão produz $\theta_t \neq \theta_{t+1}$.
+
+Mais fundamentalmente, $V_t(s)$ e $V_{t+1}(s)$ são \textbf{funções genuinamente diferentes} para o mesmo estado $s$:
+\begin{itemize}
+    \item $V_t(s)$ = valor de estar em $s$ faltando $T-t$ períodos para o final
+    \item $V_{t+1}(s)$ = valor de estar em $s$ faltando $T-t-1$ períodos para o final
+\end{itemize}
+
+Com menos tempo restante, um banco em dificuldade tem menos chances de se recuperar, logo $V_t(s) \geq V_{t+1}(s)$ em geral (mais tempo = mais opções). A regressão em cada $t$ está aprendendo uma função diferente --- o valor com um horizonte de tempo a mais.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+\textbf{Questão} & \textbf{Resposta} \\
+\hline
+De onde vêm os $x^{(n)}$? & Distribuição sobre o espaço de estados (não de trajetória) \\
+Backward em $x$? & O backward é em $t$, não em $x$. Estados por período são independentes. \\
+Por que rollout e não ótimo? & Galinha e ovo: $\theta_t$ ainda não existe quando você precisa dos estados. \\
+O que muda em cada $t$? & Os targets $Y^{(n)}$ mudam porque usam um $\theta_{t+1}$ diferente. \\
+\hline
+\end{tabular}
+\end{center}
+
+\end{document}

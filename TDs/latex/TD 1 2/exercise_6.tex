@@ -1,0 +1,68 @@
+\section{Exercise 6: Change of Measures}
+
+\textbf{Context:} Denote by $\mathcal{Q}$ the set of probability measures on $(\Omega, \mathcal{F})$ that are equivalent to $P$. Two measures are equivalent (written $Q \sim P$) if they agree on what is impossible: $P[A] = 0 \iff Q[A] = 0$.
+
+\subsection{Part 1: Convexity of the Set of Equivalent Measures}
+
+\textbf{Question 1:} Show that $\mathcal{Q}$ is a convex set.
+
+\textbf{Step-by-Step Explanation:}
+To show a set is convex, we must take any two elements in the set, say $Q_1, Q_2 \in \mathcal{Q}$, and any weight $\lambda \in [0, 1]$, and show that their weighted average (convex combination) $R = \lambda Q_1 + (1 - \lambda)Q_2$ is also in the set $\mathcal{Q}$.
+
+First, we check if $R$ is a valid probability measure:
+1. $R(\Omega) = \lambda Q_1(\Omega) + (1 - \lambda)Q_2(\Omega) = \lambda(1) + (1 - \lambda)(1) = 1$.
+2. For any event $A$, since $Q_1(A) \ge 0$ and $Q_2(A) \ge 0$, it follows that $R(A) \ge 0$.
+3. Countable additivity holds because it holds for $Q_1$ and $Q_2$, and the sum operator is linear.
+Thus, $R$ is a probability measure.
+
+Next, we check if $R$ is equivalent to $P$ (i.e., $R \sim P$).
+If $\lambda = 0$, $R = Q_2$, which is equivalent to $P$. If $\lambda = 1$, $R = Q_1$, which is also equivalent to $P$. 
+Suppose $\lambda \in (0, 1)$. Let $A \in \mathcal{F}$ be an arbitrary event.
+- If $P[A] = 0$: Because $Q_1 \sim P$ and $Q_2 \sim P$, we must have $Q_1[A] = 0$ and $Q_2[A] = 0$. Therefore, $R[A] = \lambda(0) + (1-\lambda)(0) = 0$.
+- If $R[A] = 0$: Since $\lambda > 0$, $1-\lambda > 0$, and probabilities are non-negative, the only way a weighted sum of two non-negative numbers can be zero is if both numbers are zero. Thus, $Q_1[A] = 0$ and $Q_2[A] = 0$. Because $P \sim Q_1$, this implies $P[A] = 0$.
+
+Since $P[A] = 0 \iff R[A] = 0$, the measure $R$ is equivalent to $P$, so $R \in \mathcal{Q}$. The set $\mathcal{Q}$ is convex.
+
+\subsection{Part 2: Making a Variable Integrable}
+
+\textbf{Context:} Let $X$ be a positive random variable such that $E[X] = +\infty$. We partition the sample space into sets based on the value of $X$:
+$$A_n := \{\omega \in \Omega : X(\omega) \in [n-1, n)\}, \quad \forall n \in \mathbb{N}^*$$
+For $\alpha > 0$, define a random variable $Z$ by:
+$$Z(\omega) := \frac{\alpha}{n^3(1 + P[A_n])} \quad \text{if } \omega \in A_n$$
+
+\textbf{Question 2(a):} Choose $\alpha$ such that we may define a probability $Q \in \mathcal{Q}$ satisfying $\frac{dQ}{dP} = Z$.
+
+\textbf{Step-by-Step Explanation:}
+For $Z$ to be the Radon-Nikodym derivative of a new probability measure $Q$, we need $Q$ to be a valid probability measure. This requires $Q[\Omega] = 1$, which means the expected value of $Z$ under $P$ must be 1 ($E^P[Z] = 1$).
+
+Let's compute $E^P[Z]$:
+$$E^P[Z] = \sum_{n=1}^{\infty} E^P[Z 1_{A_n}]$$
+Because $Z$ is constant on each set $A_n$, we can pull it out:
+$$= \sum_{n=1}^{\infty} \frac{\alpha}{n^3(1 + P[A_n])} E^P[1_{A_n}] = \sum_{n=1}^{\infty} \frac{\alpha P[A_n]}{n^3(1 + P[A_n])}$$
+Let $C = \sum_{n=1}^{\infty} \frac{P[A_n]}{n^3(1 + P[A_n])}$. Notice that the fraction $\frac{P[A_n]}{1 + P[A_n]}$ is always less than 1. Therefore, the terms in the sum are strictly less than $\frac{1}{n^3}$. Because the series $\sum \frac{1}{n^3}$ is convergent (p-series with $p=3>1$), our sum $C$ is finite ($C < \infty$).
+To make $E^P[Z] = 1$, we simply choose $\alpha = C^{-1}$. Since $P \ge 0$, $\alpha > 0$. Because $Z > 0$ almost everywhere, the measure $Q$ is equivalent to $P$ ($Q \sim P$).
+
+\textbf{Question 2(b):} Show that $X \in L^1(\Omega, \mathcal{F}, Q)$.
+
+\textbf{Step-by-Step Explanation:}
+We want to prove $E^Q[X] < \infty$. Using the change of measure formula, $E^Q[X] = E^P[ZX]$.
+$$E^P[ZX] = \sum_{n=1}^{\infty} E^P[ZX 1_{A_n}]$$
+On the set $A_n$, we know two things: $Z = \frac{\alpha}{n^3(1 + P[A_n])}$ and $X < n$.
+Substituting the exact value for $Z$ and the upper bound for $X$:
+$$E^P[ZX 1_{A_n}] \le E^P\left[\frac{\alpha}{n^3(1 + P[A_n])} n 1_{A_n}\right] = \frac{\alpha n}{n^3(1 + P[A_n])} P[A_n] = \frac{\alpha P[A_n]}{n^2(1 + P[A_n])}$$
+Again, noting that $\frac{P[A_n]}{1 + P[A_n]} < 1$, we get:
+$$E^P[ZX 1_{A_n}] \le \frac{\alpha}{n^2}$$
+Summing this over all $n$:
+$$E^Q[X] \le \sum_{n=1}^{\infty} \frac{\alpha}{n^2}$$
+Because $\sum \frac{1}{n^2}$ is a convergent p-series ($p=2>1$), the total expectation under $Q$ is finite. Thus, $X \in L^1(\Omega, \mathcal{F}, Q)$.
+
+\textbf{Question 2(c):} Summarize the result.
+For every positive random variable $X$ on $(\Omega, \mathcal{F}, P)$, even if its expectation is infinite, there exists an equivalent probability measure $Q$ under which $X$ has a finite expectation (it is integrable). If $X$ is already integrable under $P$, we can just choose $Q = P$.
+
+\subsection{Part 3: Preservation of Strict Positivity}
+
+\textbf{Question 3:} Let $Q \in \mathcal{Q}$ and $X \in L^1(\Omega, \mathcal{F}, P)$. Assume $X \ge 0$ P-a.s. and $P[X > 0] > 0$. Show that these properties are still satisfied for $Q$.
+
+\textbf{Step-by-Step Explanation:}
+1. \textbf{Almost sure non-negativity:} The statement "$X \ge 0$ P-a.s." means the probability of the opposite event is zero: $P[\{\omega \in \Omega : X(\omega) < 0\}] = 0$. Because $Q$ and $P$ are equivalent, they agree on probability-zero events. Therefore, $Q[\{\omega \in \Omega : X(\omega) < 0\}] = 0$, which means $X \ge 0$ Q-a.s.
+2. \textbf{Strict positivity of probability:} We are given $P[X > 0] > 0$. We want to prove $Q[X > 0] > 0$. We can use a proof by contradiction. Suppose $Q[X > 0] = 0$. By the equivalence of the two measures, any event with $Q$-probability 0 must also have $P$-probability 0. This would force $P[X > 0] = 0$, which contradicts our initial assumption. Thus, it must be that $Q[X > 0] > 0$.

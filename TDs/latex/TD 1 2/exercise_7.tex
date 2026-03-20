@@ -1,0 +1,52 @@
+\section{Exercise 7: Radon-Nikodym's Derivative}
+
+\textbf{Context:} Let $Q$ be a probability measure on $(\Omega, \mathcal{F})$ that is equivalent to $P$ and let $\mathcal{G} \subset \mathcal{F}$ be a sub-algebra.
+
+\subsection{Part 1: Equivalence on the Sub-algebra}
+
+\textbf{Question 1:} Show that $P$ \& $Q$ are equivalent on $(\Omega, \mathcal{G})$.
+
+\textbf{Step-by-Step Explanation:}
+To show that $P$ \& $Q$ are equivalent on the restricted space $(\Omega, \mathcal{G})$, we need to prove that for any event $A \in \mathcal{G}$, $P[A] = 0$ if and only if $Q[A] = 0$.
+
+Because $\mathcal{G}$ is a sub-algebra of $\mathcal{F}$, any event $A$ that belongs to $\mathcal{G}$ automatically belongs to $\mathcal{F}$ ($A \in \mathcal{G} \implies A \in \mathcal{F}$).
+We already know that $P$ \& $Q$ are equivalent on the larger space $(\Omega, \mathcal{F})$. This means that for any event in $\mathcal{F}$, they agree on what has a probability of zero.
+Since every event in $\mathcal{G}$ is also in $\mathcal{F}$, the equivalence naturally carries over. Therefore, $P$ \& $Q$ are equivalent on $(\Omega, \mathcal{G})$.
+
+Because of this equivalence, we can properly denote the Radon-Nikodym derivative defined specifically on $(\Omega, \mathcal{G})$ as $\frac{dQ}{dP}\big|_{\mathcal{G}}$.
+
+\subsection{Part 2: Conditional Expectation Connection}
+
+\textbf{Question 2:} Show that $\frac{dQ}{dP}\big|_{\mathcal{G}} = E^P\left[\frac{dQ}{dP} \middle| \mathcal{G}\right]$ P-a.s.
+
+\textbf{Step-by-Step Explanation:}
+To make the notation cleaner, let's define two variables:
+Let $A = \frac{dQ}{dP}\big|_{\mathcal{G}}$ (the derivative restricted to $\mathcal{G}$).
+Let $B = \frac{dQ}{dP}$ (the full derivative on $\mathcal{F}$).
+
+We want to prove that $A = E^P[B | \mathcal{G}]$. 
+By the mathematical definition of conditional expectation, $E^P[B | \mathcal{G}]$ is the unique $\mathcal{G}$-measurable random variable that satisfies the following property for every bounded $\mathcal{G}$-measurable test variable $Z$:
+$$ E^P[B Z] = E^P\big[E^P[B | \mathcal{G}] Z\big] $$
+
+Let's compute the expected value of $Z$ under the measure $Q$ in two different ways, using our two different Radon-Nikodym derivatives.
+
+\textbf{Path 1 (Using B):} 
+Because $Z$ is $\mathcal{G}$-measurable, it is also $\mathcal{F}$-measurable. Using the full derivative $B$ to change the measure from $P$ to $Q$ over $\mathcal{F}$, we get:
+$$ E^Q[Z] = E^P[B Z] $$
+
+\textbf{Path 2 (Using A):}
+Because $Z$ is $\mathcal{G}$-measurable, we can use the restricted derivative $A$ to change the measure from $P$ to $Q$ directly over $\mathcal{G}$:
+$$ E^Q[Z] = E^P[A Z] $$
+
+\textbf{Conclusion:}
+Since both paths compute the exact same expected value $E^Q[Z]$, we can equate them:
+$$ E^P[A Z] = E^P[B Z] $$
+
+By definition, $A$ is $\mathcal{G}$-measurable because it is the Radon-Nikodym derivative defined on the sub-algebra $\mathcal{G}$. 
+Since $A$ is $\mathcal{G}$-measurable and satisfies $E^P[A Z] = E^P[B Z]$ for every bounded $\mathcal{G}$-measurable random variable $Z$, $A$ perfectly satisfies the definition of the conditional expectation of $B$ given $\mathcal{G}$. 
+
+Due to the uniqueness of conditional expectation (up to a P-null set), we conclude:
+$$ A = E^P[B | \mathcal{G}] \quad P\text{-a.s.} $$
+
+Which translates exactly to our target equation:
+$$ \frac{dQ}{dP}\bigg|_{\mathcal{G}} = E^P\left[\frac{dQ}{dP} \middle| \mathcal{G}\right] \quad P\text{-a.s.} $$

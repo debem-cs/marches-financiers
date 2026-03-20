@@ -1,0 +1,58 @@
+The problem asks us to prove that in a one-period model, the existence of an arbitrage opportunity is independent of the choice of equivalent probability measures. Specifically, if $P$ and $Q$ are equivalent probability measures ($P \sim Q$), the market is arbitrage-free under $P$ if and only if it is arbitrage-free under $Q$.
+
+Let us break down the proof step-by-step.
+
+\subsection*{Step 1: Define an arbitrage strategy under measure $Q$}
+Suppose there exists an arbitrage strategy under the measure $Q$. Let this strategy be denoted by $\xi = (\xi^{0}, \xi^{1}, \dots, \xi^{d}) \in \mathbb{R}^{d+1}$, where $\xi^{0}$ represents the position in the riskless asset, and $\xi^{1}, \dots, \xi^{d}$ represent the positions in the $d$ risky assets.
+
+Let $V^{\xi}_t$ denote the value of this portfolio at time $t \in \{0, 1\}$. By the definition of an arbitrage strategy under $Q$, the following three conditions must hold simultaneously:
+\begin{enumerate}
+    \item The initial cost of the portfolio is zero:
+    \begin{equation}
+        V_{0}^{\xi} = 0
+    \end{equation}
+    \item The portfolio has no risk of losing money (it is almost surely non-negative under $Q$):
+    \begin{equation}
+        Q(V_{1}^{\xi} \ge 0) = 1
+    \end{equation}
+    \item There is a strictly positive probability of making a profit under $Q$:
+    \begin{equation}
+        Q(V_{1}^{\xi} > 0) > 0
+    \end{equation}
+\end{enumerate}
+
+\subsection*{Step 2: Apply the definition of equivalent measures}
+We are given that $P$ and $Q$ are equivalent measures. Two probability measures are equivalent if they agree on which events have a probability of zero. Mathematically, for any event $A \in \mathcal{F}$:
+\begin{equation}
+    P(A) = 0 \iff Q(A) = 0
+\end{equation}
+This also directly implies they agree on events that occur almost surely (probability equal to 1). If $Q(A) = 1$, then $Q(A^c) = 0$, which means $P(A^c) = 0$, and thus:
+\begin{equation}
+    P(A) = 1 \iff Q(A) = 1
+\end{equation}
+
+\subsection*{Step 3: Translate the arbitrage conditions from $Q$ to $P$}
+Now, we apply the equivalence property to the conditions from Step 1.
+
+Condition 1 ($V_{0}^{\xi} = 0$) is an initial deterministic condition at $t=0$ and does not depend on the probability measure. It remains exactly the same.
+
+Condition 2 states that $Q(V_{1}^{\xi} \ge 0) = 1$. Because $P$ and $Q$ agree on events of probability 1, this immediately implies:
+\begin{equation}
+    P(V_{1}^{\xi} \ge 0) = 1
+\end{equation}
+
+Condition 3 states that $Q(V_{1}^{\xi} > 0) > 0$. We know that $P(A) = 0 \iff Q(A) = 0$. By taking the contrapositive, this means $P(A) > 0 \iff Q(A) > 0$. Applying this to the event $\{V_{1}^{\xi} > 0\}$, we get:
+\begin{equation}
+    P(V_{1}^{\xi} > 0) > 0
+\end{equation}
+
+\subsection*{Step 4: Conclusion}
+We have shown that if $\xi$ is an arbitrage strategy under $Q$, it satisfies:
+\begin{itemize}
+    \item $V_{0}^{\xi} = 0$
+    \item $P(V_{1}^{\xi} \ge 0) = 1$
+    \item $P(V_{1}^{\xi} > 0) > 0$
+\end{itemize}
+These are the exact definitions of an arbitrage strategy under $P$. Therefore, if there is an arbitrage under $Q$, there is also an arbitrage under $P$.
+
+Because equivalence is a symmetric relationship ($P \sim Q \iff Q \sim P$), the exact same logic can be applied in reverse to show that an arbitrage under $P$ implies an arbitrage under $Q$. Thus, the market is arbitrage-free under $P$ if and only if it is arbitrage-free under $Q$.

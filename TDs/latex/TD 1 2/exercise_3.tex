@@ -1,0 +1,59 @@
+\section{Exercise 3: Submartingales and Convex Functions}
+
+\textbf{Problem Statement:} Assume that $M = (M_t)_{t\in\mathbb{N}}$ is a positive $\mathbb{F}$-submartingale such that $M_t \in L^2$ for all $t \ge 0$. Let $N_t = M_t^2$. Show that $N$ is an $\mathbb{F}$-submartingale.
+
+\subsection*{Step 1: Check Measurability and Integrability}
+To prove that $N_t$ is a submartingale, we first need to ensure it satisfies the basic properties of a stochastic process: it must be adapted to the filtration and integrable.
+
+\begin{enumerate}
+    \item \textbf{Measurability (Adaptedness):} We are given that $M_t$ is $\mathcal{F}_t$-measurable. Because the function $f(x) = x^2$ is a continuous function, applying it to a measurable random variable results in another measurable random variable. Therefore, $N_t = M_t^2$ is $\mathcal{F}_t$-measurable.
+    \item \textbf{Integrability:} We are given that $M_t \in L^2$, which by definition means that the expected value of its square is finite: $\mathbb{E}[M_t^2] < \infty$. Since $N_t = M_t^2$, this immediately gives us $\mathbb{E}[|N_t|] = \mathbb{E}[M_t^2] < \infty$, so $N_t$ is integrable.
+\end{enumerate}
+
+\subsection*{Step 2: Prove the Submartingale Property}
+We need to show that for $t \ge s$, we have $\mathbb{E}[N_t | \mathcal{F}_s] \ge N_s$. There are two distinct ways to prove this, both hinted at in your class correction.
+
+\vspace{0.5cm}
+\textbf{Method 1: Using Jensen's Inequality (The elegant way)}
+
+Jensen's Inequality states that for any convex function $\phi$ and a random variable $X$, $\mathbb{E}[\phi(X) | \mathcal{F}] \ge \phi(\mathbb{E}[X | \mathcal{F}])$. 
+
+Let $\phi(x) = x^2$, which is strictly convex. Applying Jensen's inequality to our process:
+\[ \mathbb{E}[M_t^2 | \mathcal{F}_s] \ge (\mathbb{E}[M_t | \mathcal{F}_s])^2 \]
+
+Now, we use the fact that $M$ is a positive submartingale. The submartingale property tells us:
+\[ \mathbb{E}[M_t | \mathcal{F}_s] \ge M_s \]
+
+Because $M_s$ is a positive process ($M_s \ge 0$), squaring both sides preserves the inequality (the function $x^2$ is increasing for $x \ge 0$):
+\[ (\mathbb{E}[M_t | \mathcal{F}_s])^2 \ge M_s^2 \]
+
+Combining our two inequalities:
+\[ \mathbb{E}[N_t | \mathcal{F}_s] = \mathbb{E}[M_t^2 | \mathcal{F}_s] \ge M_s^2 = N_s \]
+This concludes the proof using Method 1.
+
+\vspace{0.5cm}
+\textbf{Method 2: Algebraic Expansion (The computational way)}
+
+Let's look at the expected value of the squared difference $(M_t - M_s)^2$ conditioned on $\mathcal{F}_s$. Since a square is always non-negative, its expected value must be non-negative:
+\[ \mathbb{E}[(M_t - M_s)^2 | \mathcal{F}_s] \ge 0 \]
+
+Now, let's expand the square inside the expectation:
+\[ \mathbb{E}[M_t^2 - 2M_t M_s + M_s^2 | \mathcal{F}_s] \ge 0 \]
+
+Using the linearity of conditional expectation, we split the terms:
+\[ \mathbb{E}[M_t^2 | \mathcal{F}_s] - \mathbb{E}[2M_t M_s | \mathcal{F}_s] + \mathbb{E}[M_s^2 | \mathcal{F}_s] \ge 0 \]
+
+Now we evaluate what is "known" at time $s$. Since $M_s$ is $\mathcal{F}_s$-measurable, it acts as a constant under the conditioning on $\mathcal{F}_s$ and can be pulled out:
+\[ \mathbb{E}[M_t^2 | \mathcal{F}_s] - 2M_s \mathbb{E}[M_t | \mathcal{F}_s] + M_s^2 \ge 0 \]
+
+Next, we isolate $\mathbb{E}[M_t^2 | \mathcal{F}_s]$, which is $\mathbb{E}[N_t | \mathcal{F}_s]$:
+\[ \mathbb{E}[M_t^2 | \mathcal{F}_s] \ge 2M_s \mathbb{E}[M_t | \mathcal{F}_s] - M_s^2 \]
+
+Because $M$ is a submartingale, we know $\mathbb{E}[M_t | \mathcal{F}_s] \ge M_s$. Since $M_s \ge 0$, multiplying by $2M_s$ preserves the inequality:
+\[ 2M_s \mathbb{E}[M_t | \mathcal{F}_s] \ge 2M_s(M_s) = 2M_s^2 \]
+
+Substitute this back into our isolated equation:
+\[ \mathbb{E}[M_t^2 | \mathcal{F}_s] \ge 2M_s^2 - M_s^2 \]
+\[ \mathbb{E}[M_t^2 | \mathcal{F}_s] \ge M_s^2 \]
+
+Substituting $N$ back in, we get $\mathbb{E}[N_t | \mathcal{F}_s] \ge N_s$, which proves $N$ is a submartingale.

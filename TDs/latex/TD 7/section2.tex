@@ -1,0 +1,78 @@
+\section{Positivity Conditions for Put Options}
+
+We now assume that the payoff function is specifically for a put option, meaning $h(x) = (K-x)_+$ for a given strike price $K > 0$. The initial price of the underlying asset is denoted as $S_0 = s_0 > 0$.
+
+\subsection*{Question 3: Positivity of the European Put}
+
+\textbf{Problem Statement:}
+Show that $V_0^e > 0$ if and only if $s_0 < \frac{K}{(1+d)^T}$.
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Risk-Neutral Valuation:} As established in Question 1, the market is complete and arbitrage-free. By the Fundamental Theorem of Asset Pricing (FTAP), the initial value of the European option is the discounted expected payoff under the risk-neutral measure $Q$:
+    \begin{equation*}
+        V_0^e = \mathbb{E}_Q \left[ \frac{(K-S_T)_+}{S_T^0} \right]
+    \end{equation*}
+    where $S_T^0 = (1+r)^T$ is the deterministic value of the riskless asset at maturity.
+    
+    \item \textbf{Expectation of a Non-Negative Random Variable:} The payoff $(K-S_T)_+$ is strictly non-negative. A fundamental property of probability states that the expectation of a non-negative random variable is zero if and only if the random variable is zero almost surely (a.s.). Therefore:
+    \begin{equation*}
+        V_0^e = 0 \iff (K-S_T)_+ = 0 \text{ holds } Q\text{-a.s.}
+    \end{equation*}
+    
+    \item \textbf{Evaluating the Almost Sure Condition:} The condition $(K-S_T)_+ = 0$ is equivalent to saying $S_T \ge K$. For this to be true almost surely under $Q$, it must hold for the absolute minimum possible value of $S_T$.
+    \item \textbf{Minimum Possible Price:} In the binomial model, the lowest possible price at maturity occurs if the asset price goes down at every single step $t=1,\dots,T$. This minimum price is $s_0(1+d)^T$.
+    \item \textbf{Conclusion:} For the option value to be exactly zero, the strike $K$ must be less than or equal to this minimum possible price. Thus:
+    \begin{equation*}
+        V_0^e = 0 \iff K \le s_0(1+d)^T
+    \end{equation*}
+    Taking the negation of both sides yields the desired result: $V_0^e > 0$ if and only if $s_0 < \frac{K}{(1+d)^T}$.
+\end{enumerate}
+
+\subsection*{Question 4: Positivity of the American Put}
+
+\textbf{Problem Statement:}
+Assume further that $-1 < d < 0 < r < u$. Show that $V_0 > 0$ if and only if $s_0 < \frac{K}{(1+d)^T}$.
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Sufficient Condition ($\Rightarrow$):} An American option gives the holder all the rights of a European option, plus the right to exercise early. Consequently, its value must be at least as great as the European equivalent: $V_t \ge V_t^e$ for all $t$. 
+    From Question 3, if $s_0 < \frac{K}{(1+d)^T}$, then $V_0^e > 0$. It immediately follows that $V_0 \ge V_0^e > 0$.
+    
+    \item \textbf{Necessary Condition ($\Leftarrow$):} We must prove that if $s_0 \ge \frac{K}{(1+d)^T}$, then $V_0 = 0$. 
+    Suppose $K \le s_0(1+d)^T$. Because we are now given that $d < 0$, the factor $(1+d)$ is less than 1. This implies that the sequence $(1+d)^t$ is strictly decreasing over time.
+    \item \textbf{Path Evaluation:} Since $(1+d)^t \ge (1+d)^T$ for all $t \le T$, we have:
+    \begin{equation*}
+        K \le s_0(1+d)^T \le s_0(1+d)^t
+    \end{equation*}
+    This means the strike price $K$ is less than or equal to the minimum possible asset price at \textit{every} time step $t$, not just at maturity. 
+    \item \textbf{Conclusion:} Therefore, the immediate payoff $(K-S_t)_+ = 0$ holds $Q$-a.s. for all $t \in \{0, \dots, T\}$. Since the option is never ``in the money" at any point, its value $V_0$ must be 0.
+\end{enumerate}
+
+\subsection*{Question 5: Evaluating Boundary Conditions}
+
+\textbf{Problem Statement:}
+Show that $v(0,0) = h(0)$ and then $v(0,K) > 0$.
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Evaluating at $S_0 = 0$:} We want to find the value of the American option if the underlying asset price drops to zero. If $S_t = 0$, the price remains stuck at zero because $0 \times (1+u) = 0$ and $0 \times (1+d) = 0$.
+    \item We calculate this using the recursive formulation from Question 1, starting at maturity $T$:
+    \begin{equation*}
+        v(T,0) = h(0) = (K-0)_+ = K
+    \end{equation*}
+    Moving one step backward to $T-1$:
+    \begin{equation*}
+        v(T-1,0) = \max\left\{ h(0), \tilde{p} v(T,0) + \tilde{q} v(T,0) \right\}
+    \end{equation*}
+    Since $\tilde{p} + \tilde{q} = \frac{1-q}{1+r} + \frac{q}{1+r} = \frac{1}{1+r}$, we substitute to get:
+    \begin{equation*}
+        v(T-1,0) = \max\left\{ h(0), \frac{h(0)}{1+r} \right\}
+    \end{equation*}
+    Because the interest rate $r > 0$, the discounted continuation value $\frac{h(0)}{1+r}$ is strictly less than the immediate exercise value $h(0)$. Therefore, the max is $h(0)$. Repeating this logic backward to $t=0$ yields $v(0,0) = h(0)$.
+    
+    \item \textbf{Evaluating at $S_0 = K$:} We apply the condition derived in Question 4. We want to check if $V_0 > 0$ when $s_0 = K$.
+    According to Question 4, $V_0 > 0$ if and only if $K < \frac{K}{(1+d)^T}$.
+    \item \textbf{Checking the Inequality:} Since $K > 0$ and $d < 0$, the term $(1+d)^T$ is strictly less than 1. Dividing $K$ by a positive number less than 1 yields a result strictly greater than $K$. 
+    Therefore, the inequality $K < \frac{K}{(1+d)^T}$ holds true, which confirms that $v(0,K) > 0$.
+\end{enumerate}

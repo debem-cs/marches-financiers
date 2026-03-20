@@ -1,0 +1,129 @@
+\subsection*{(1) $L \sim \text{Exp}(\lambda)$}
+
+The probability density function is $f(x) = \lambda e^{-\lambda x}$ and the cumulative distribution function (CDF) is $F_L(x) = \int_0^x \lambda e^{-\lambda u} du = 1 - e^{-\lambda x}$ for $x \ge 0$.
+
+To find the Value at Risk ($VaR_{\alpha}$), we use the definition and solve for $F_L(x) = \alpha$:
+\begin{align*}
+1 - e^{-\lambda x} &= \alpha \\
+e^{-\lambda x} &= 1 - \alpha \\
+-\lambda x &= \ln(1 - \alpha) \\
+VaR_{\alpha}(L) &= -\frac{1}{\lambda}\ln(1 - \alpha)
+\end{align*}
+
+Since the exponential distribution is continuous, the Expected Shortfall ($ES_{\alpha}$) can be computed using the conditional expectation $ES_{\alpha}(L) = \mathbb{E}[L | L \ge VaR_{\alpha}(L)]$. 
+Thanks to the memoryless property of the exponential distribution, the excess loss over a threshold $x$, given that it exceeds $x$, has the exact same $\text{Exp}(\lambda)$ distribution. Therefore:
+\begin{align*}
+ES_{\alpha}(L) &= VaR_{\alpha}(L) + \mathbb{E}[L] \\
+ES_{\alpha}(L) &= -\frac{1}{\lambda}\ln(1 - \alpha) + \frac{1}{\lambda}
+\end{align*}
+
+\subsection*{(2) $L \sim \text{Unif}([a,b])$}
+
+The CDF for a uniform distribution on $[a,b]$ is $F_L(x) = \frac{x-a}{b-a}$ for $x \in [a,b]$.
+
+To find $VaR_{\alpha}(L)$, we set the CDF equal to $\alpha$:
+\begin{align*}
+\frac{x-a}{b-a} &= \alpha \\
+x - a &= \alpha(b-a) \\
+VaR_{\alpha}(L) &= a + \alpha(b-a) = (1-\alpha)a + \alpha b
+\end{align*}
+
+Since the distribution is continuous, $ES_{\alpha}(L) = \mathbb{E}[L | L \ge VaR_{\alpha}(L)]$. 
+Conditioned on being greater than or equal to $VaR_{\alpha}(L)$, the random variable $L$ follows a new uniform distribution on the interval $[VaR_{\alpha}(L), b]$. The expected value of a uniform distribution is simply its midpoint:
+\begin{align*}
+ES_{\alpha}(L) &= \frac{VaR_{\alpha}(L) + b}{2} \\
+ES_{\alpha}(L) &= \frac{a + \alpha(b-a) + b}{2}
+\end{align*}
+
+\subsection*{(3) $L \sim \chi^2(1)$ i.e., $L=G^2$ with $G \sim \mathcal{N}(0,1)$}
+
+First, let's find the CDF of $L$. Let $\Phi$ be the CDF of the standard normal distribution.
+\begin{align*}
+F_L(x) &= \mathbb{P}(G^2 \le x) \\
+&= \mathbb{P}(-\sqrt{x} \le G \le \sqrt{x}) \\
+&= \Phi(\sqrt{x}) - \Phi(-\sqrt{x}) 
+\end{align*}
+Because the standard normal is symmetric, $\Phi(-\sqrt{x}) = 1 - \Phi(\sqrt{x})$. Thus:
+\begin{equation*}
+F_L(x) = 2\Phi(\sqrt{x}) - 1
+\end{equation*}
+
+To find $VaR_{\alpha}(L)$, we solve $F_L(x) = \alpha$:
+\begin{align*}
+2\Phi(\sqrt{x}) - 1 &= \alpha \\
+\Phi(\sqrt{x}) &= \frac{1+\alpha}{2} \\
+\sqrt{x} &= \Phi^{-1}\left(\frac{1+\alpha}{2}\right) \\
+VaR_{\alpha}(L) &= \left[ \Phi^{-1}\left(\frac{1+\alpha}{2}\right) \right]^2
+\end{align*}
+
+For the Expected Shortfall, we use the integral definition. Let $c = \sqrt{VaR_{\alpha}(L)} = \Phi^{-1}\left(\frac{1+\alpha}{2}\right)$. 
+\begin{equation*}
+ES_{\alpha}(L) = \mathbb{E}[G^2 | G^2 \ge VaR_{\alpha}(L)] = \frac{1}{1-\alpha}\mathbb{E}[G^2 1_{\{|G| \ge c\}}]
+\end{equation*}
+By symmetry of the standard normal density $\phi(z) = \frac{1}{\sqrt{2\pi}}e^{-z^2/2}$:
+\begin{equation*}
+\mathbb{E}[G^2 1_{\{|G| \ge c\}}] = 2 \int_c^\infty z^2 \phi(z) dz
+\end{equation*}
+We evaluate this using integration by parts, setting $u=z$ and $dv = z\phi(z)dz$ (which implies $v = -\phi(z)$):
+\begin{align*}
+\int_c^\infty z^2 \phi(z) dz &= \left[ -z\phi(z) \right]_c^\infty + \int_c^\infty \phi(z) dz \\
+&= c\phi(c) + (1 - \Phi(c))
+\end{align*}
+Notice that $\Phi(c) = \frac{1+\alpha}{2}$, which means $1 - \Phi(c) = \frac{1-\alpha}{2}$. Therefore:
+\begin{align*}
+2 \int_c^\infty z^2 \phi(z) dz &= 2c\phi(c) + 2\left(\frac{1-\alpha}{2}\right) = 2c\phi(c) + 1 - \alpha
+\end{align*}
+Finally, plugging this back into the Expected Shortfall equation:
+\begin{align*}
+ES_{\alpha}(L) &= \frac{2c\phi(c) + 1 - \alpha}{1-\alpha} \\
+ES_{\alpha}(L) &= 1 + \frac{2c\phi(c)}{1-\alpha} \quad \text{where} \quad c = \Phi^{-1}\left(\frac{1+\alpha}{2}\right)
+\end{align*}
+
+
+\subsection*{(4) L has the discrete distribution}
+
+From the table provided, the possible loss values $l_i$ and their probabilities $p_i = \mathbb{P}(L = l_i)$ are:
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccccc}
+\toprule
+$l_i$ & -5 & 0 & 3 & 6 & 8 & 10 \\
+\midrule
+$p_i$ & 0.10 & 0.50 & 0.23 & 0.07 & 0.06 & 0.04 \\
+$F_L(l_i)$ & 0.10 & 0.60 & 0.83 & 0.90 & 0.96 & 1.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Computing $VaR_{0.95}(L)$:}
+Recall that $VaR_{\alpha}(L) = \inf\{x \in \mathbb{R} : F_L(x) \ge \alpha\}$. 
+Looking at the cumulative probabilities, the smallest value $x$ for which $F_L(x) \ge 0.95$ is $x = 8$ (since $F_L(8) = 0.96$).
+\begin{equation*}
+VaR_{0.95}(L) = 8
+\end{equation*}
+
+\textbf{Computing $VaR_{0.99}(L)$:}
+Similarly, the smallest value $x$ for which $F_L(x) \ge 0.99$ is $x = 10$ (since $F_L(10) = 1.00$).
+\begin{equation*}
+VaR_{0.99}(L) = 10
+\end{equation*}
+
+\textbf{Computing $ES_{0.95}(L)$:}
+For a discrete distribution, we must use the integral definition: $ES_{\alpha}(L) = \frac{1}{1-\alpha}\int_{\alpha}^1 VaR_u(L) du$.
+We can break the integral into intervals where $VaR_u$ is constant:
+- For $u \in [0.95, 0.96)$, $VaR_u(L) = 8$.
+- For $u \in [0.96, 1.00]$, $VaR_u(L) = 10$.
+\begin{align*}
+ES_{0.95}(L) &= \frac{1}{1 - 0.95} \left( \int_{0.95}^{0.96} 8 \, du + \int_{0.96}^{1.00} 10 \, du \right) \\
+&= \frac{1}{0.05} \left( 8(0.01) + 10(0.04) \right) \\
+&= 20 \left( 0.08 + 0.40 \right) \\
+&= 20(0.48) = 9.6
+\end{align*}
+
+\textbf{Computing $ES_{0.99}(L)$:}
+For $u \in [0.99, 1]$, $VaR_u(L) = 10$.
+\begin{align*}
+ES_{0.99}(L) &= \frac{1}{1 - 0.99} \int_{0.99}^1 10 \, du \\
+&= \frac{1}{0.01} ( 10 \times 0.01 ) \\
+&= 10
+\end{align*}

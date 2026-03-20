@@ -1,0 +1,71 @@
+\section*{Exercise 3: Pricing of Asian option}
+
+\subsection*{Context and Definitions}
+An Asian option is a path-dependent derivative where the payoff depends on the average price of the underlying asset over a certain period. 
+Here, we consider a call option on the average with the payoff:
+\begin{equation*}
+    H_a := (A_T - K)^+
+\end{equation*}
+where $K > 0$ is the strike price, and $(A_t)_{0 \le t \le T}$ is the running average process defined as:
+\begin{equation*}
+    A_t := \frac{1}{t+1} \sum_{i=0}^t S_i
+\end{equation*}
+This average includes the initial price $S_0$ up to the current price $S_t$, meaning there are $t+1$ terms in the sum.
+
+\subsection*{Question: Recursive Pricing Formula for an Asian Option}
+\textbf{Goal:} Let $v_t := E_Q[H_a / (1+r)^{T-t} \mid \mathcal{F}_t]$. Prove that $v_t$ can be written as a function of the current asset price and the current average, $v_t = g_t(S_t, A_t)$, and find the recursive relationship $g_{t-1}$.
+
+\vspace{0.5cm}
+\noindent \textbf{Step-by-step Solution:}
+We will prove this using backward induction.
+
+\begin{enumerate}
+    \item \textbf{Terminal Condition (Base Case $t = T$):}
+    At maturity $T$, the value of the option $v_T$ is simply the payoff itself, because there is no discounting needed (time to maturity is zero).
+    \begin{equation*}
+        v_T = H_a = (A_T - K)^+
+    \end{equation*}
+    This payoff only depends on the final average $A_T$. Thus, we can define our base function as:
+    \begin{equation*}
+        g_T(s, a) := (a - K)^+
+    \end{equation*}
+    The property holds for $t=T$.
+    
+    \item \textbf{The Running Average Recursion (Crucial Step):}
+    Before tackling the induction step, we need to express the average at time $t$ ($A_t$) in terms of the average at time $t-1$ ($A_{t-1}$) and the new asset price $S_t$. 
+    \begin{align*}
+        A_t &= \frac{1}{t+1} \sum_{i=0}^t S_i \\
+        &= \frac{1}{t+1} \left( \sum_{i=0}^{t-1} S_i + S_t \right)
+    \end{align*}
+    Notice that by definition, $A_{t-1} = \frac{1}{t} \sum_{i=0}^{t-1} S_i$, which implies that $\sum_{i=0}^{t-1} S_i = t A_{t-1}$. Substituting this back gives us the fundamental recursive update for the average:
+    \begin{equation*}
+        A_t = \frac{t A_{t-1} + S_t}{t+1}
+    \end{equation*}
+
+    \item \textbf{Backward Induction Step (Assuming true for $t$, proving for $t-1$):}
+    Assume that at time $t$, the option price is given by $v_t = g_t(S_t, A_t)$. We want to find $v_{t-1}$.
+    Using the Tower Property of conditional expectations, we step back one period:
+    \begin{equation*}
+        v_{t-1} = \frac{1}{1+r} E_Q[ v_t \mid \mathcal{F}_{t-1} ]
+    \end{equation*}
+    Substitute our induction hypothesis $v_t = g_t(S_t, A_t)$:
+    \begin{equation*}
+        v_{t-1} = \frac{1}{1+r} E_Q[ g_t(S_t, A_t) \mid \mathcal{F}_{t-1} ]
+    \end{equation*}
+    Now, express $S_t$ and $A_t$ in terms of variables known at time $t-1$ and the independent return $R_t$. We know $S_t = S_{t-1}(1+R_t)$. Using the average recursion from Step 2:
+    \begin{equation*}
+        A_t = \frac{t A_{t-1} + S_{t-1}(1+R_t)}{t+1}
+    \end{equation*}
+    Substitute these into the expectation:
+    \begin{equation*}
+        v_{t-1} = \frac{1}{1+r} E_Q\left[ g_t\left(S_{t-1}(1+R_t), \frac{t A_{t-1} + S_{t-1}(1+R_t)}{t+1}\right) \mid \mathcal{F}_{t-1} \right]
+    \end{equation*}
+    
+    \item \textbf{Applying the Markov Property:}
+    At time $t-1$, both $S_{t-1}$ and $A_{t-1}$ are completely known ($\mathcal{F}_{t-1}$-measurable). The only source of randomness is the return $R_t$, which is independent of the past filtration $\mathcal{F}_{t-1}$ under the risk-neutral measure $Q$. 
+    Therefore, the conditional expectation simply evaluates the function over the distribution of $R_t$. This proves that $v_{t-1}$ is a deterministic function of $S_{t-1}$ and $A_{t-1}$, which we define as $g_{t-1}$:
+    \begin{equation*}
+        g_{t-1}(s, a) := \frac{1}{1+r} E_Q\left[ g_t\left(s(1+R_t), \frac{ta + s(1+R_t)}{t+1}\right) \right]
+    \end{equation*}
+    This completes the proof. Note: To compute this expectation in practice, you sum over the two possible states for $R_t$ (up with probability $q$, down with probability $1-q$) just like in standard European \& American option pricing.
+\end{enumerate}

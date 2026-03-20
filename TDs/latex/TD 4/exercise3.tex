@@ -1,0 +1,102 @@
+\subsection*{1. Understanding the Robust Optimization Problem}
+In this exercise, we are no longer certain about the expected return vector $R$. Instead, the expected return is a random vector $Z$ with a known expectation $\overline{Z}$ and a positive definite covariance matrix $\Omega$.
+
+Because we are uncertain about the true expected return, we want to optimize our portfolio for the \textit{worst-case scenario} within a reasonable confidence interval. This is represented by the set $G$, which bounds the standardized distance of $Z$ from its mean $\overline{Z}$ by a constant $K$:
+\[
+G := \left\{ z \in \mathbb{R}^2 : (z - \overline{Z})^T \Omega^{-1} (z - \overline{Z}) \le K^2 \right\}
+\]
+When $K$ is large enough, the true expected return falls within $G$ with high probability. 
+
+Our goal is to find the portfolio weights $w \in F$ that maximize our objective, while assuming the market will pick the $z \in G$ that minimizes it. This leads to a max-min (or sup-inf) formulation:
+\[
+\sup_{w \in F} \left( \inf_{z \in G} w^T z - \frac{\lambda}{2}w^T \Sigma w \right)
+\]
+We define the inner minimization problem as the value function $h(w)$:
+\[
+h(w) := \inf_{z \in G} w^T z - \frac{\lambda}{2}w^T \Sigma w
+\]
+The problem is well-posed because $h(w)$ is strictly concave. It is bounded above by $-c w^T \Sigma w$ for some constant $c > 0$, guaranteeing a unique maximum for the outer problem over the feasible set $F$.
+
+\subsection*{2. Solving the Inner Minimization for $h(w)$}
+We need to find the specific vector $z^*$ that minimizes $h(w)$. We set up the Lagrangian for the inner minimization problem. Let $\mu \ge 0$ be the Lagrange multiplier for the inequality constraint:
+\[
+L(z, \mu) = w^T z - \frac{\lambda}{2}w^T \Sigma w + \mu \left( (z - \overline{Z})^T \Omega^{-1} (z - \overline{Z}) - K^2 \right)
+\]
+To simplify the differentiation, let us define a shifted variable $\hat{z} = z - \overline{Z}$. This means $z = \hat{z} + \overline{Z}$. Substituting this into the Lagrangian gives:
+\[
+\hat{L}(\hat{z}, \mu) = w^T (\hat{z} + \overline{Z}) - \frac{\lambda}{2}w^T \Sigma w + \mu (\hat{z}^T \Omega^{-1} \hat{z} - K^2)
+\]
+Now, we take the first-order condition with respect to the vector $\hat{z}$ and set it to zero:
+\[
+\frac{\partial \hat{L}}{\partial \hat{z}} = w + 2\mu \Omega^{-1} \hat{z} = 0
+\]
+Solving for $\hat{z}$, we get:
+\[
+2\mu \Omega^{-1} \hat{z} = -w \implies \hat{z}^* = -\frac{1}{2\mu} \Omega w
+\]
+We know that at the optimum, the constraint binds, meaning $\hat{z}^T \Omega^{-1} \hat{z} = K^2$. Substitute our expression for $\hat{z}^*$ into this constraint to solve for $\mu$:
+\[
+\left( -\frac{1}{2\mu} \Omega w \right)^T \Omega^{-1} \left( -\frac{1}{2\mu} \Omega w \right) = K^2
+\]
+\[
+\frac{1}{4\mu^2} w^T \Omega^T \Omega^{-1} \Omega w = K^2
+\]
+Since $\Omega$ is a covariance matrix, it is symmetric ($\Omega^T = \Omega$). Thus, $\Omega^T \Omega^{-1} \Omega = \Omega \Omega^{-1} \Omega = \Omega$.
+\[
+\frac{1}{4\mu^2} w^T \Omega w = K^2 \implies \frac{1}{2\mu} = \frac{K}{\sqrt{w^T \Omega w}}
+\]
+Substitute this term back into our expression for $\hat{z}^*$:
+\[
+\hat{z}^* = -\frac{K}{\sqrt{w^T \Omega w}} \Omega w
+\]
+Finally, reverting to our original variable $z^* = \overline{Z} + \hat{z}^*$, we get the worst-case return vector:
+\[
+z^*(w) = \overline{Z} - \frac{K}{\sqrt{w^T \Omega w}} \Omega w
+\]
+
+\subsection*{3. Solving the Outer Maximization for $w^*$}
+Now we substitute $z^*(w)$ back into our value function $h(w)$:
+\[
+h(w) = w^T \left( \overline{Z} - \frac{K}{\sqrt{w^T \Omega w}} \Omega w \right) - \frac{\lambda}{2}w^T \Sigma w
+\]
+\[
+h(w) = w^T \overline{Z} - \frac{K}{\sqrt{w^T \Omega w}} w^T \Omega w - \frac{\lambda}{2}w^T \Sigma w = w^T \overline{Z} - K\sqrt{w^T \Omega w} - \frac{\lambda}{2}w^T \Sigma w
+\]
+We want to maximize $h(w)$ subject to the budget constraint $w_1 + w_2 = 1$, which is written in vector notation as $w^T \mathbf{1} - 1 = 0$ (where $\mathbf{1}$ is a vector of ones).
+
+We formulate a new Lagrangian for this outer problem, using $\mu \in \mathbb{R}$ as the multiplier for the budget constraint:
+\[
+\mathcal{L}(w, \mu) = w^T \overline{Z} - K\sqrt{w^T \Omega w} - \frac{\lambda}{2}w^T \Sigma w + \mu (w^T \mathbf{1} - 1)
+\]
+To find the optimal portfolio $w^*$, we take the derivative with respect to the vector $w$:
+\[
+\frac{\partial \mathcal{L}}{\partial w} = \overline{Z} - K \frac{2 \Omega w}{2\sqrt{w^T \Omega w}} - \lambda \Sigma w + \mu \mathbf{1} = 0
+\]
+Rearranging terms, we find the system of equations that defines the optimal wealth $w^*$:
+\[
+\lambda \Sigma w^* + \frac{K}{\sqrt{w^{*T} \Omega w^*}} \Omega w^* = \overline{Z} + \mu \mathbf{1}
+\]
+\[
+w^{*T} \mathbf{1} = 1
+\]
+This non-linear system characterizes the robust optimal portfolio.
+
+\subsection*{4. Solving the System for a Specific Case}
+We are given specific values: $K=1$, $\Omega = I$ (the identity matrix), and 
+\[
+\overline{Z} = \begin{pmatrix} 0.1 \\ 0.1 \end{pmatrix}, \quad 
+\Sigma = \begin{pmatrix} 0.01 \& 0.005 \\ 0.005 \& 0.01 \end{pmatrix}
+\]
+Substitute these into our system. Since $\Omega = I$, $\Omega w^* = w^*$ and $w^{*T} \Omega w^* = w^{*T} w^* = |w^*|^2$. The system simplifies to:
+\[
+\lambda \Sigma w^* + \frac{w^*}{|w^*|} = (\mu + 0.1)\mathbf{1}
+\]
+\[
+w_1^* + w_2^* = 1
+\]
+Notice the symmetry in the given parameters: both assets have the same expected return (0.1), the same variance (0.01), and the same covariance with each other (0.005). Because the optimization problem is strictly concave and entirely symmetric with respect to both assets, the unique optimal weights must also be symmetric.
+
+Therefore, $w_1^* = w_2^*$. Since they must sum to 1:
+\[
+2w_1^* = 1 \implies \tilde{w} = \begin{pmatrix} 0.5 \\ 0.5 \end{pmatrix}
+\]

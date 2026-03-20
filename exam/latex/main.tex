@@ -1,0 +1,165 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[]{babel}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz-cd}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{siunitx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{algorithm2e}
+
+
+\begin{document}
+
+\title{}
+\author{}
+\date{}
+
+%% DOCUMENT STARTS HERE %%
+
+\begin{center}
+    {\Large \textbf{Centrale Supélec}} \\
+    ST7 2024-2025 \\
+    STOCHASTIC FINANCE \& RISK MODELLING \\
+    FINAL EXAM \\
+    2H, Neither Document nor Calculator is Allowed
+\end{center}
+
+\vspace{0.5cm}
+\noindent The final score takes values between 0 and 20, while the accumulated points are up to 27. The scale is indicative only.
+
+\section*{Exercise 1. "Chooser" Option (4 pt)}
+
+We consider a finite discrete-time financial market consisting of a risk-free asset, whose price process $S^{0}$ is given by $S_{n}^{0}=e^{rn}$ for all $n\in\mathbb{N}$ with $r\ge0$, and one risky asset with price process $S=(S_{n})_{n\in \mathbb{N}}$.
+
+The filtration is $\mathbb{F}=(\mathcal{F}_{n})_{n\in\mathbb{N}}$ with $\mathcal{F}_{n}:=\sigma(S_{0},...,S_{n})$. We assume that the market is arbitrage-free and complete.
+
+We are interested in a "chooser" option with maturity $N$ and strike price $K$. The particularity of this option is that the buyer will choose at a predetermined date $T_{c}\in\{1,...,N\}$ whether the option is a call or a put; in both cases, the maturity of the options is $N$ and the strike is $K$. Let $C_{n}\equiv C_{n}(K,N)$ (resp. $P_{n}\equiv P_{n}(K,N)$) be the arbitrage-free price at time $n$ of the call (resp. the put).
+
+The payoff at $N$ is given by:
+\[ (S_{N}-K)_{+}\mathds{1}_{C_{T_{c}}\ge P_{T_{c}}} + (K-S_{N})_{+}\mathds{1}_{C_{T_{c}}<P_{T_{c}}} \]
+
+\begin{enumerate}
+    \item Recall the Fundamental Theorem of Asset Pricing in this complete arbitrage-free market.
+    \item Show that the arbitrage-free price of the "chooser" option at $T_{c}$ is $\max(C_{T_{c}},P_{T_{c}})$.
+    \item Using the put-call parity relation, show that the arbitrage-free price at $T_{c}$ of this option is:
+    \[ C_{T_{c}}+(e^{-r(N-T_{c})}K-S_{T_{c}})_{+} \]
+    \item Deduce that the "chooser" option can be replicated before $T_{c}$ by a portfolio consisting of a call and a put, specifying their respective maturities and strike prices.
+    \item In terms of $C_{0}(\cdot,\cdot)$ and $P_{0}(\cdot,\cdot)$, what is the arbitrage-free price of the "chooser" option at 0?
+\end{enumerate}
+
+\section*{Exercise 2. American/European Option (4 pt)}
+
+This exercise aims to prove that an American call option has the same price as a European call option.
+
+We consider a finite discrete time probability model $(\Omega, \mathcal{F}, \mathbb{P})$ with a time horizon $N$ and a filtration $\mathbb{F}=\{\mathcal{F}_{n},n\ge0\}$ where $\mathcal{F}_{0}=\{\emptyset,\Omega\}$ and $\mathcal{F}_{N}=\mathcal{F}$.
+
+There are $d+1$ assets, the first indexed by 0, called the risk-free asset, whose price process $S^{0}$ is given, for all $n\in\{0,...,N\}$, by $S_{n}^{0}=(1+r)^{n}$, with $r\ge0$.
+
+The next $d$ assets are called risky assets, and their price processes, denoted $S^{i}$, $i=1,...,d$, are assumed to be $\mathbb{F}$-adapted.
+
+We assume the market is arbitrage-free and complete. Let $Z=(Z_{n};n=0,...N)$ be an adapted process. We denote by $\mathcal{C}_{n}$ the arbitrage-free value at time $n$ of the American option with payoff process $Z$. Recall that the holder can exercise the American option at any time $n\in\{0,...,N\}$. If the option is exercised at $n$, the holder will receive a payoff equal to $Z_{n}$. The option can only be exercised once. Let $c_{n}$ be the arbitrage-free value at time $n$ of the European option with $\mathcal{F}_{N}$-measurable payoff defined by $h=Z_{N}$.
+
+\begin{enumerate}
+    \item Recall the recursive formulation of $\mathcal{C}_{n}$.
+    \item Show that $\mathcal{C}_{n}\ge c_{n}$, for all $n=0...N$.
+    \item Show that if $c_{n}\ge Z_{n}$ for all $n=0...N$ then $\mathcal{C}_{n}=c_{n}$, for all $n=0...N$.
+    \item Consider a market with a single risky asset with price process $S$ and apply the previous result to the case of a European call option on $S$ with maturity $N$ and strike price $K$.
+\end{enumerate}
+
+\section*{Exercise 3. Optimal Portfolio (6 pt)}
+
+Consider the nonlinear optimization problem:
+\[ w_{\phi}^{*}:=\arg\max_{w\in\mathbb{R}^{n}}\left(\mu^{T}w-\frac{\phi}{2}w^{T}\Sigma w\right) \]
+\[ \text{s.t. } 1^{T}w=1. \quad (1) \]
+where $\mu\in\mathbb{R}^{n}$ is the vector of returns of the $n$ risky assets, $\Sigma$ is the $n\times n$ covariance matrix, $1:=(1,...,1)\in\mathbb{R}^{n}$ and $\phi>0$ is the risk aversion parameter.
+
+We assume that $\Sigma$ is invertible and positive semi-definite and that $\mu$ is not collinear to $1$. Let $a=\mu^{T}\Sigma^{-1}\mathbf{1}$, $b=\mu^{T}\Sigma^{-1}\mu$ and $c=\mathbf{1}^{T}\Sigma^{-1}\mathbf{1}$.
+
+\begin{enumerate}
+    \item Compute the optimizer $w_{\phi}^{*}$ as a function of $a$, $b$, $c$ and $\Sigma$, $\mu$, and $\phi$.
+    \item Deduce the limit $\lim_{\phi\rightarrow\infty}w_{\phi}^{*}$.
+    \item Compute the return and the variance of $w_{\phi}^{*}$.
+    \item Prove that $bc-a^{2}>0$ and compare the return of $w_{\phi}^{*}$ to $a/c$.
+    \item Express the variance of $w_{\phi}^{*}$ as a function of its return. What do you deduce?
+\end{enumerate}
+
+\section*{Exercise 4. Markov Process and Average Options (7 pt)}
+
+The binomial market consists of two assets: The first one is called the risk-free asset, and its price process, $S^{0}$, is given, for all $n\in\{0,...N\}$, by $S_{n}^{0}=(1+r)^{n}$ with $r>-1$.
+
+The second one is called the risky asset, and its price process, $S$, is given by:
+\begin{align*}
+S_{n+1} &= S_{n}U_{n+1} \quad \text{for } n\in\{0,...N-1\} \\
+S_{0} &= s\in\mathbb{R}_{*}^{+}
+\end{align*}
+The random variables $U_{n}$ are all defined on the same probability space $(\Omega, \mathcal{F}, \mathbb{P})$, taking values in $\{d, u\}$ with $0<d<u$, that is,
+\begin{align*}
+U_{n}:\Omega=\{u,d\}^{N} &\longrightarrow \{u,d\} \\
+\omega=(\omega_{n})_{n\in\{1,...N\}} &\mapsto \omega_{n}
+\end{align*}
+We set $\mathbb{F}=\{\mathcal{F}_{n},n\ge0\}$ with $\mathcal{F}_{0}=\{\emptyset,\Omega\}$ and $\mathcal{F}_{n}=\sigma(U_{1},...,U_{n})$, for $n\in\{1,...N\}$. We assume that $(\Omega, \mathcal{F}, \mathbb{P})$ is non-redundant, meaning that $\mathcal{F}=\mathcal{P}(\Omega)$ and for all $\omega\in\Omega$, $\mathbb{P}(\omega) > 0$.
+
+In a generic way, we denote by $\hat{A}$ the normalized process of $A$, i.e., $\hat{A}_{n}=\frac{A_{n}}{S_{n}^{0}}$ for all $n\in\{0,...N\}$.
+
+\subsection*{I) Introduction}
+\begin{enumerate}
+    \item Show that $\mathcal{F}_{n}=\sigma(S_{1},...,S_{n})$. What does $\mathcal{F}_{n}$ represent?
+    \item Provide a necessary and sufficient condition for the market to be arbitrage-free and complete. We will assume that this condition is satisfied from now on.
+    \item Define $\mathbb{P}^{*}$, so that it is the unique probability measure that makes $\hat{S}$ a martingale. Construct $\mathbb{P}^{*}$ from a certain real number that you will express in terms of $u$, $d$, and $r$. What can we say about $(U_{n};n\in\{1,...,N\})$ under $\mathbb{P}^{*}$? Questions 1) and 2) are questions about the course; no proof is required.
+    \item Let $g$ be a Borel measurable and integrable function from $\mathbb{R}^{n+1}$ to $\mathbb{R}$. Prove using the definition of the conditional expectation that
+    \[ \mathbb{E}^{*}(g(S_{1},...,S_{n},U_{n+1})|\mathcal{F}_{n})=G(S_{1},...,S_{n}), \]
+    where $G(s_{1},...,s_{n})=\mathbb{E}^{*}(g(s_{1},...,s_{n},U_{n+1}))$.
+\end{enumerate}
+
+\subsection*{II) Option Pricing}
+We introduce the process $\Sigma=(\Sigma_{n};n\in\{0,...N\})$, defined as:
+\[ \Sigma_{n}=\sum_{j=1}^{n}S_{j}. \]
+
+\begin{enumerate}
+    \item Let $h$ be a Borel measurable and integrable function from $\mathbb{R}^{2}$ to $\mathbb{R}$. Show that, for all $n=0,...N-1$,
+    \[ \mathbb{E}^{*}(h(S_{n+1},\Sigma_{n+1})|\mathcal{F}_{n})=\pi h(uS_{n},\Sigma_{n}+uS_{n})+(1-\pi)h(dS_{n},\Sigma_{n}+dS_{n}). \]
+    \item Deduce from 1) that $C=(C_{n}=(S_{n},\Sigma_{n});n\in\{0,...N\})$ is a $(\mathbb{F}, \mathbb{P}^{*})$-Markovian process.
+    \item We now consider average options whose terminal payoff is of the form $e(S_{N},\Sigma_{N})$. For example, if $e(x,y)=(x-\frac{y}{N+1})^{+}$ this corresponds to an average strike call option maturing at $N$. We denote by $E_{n}$ the arbitrage-free value at date $n$ of the option with payoff $e(S_{N},\Sigma_{N})$ at date $N$. Explain what the arbitrage-free value $E_{n}$ is and show that there exists, for all $n=0,...N$ a function $e_{n}$ from $\mathbb{R}^{2}$ to $\mathbb{R}$ such that $E_{n}=e_{n}(S_{n},\Sigma_{n})$, where
+    \begin{align*}
+    e_{N} &= e \\
+    e_{n}(x,y) &= \frac{1}{1+r}[\pi e_{n+1}(ux,ux+y)+(1-\pi)e_{n+1}(dx,dx+y)] \quad n=0,...,N-1.
+    \end{align*}
+\end{enumerate}
+
+\section*{Exercise 5. Risk Management (6 pt)}
+
+Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space. We consider a market with a time horizon of 1 and with two assets.
+
+The risky asset $S$ is such that $S_{0}=s$ for a given constant $s\in\mathbb{R}$, we call $\Delta S=S_{1}-s$ and assume that $\Delta S$ is square integrable under $\mathbb{P}$. We also assume that the riskless asset is such that $S^{0}\equiv1$. We consider a derivative with payoff $F(S_{1})$, and we want to find the optimal hedging of $F(S_{1})$ from the point of view of risk management. We call $p$ the price of $F(S_{1})$ observed in the market.
+
+We assume that $F(S_{1})$ is also square integrable under $\mathbb{P}$. Define the risk measure $\rho$ for the square-integrable random variables $X$ by
+\[ \rho(X):=\mathbb{E}[X^{2}]. \]
+
+\begin{enumerate}
+    \item Let $x, y\in\mathbb{R}$. Consider a strategy where there is $x$ in $S$, $y$ in $S^{0}$ and $-1$ in $F(S_{1})$. Let $V$ be the associated portfolio value. Write $V_{0}$, $V_{1}$ and further the loss $L:=V_{0}-V_{1}$. We say that $(x, y)$ is a hedging strategy if $p=xs_{0}+y$. Compute the loss in this case. We write it $L(x,p)$. We want to find among $(x, p)$ the one that minimize
+    \[ \min_{x,p}\rho(L(x,p)). \]
+    \item Write the optimality conditions for $x, p$. Solve the system and show that the optimal solution $p^{*}$ is given by
+    \[ p^{*}=\frac{\mathbb{E}[\Delta S^{2}]\mathbb{E}[F(S_{1})]-\mathbb{E}[\Delta S]\mathbb{E}[F(S_{1})\Delta S]}{var(\Delta S)}, \]
+    where $var(\Delta S)$ is the variance of $\Delta S$.
+    \item Assume that $S$ is a martingale under $\mathbb{P}$. Compare $p^{*}$ to the arbitrage-free price of $F(S_{1})$.
+    \item Assume in what follows that we are under the setting of the binomial model where $\mathbb{P}[S_{1}=(1+u)s]=1-\mathbb{P}[S_{1}=(1+d)s]$, where $u>0>d>-1$. Compute $p^{*}$ in this context and show that
+    \[ p^{*}=-\frac{d}{u-d}F((1+u)s)+\frac{u}{u-d}F((1+d)s). \]
+    Hint: if $q=\mathbb{P}[S_{1}=(1+u)s]$, $var(\Delta S)=s^{2}q(1-q)(u-d)^{2}$. Compare again $p^{*}$ to the arbitrage-free price of $F(S_{1})$.
+    \item Now prove that there exists $(\overline{x},\overline{p})$ such that $\rho(L(\overline{x},\overline{p}))=0$. Comment.
+\end{enumerate}
+
+\end{document}

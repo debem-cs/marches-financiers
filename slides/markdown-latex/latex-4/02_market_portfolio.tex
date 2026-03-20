@@ -37,7 +37,7 @@ These formulations characterize the \textbf{Mean-Variance Efficient Frontier}. T
 
 We will explicitly solve for the optimal weights using Formulation 2 via the method of Lagrange multipliers. To build intuition, we first solve an unconstrained version (omitting the $w \cdot \mathbf{1}=1$ requirement), and then tackle the fully constrained problem.
 
-\subsection{Unconstrained Optimization ($E = \mathbb{R}^d$)}
+\subsection{Unconstrained Optimization}
 Suppose temporarily that we do not enforce $w \cdot \mathbf{1} = 1$ (which means $w^0$ is arbitrary, functioning as a slack variable, but without assigning any explicit return to it). We wish to minimize variance while achieving a target return $\mu$:
 \begin{equation*}
     \min_{w \in \mathbb{R}^d} w^T \Sigma w \quad \text{subject to} \quad w \cdot R = \mu.
@@ -72,7 +72,7 @@ Finally, substituting $\frac{\lambda}{2}$ back into \eqref{eq:w_unconstrained} g
     \tilde{w} = \mu \frac{\Sigma^{-1} R}{R^T \Sigma^{-1} R}.
 \end{equation}
 
-\subsection{Constrained Optimization ($E = E_0$)}
+\subsection{Constrained Optimization (E = E\_0)}
 We now solve the actual problem defined in \eqref{eq:p2_market}, restricting the riskless asset weight to zero by enforcing $w \cdot \mathbf{1} = 1$:
 \begin{equation}
     \min_{w \in \mathbb{R}^d} w^T \Sigma w \quad \text{subject to} \quad w \cdot R = \mu \quad \text{and} \quad w \cdot \mathbf{1} = 1.
@@ -151,7 +151,7 @@ Using these definitions, the optimal portfolio can be elegantly rewritten as an 
     \tilde{w}(\mu) = \mu h + g. \label{eq:two_fund_separation}
 \end{equation}
 
-\subsection{Interpretation of $g$ and $h$}
+\subsection{Interpretation of g and h}
 Equation \eqref{eq:two_fund_separation} is a powerful result known as the \textbf{Two-Fund Separation Theorem} (or Mutual Fund Theorem).
 It states that \textit{every} optimal portfolio on the efficient frontier is merely a linear combination of two fixed portfolios: $g$ and $h$. Thus, an investor does not need to separately analyze and invest in all $d$ individual underlying stocks. They only need access to two ``mutual funds'' constructed according to the weights $g$ and $h$, respectively. They achieve their desired risk-return profile simply by scaling their investment amounts in these two funds based on their personal target $\mu$.
 

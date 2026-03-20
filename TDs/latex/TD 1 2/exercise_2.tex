@@ -1,0 +1,103 @@
+\section{Exercise 2: Martingales and Casino Strategies}
+
+\textbf{Context:} A player plays a sequence of independent games. Let $X_1, X_2, \dots$ be the algebraic gain (gain minus initial bet) at each game. We assume $\mathbb{E}[|X_i|] < \infty$, the game is fair ($\mathbb{E}[X_i] = 0$), and $S_n = X_1 + \dots + X_n$ is the total winnings \textendash{} or losses \textendash{} after $n$ games. The filtration is given by $\mathcal{F}_n = \sigma(S_1, \dots, S_n) = \sigma(X_1, \dots, X_n)$.
+
+\subsection{Part 1: The Standard Game}
+
+\textbf{Question 1:} What does $\mathcal{F}_n$ represent?
+
+\textbf{Step-by-Step Explanation:}
+The $\sigma$-algebra $\mathcal{F}_n$ represents the total accumulation of information available to the player exactly after the $n$-th game has been played. If a random variable is $\mathcal{F}_n$-measurable, it means its value is completely known by time $n$. In this casino context, it perfectly represents the history of all the gains \& losses up to game $n$.
+
+\vspace{0.5cm}
+\textbf{Question 2:} Compute $\mathbb{E}[S_{n+1} | \mathcal{F}_n]$.
+
+\textbf{Step-by-Step Explanation:}
+We want to find the expected total winnings after game $n+1$, given all the information up to game $n$. 
+
+First, let's write $S_{n+1}$ in terms of $S_n$:
+\[ S_{n+1} = S_n + X_{n+1} \]
+
+Now, we apply the conditional expectation:
+\[ \mathbb{E}[S_{n+1} | \mathcal{F}_n] = \mathbb{E}[S_n + X_{n+1} | \mathcal{F}_n] \]
+
+By the linearity property of conditional expectations, we can split the sum:
+\[ = \mathbb{E}[S_n | \mathcal{F}_n] + \mathbb{E}[X_{n+1} | \mathcal{F}_n] \]
+
+Now we evaluate each term based on what we know at time $n$:
+1. Since $S_n$ is completely determined by the information at time $n$, it is $\mathcal{F}_n$-measurable. We can just pull it out of the expectation: $\mathbb{E}[S_n | \mathcal{F}_n] = S_n$.
+2. The games are independent, meaning the outcome of game $n+1$ ($X_{n+1}$) does not depend on the history of the games up to time $n$ ($\mathcal{F}_n$). Therefore, conditioning on $\mathcal{F}_n$ gives no new information about $X_{n+1}$: $\mathbb{E}[X_{n+1} | \mathcal{F}_n] = \mathbb{E}[X_{n+1}]$.
+
+Substitute these back into our equation:
+\[ = S_n + \mathbb{E}[X_{n+1}] \]
+
+Finally, because the game is fair, we know $\mathbb{E}[X_{n+1}] = 0$. 
+\[ = S_n + 0 = S_n \quad P\text{-a.s.} \]
+This proves that the total winnings process $S_n$ is a martingale.
+
+\subsection{Part 2: Introducing a Betting Strategy}
+
+\textbf{Context:} The player now chooses a bet amount $H_i$ at the $i$-th game. The total winnings become $\tilde{S}_n = \sum_{i=1}^n H_i X_i$.
+
+\textbf{Question 1:} What is the reasonable assumption about the measurability and integrability of $H_i$?
+
+\textbf{Step-by-Step Explanation:}
+In reality, a player must decide their bet for game $i$ \textit{before} the game is played. They cannot use a crystal ball to look into the future. Therefore, the bet $H_i$ can only depend on the information available strictly before game $i$, which is $\mathcal{F}_{i-1}$. 
+
+Mathematically, we say $H_i$ must be a \textit{predictable} process. For integrability, we typically assume $H_i$ is bounded so that the resulting stochastic integral remains integrable.
+
+\vspace{0.5cm}
+\textbf{Question 2:} Compute $\mathbb{E}[\tilde{S}_{n+1} | \mathcal{F}_n]$ and comment.
+
+\textbf{Step-by-Step Explanation:}
+Just like before, we write the wealth at $n+1$ as the wealth at $n$ plus the change at $n+1$:
+\[ \tilde{S}_{n+1} = \tilde{S}_n + H_{n+1} X_{n+1} \]
+
+Apply the conditional expectation:
+\[ \mathbb{E}[\tilde{S}_{n+1} | \mathcal{F}_n] = \mathbb{E}[\tilde{S}_n | \mathcal{F}_n] + \mathbb{E}[H_{n+1} X_{n+1} | \mathcal{F}_n] \]
+
+Again, $\tilde{S}_n$ is perfectly known at time $n$, so $\mathbb{E}[\tilde{S}_n | \mathcal{F}_n] = \tilde{S}_n$.
+
+For the second term, we use the property of "pulling out what is known". Since $H_{n+1}$ is predictable, it is decided based on $\mathcal{F}_n$. Thus, it acts as a constant relative to $\mathcal{F}_n$ and can be pulled out of the conditional expectation:
+\[ \mathbb{E}[H_{n+1} X_{n+1} | \mathcal{F}_n] = H_{n+1} \mathbb{E}[X_{n+1} | \mathcal{F}_n] \]
+
+Because $X_{n+1}$ is independent of $\mathcal{F}_n$, we drop the condition:
+\[ = H_{n+1} \mathbb{E}[X_{n+1}] \]
+
+Since the game is fair ($\mathbb{E}[X_{n+1}] = 0$):
+\[ = H_{n+1} \times 0 = 0 \]
+
+Putting it all together:
+\[ \mathbb{E}[\tilde{S}_{n+1} | \mathcal{F}_n] = \tilde{S}_n + 0 = \tilde{S}_n \quad P\text{-a.s.} \]
+\textbf{Comment:} This proves that you cannot turn a fair game into a winning game simply by varying your bet sizes based on past information. The process remains a martingale.
+
+\subsection{Part 3: Stopping Times}
+
+\textbf{Context:} The player stops at a bounded random time $\tau : \Omega \rightarrow \mathbb{N}$.
+
+\textbf{Question 1:} What is the reasonable assumption about the measurability of $\tau$?
+
+\textbf{Step-by-Step Explanation:}
+The decision to stop playing right after game $n$ (the event $\{\tau = n\}$) must be made using only the information available up to and including game $n$. You cannot stop today because you know you will lose tomorrow. Therefore, the event $\{\tau = n\}$ must belong to the $\sigma$-algebra $\mathcal{F}_n$. This is the formal definition of a stopping time.
+
+\vspace{0.5cm}
+\textbf{Question 2:} Assume $\{\tau = i\}$ is independent of $\mathcal{F}_i$ for $i \ge 1$. Compute $\mathbb{E}[S_\tau]$.
+
+\textbf{Step-by-Step Explanation:}
+Since $\tau$ is bounded, there exists some maximum integer $k$ such that $\tau \le k$ always happens ($P(\tau \le k) = 1$). 
+We can rewrite the value of the stopped process $S_\tau$ by summing over all possible stopping times using indicator functions:
+\[ S_\tau = \sum_{n=1}^k \mathbb{I}_{\{\tau=n\}} S_n \]
+
+Now take the expected value of both sides:
+\[ \mathbb{E}[S_\tau] = \mathbb{E}\left[ \sum_{n=1}^k \mathbb{I}_{\{\tau=n\}} S_n \right] \]
+
+By linearity (since the sum is finite), we can pull the sum outside the expectation:
+\[ = \sum_{n=1}^k \mathbb{E}[\mathbb{I}_{\{\tau=n\}} S_n] \]
+
+We are given that $\{\tau=n\}$ is independent of $\mathcal{F}_n$. Since $S_n$ is $\mathcal{F}_n$-measurable, the indicator function $\mathbb{I}_{\{\tau=n\}}$ and the random variable $S_n$ are independent. For independent variables, the expectation of their product is the product of their expectations:
+\[ = \sum_{n=1}^k \mathbb{E}[\mathbb{I}_{\{\tau=n\}}] \mathbb{E}[S_n] \]
+
+We know that $\mathbb{E}[\mathbb{I}_{\{\tau=n\}}] = P(\tau=n)$. We also know from Part 1 that $\mathbb{E}[S_n] = \mathbb{E}[X_1 + \dots + X_n] = 0$ because each game is fair.
+\[ = \sum_{n=1}^k P(\tau=n) \times 0 = 0 \]
+
+Thus, $\mathbb{E}[S_\tau] = 0$.

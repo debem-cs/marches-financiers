@@ -1,0 +1,58 @@
+\section{Exercise 3: Put-Call Parity}
+
+\subsection{Problem Statement}
+We assume a market with one risky asset ($d=1$) that is free of arbitrage opportunities. Let $C_0$ and $P_0$ be the prices at time $t=0$ of a European call and a European put, respectively, both with the same strike price $K$ and the same maturity date $T$. 
+
+We want to prove the fundamental put-call parity relationship:
+\begin{equation}
+    C_0 - P_0 = S_0 - \frac{K}{(1+r)^T}
+\end{equation}
+
+\subsection{Step-by-Step Proof using No-Arbitrage}
+To prove this relationship, we will construct two different investment strategies at time $t=0$. We will show that both strategies yield the exact same payoff at time $T$, regardless of what the final stock price $S_T$ is. By the Law of One Price (a consequence of no-arbitrage), two portfolios with identical future payoffs must have the exact same initial cost.
+
+\subsubsection*{Strategy 1: Options Portfolio}
+\begin{itemize}
+    \item \textbf{Action at $t=0$:} We short (sell) one call option and long (buy) one put option.
+    \item \textbf{Initial Value $V_0^{(1)}$:} Selling the call brings in $C_0$, and buying the put costs $P_0$. The net value of this portfolio today is $-C_0 + P_0$.
+    \item \textbf{Payoff at $t=T$:} 
+    \begin{itemize}
+        \item The short call pays $-(S_T - K)_+$
+        \item The long put pays $+(K - S_T)_+$
+    \end{itemize}
+    Let's evaluate the combined payoff $V_T^{(1)}$ for any possible value of $S_T$:
+    \begin{align}
+        V_T^{(1)} &= -(S_T - K)_+ + (K - S_T)_+ \\
+        &= \begin{cases} 
+            -(S_T - K) + 0 = K - S_T & \text{if } S_T \ge K \\
+            0 + (K - S_T) = K - S_T & \text{if } S_T < K 
+           \end{cases}
+    \end{align}
+    In all cases, $V_T^{(1)} = K - S_T$.
+\end{itemize}
+
+\subsubsection*{Strategy 2: Underlying and Riskless Asset}
+\begin{itemize}
+    \item \textbf{Action at $t=0$:} We short one share of the underlying asset and invest the discounted strike price, $\frac{K}{(1+r)^T}$, into the riskless bank account.
+    \item \textbf{Initial Value $V_0^{(2)}$:} Shorting the share gives us a negative position value of $-S_0$. The money in the bank has a value of $+\frac{K}{(1+r)^T}$. The net value of this portfolio today is $-S_0 + \frac{K}{(1+r)^T}$.
+    \item \textbf{Payoff at $t=T$:}
+    \begin{itemize}
+        \item We must buy back the shorted share, which will cost us $-S_T$.
+        \item The money in the bank account has grown with interest: $\frac{K}{(1+r)^T} \times (1+r)^T = K$.
+    \end{itemize}
+    The combined payoff is $V_T^{(2)} = K - S_T$.
+\end{itemize}
+
+\subsection{Conclusion}
+We have established that both strategies yield the exact same final payoff:
+\begin{equation}
+    V_T^{(1)} = V_T^{(2)} = K - S_T
+\end{equation}
+Because the market is arbitrage-free, two portfolios that always have the same final value must have the exact same initial value. Therefore, $V_0^{(1)} = V_0^{(2)}$:
+\begin{equation}
+    -C_0 + P_0 = -S_0 + \frac{K}{(1+r)^T}
+\end{equation}
+Multiplying the entire equation by $-1$ gives us the desired put-call parity formula:
+\begin{equation}
+    C_0 - P_0 = S_0 - \frac{K}{(1+r)^T}
+\end{equation}

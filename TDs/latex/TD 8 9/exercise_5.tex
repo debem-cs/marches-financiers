@@ -1,0 +1,112 @@
+\subsection*{(1) Compute $\mu_P$ and $\sigma_P^2$ as functions of $\rho$}
+
+The portfolio return is a linear combination of the individual asset returns:
+\begin{equation*}
+R_P = w_A R_A + w_B R_B
+\end{equation*}
+where $w_A = 0.35$ and $w_B = 0.65$.
+
+Since the expectation is a linear operator, the expected portfolio return $\mu_P$ is independent of the correlation $\rho$:
+\begin{align*}
+\mu_P &= \mathbb{E}[R_P] = w_A \mathbb{E}[R_A] + w_B \mathbb{E}[R_B] \\
+&= w_A \mu_A + w_B \mu_B \\
+&= 0.35(0.20) + 0.65(0.18) \\
+&= 0.070 + 0.117 \\
+&= 0.187
+\end{align*}
+
+The variance of the portfolio return $\sigma_P^2$, however, depends on the covariance (and thus the correlation) between the two assets:
+\begin{align*}
+\sigma_P^2(\rho) &= \text{Var}(w_A R_A + w_B R_B) \\
+&= w_A^2 \sigma_A^2 + w_B^2 \sigma_B^2 + 2w_A w_B \text{Cov}(R_A, R_B) \\
+&= w_A^2 \sigma_A^2 + w_B^2 \sigma_B^2 + 2w_A w_B \rho \sigma_A \sigma_B
+\end{align*}
+
+Let us compute the individual terms:
+\begin{itemize}
+    \item $w_A^2 \sigma_A^2 = (0.35)^2 (0.15)^2 = 0.1225 \times 0.0225 = 0.00275625$
+    \item $w_B^2 \sigma_B^2 = (0.65)^2 (0.12)^2 = 0.4225 \times 0.0144 = 0.006084$
+    \item $2w_A w_B \sigma_A \sigma_B = 2(0.35)(0.65)(0.15)(0.12) = 0.00819$
+\end{itemize}
+
+Substituting these values back into the equation:
+\begin{align*}
+\sigma_P^2(\rho) &= 0.00275625 + 0.006084 + 0.00819 \rho \\
+&= 0.00884025 + 0.00819 \rho
+\end{align*}
+
+
+\subsection*{(2) Deduce an analytical formula for $VaR_{\alpha}(L)$}
+
+The loss is defined as $L = -V_0 R_P = -100 R_P$.
+Since $R_A$ and $R_B$ are Gaussian, their linear combination $R_P$ is also Gaussian. Thus, $R_P \sim \mathcal{N}(\mu_P, \sigma_P^2)$.
+
+Because $L$ is a simple scaling of $R_P$, the loss variable $L$ is also normally distributed:
+\begin{align*}
+\mu_L &= \mathbb{E}[-100 R_P] = -100 \mu_P \\
+\sigma_L^2 &= \text{Var}(-100 R_P) = (-100)^2 \sigma_P^2 = 10000 \sigma_P^2 \\
+\sigma_L &= 100 \sigma_P
+\end{align*}
+Therefore, $L \sim \mathcal{N}(-100\mu_P, 10000\sigma_P^2)$.
+
+For any normally distributed random variable $X \sim \mathcal{N}(\mu, \sigma^2)$, the Value at Risk at confidence level $\alpha$ is given by $VaR_{\alpha}(X) = \mu + \sigma \Phi^{-1}(\alpha)$, where $\Phi^{-1}$ is the inverse of the standard normal CDF.
+
+Applying this to our loss $L$:
+\begin{align*}
+VaR_{\alpha}(L) &= \mu_L + \sigma_L \Phi^{-1}(\alpha) \\
+&= -100\mu_P + 100\sigma_P(\rho) \Phi^{-1}(\alpha)
+\end{align*}
+
+
+\subsection*{(3) Compute $VaR_{0.99}(L)$ for $\rho=0.5$ and $\rho=-0.5$. Comment.}
+
+First, we need the standard normal quantile for $\alpha = 0.99$. 
+$\Phi^{-1}(0.99) \approx 2.3263$.
+
+Recall $\mu_P = 0.187$, so $-100\mu_P = -18.7$.
+
+\vspace{0.3cm}
+\noindent \textbf{Case 1: $\rho = 0.5$}
+
+We first compute the portfolio variance and standard deviation:
+\begin{align*}
+\sigma_P^2(0.5) &= 0.00884025 + 0.00819(0.5) \\
+&= 0.00884025 + 0.004095 \\
+&= 0.01293525
+\end{align*}
+\begin{equation*}
+\sigma_P(0.5) = \sqrt{0.01293525} \approx 0.113733
+\end{equation*}
+
+Now we compute the VaR:
+\begin{align*}
+VaR_{0.99}(L) &= -18.7 + 100(0.113733)(2.3263) \\
+&= -18.7 + 11.3733(2.3263) \\
+&= -18.7 + 26.4577 \\
+&\approx 7.758 \text{ M euros}
+\end{align*}
+
+\vspace{0.3cm}
+\noindent \textbf{Case 2: $\rho = -0.5$}
+
+We compute the portfolio variance and standard deviation:
+\begin{align*}
+\sigma_P^2(-0.5) &= 0.00884025 + 0.00819(-0.5) \\
+&= 0.00884025 - 0.004095 \\
+&= 0.00474525
+\end{align*}
+\begin{equation*}
+\sigma_P(-0.5) = \sqrt{0.00474525} \approx 0.068886
+\end{equation*}
+
+Now we compute the VaR:
+\begin{align*}
+VaR_{0.99}(L) &= -18.7 + 100(0.068886)(2.3263) \\
+&= -18.7 + 6.8886(2.3263) \\
+&= -18.7 + 16.0250 \\
+&\approx -2.675 \text{ M euros}
+\end{align*}
+
+\vspace{0.3cm}
+\noindent \textbf{Comment:} 
+The correlation coefficient strongly impacts the portfolio risk. When the assets are positively correlated ($\rho=0.5$), they tend to move in the same direction, leading to a higher portfolio variance and a substantial $VaR_{0.99}$ of approximately $7.76$ M euros. Conversely, when the assets are negatively correlated ($\rho=-0.5$), their price movements tend to offset each other, demonstrating the power of diversification. This drastically reduces the portfolio variance, pulling the $VaR_{0.99}$ down to approximately $-2.68$ M euros, meaning that even in the worst 1\% of cases, the portfolio is actually expected to make a profit.

@@ -1,0 +1,104 @@
+\subsection{(1) Compute VaR\_0.95 of both strategies}
+
+For Strategy A, the cumulative distribution function $F_{L_A}(x)$ is:
+\begin{equation*}
+F_{L_A}(x) = 
+\begin{cases} 
+0 & \text{if } x < -1 \\
+0.95 & \text{if } -1 \le x < 100 \\
+1 & \text{if } x \ge 100 
+\end{cases}
+\end{equation*}
+The Value at Risk is $VaR_{0.95}(L_A) = \inf\{x : F_{L_A}(x) \ge 0.95\}$. The smallest $x$ satisfying this is $-1$.
+\begin{equation*}
+VaR_{0.95}(L_A) = -1
+\end{equation*}
+
+For Strategy B, $L_B$ is deterministic. The CDF jumps to 1 at $x=0$.
+\begin{equation*}
+VaR_{0.95}(L_B) = 0
+\end{equation*}
+
+
+\subsection{(2) Which strategy satisfies regulation?}
+
+The regulatory constraint is $VaR_{0.95}(L) \le 0$.
+Since $VaR_{0.95}(L_A) = -1 \le 0$ and $VaR_{0.95}(L_B) = 0 \le 0$, \underline{both} strategies satisfy the regulation.
+
+
+\subsection{(3) Compare expected losses}
+
+Let us compute the expected loss for each strategy:
+\begin{align*}
+\mathbb{E}[L_A] &= (-1) \times \mathbb{P}(L_A = -1) + (100) \times \mathbb{P}(L_A = 100) \\
+&= -1(0.95) + 100(0.05) \\
+&= -0.95 + 5 \\
+&= 4.05
+\end{align*}
+
+For Strategy B, since the loss is always 0:
+\begin{equation*}
+\mathbb{E}[L_B] = 0
+\end{equation*}
+
+Strategy A has a significantly higher expected loss ($4.05$) compared to Strategy B ($0$), despite both passing the VaR constraint.
+
+
+\subsection{(4) Explain why VaR may create incentives to take catastrophic risks}
+
+Value at Risk only looks at the probability of a loss, completely ignoring the severity of losses that occur beyond the chosen confidence level. By taking on a strategy like A, a bank can generate small, highly probable profits (the negative loss of $-1$) to satisfy the regulator, while hiding a catastrophic, low-probability risk (the loss of $100$) in the tail. VaR incentivizes this behavior because it does not penalize the magnitude of extreme tail events.
+
+
+\subsection{(5) Show that ES removes this paradox}
+
+Let us compute the Expected Shortfall ($ES_{0.95}$) for both strategies.
+
+For Strategy B, the loss is constant at 0, so $ES_{0.95}(L_B) = 0$.
+
+For Strategy A, the quantile function $VaR_u(L_A) = 100$ for $u \in (0.95, 1]$.
+\begin{align*}
+ES_{0.95}(L_A) &= \frac{1}{1 - 0.95} \int_{0.95}^1 VaR_u(L_A) du \\
+&= \frac{1}{0.05} \int_{0.95}^1 100 \, du \\
+&= \frac{1}{0.05} \times 100(1 - 0.95) \\
+&= 100
+\end{align*}
+
+Unlike VaR, Expected Shortfall accounts for the magnitude of tail losses. Under an ES-based regulatory constraint (e.g., $ES_{0.95}(L) \le 0$), Strategy A would fail spectacularly ($100 \not\le 0$), successfully resolving the paradox.
+
+
+\subsection{(6) Construct a sequence L\_n where expected loss diverges}
+
+We want to construct a sequence $(L_n)$ such that $VaR_{0.95}(L_n) = 0$ for all $n$, but $\mathbb{E}[L_n] \rightarrow +\infty$.
+
+Define the discrete random variable $L_n$ as follows:
+\begin{align*}
+\mathbb{P}(L_n = 0) &= 0.95 \\
+\mathbb{P}(L_n = n) &= 0.05
+\end{align*}
+where $n \in \mathbb{N}, n > 0$.
+
+For any $n$, $F_{L_n}(0) = 0.95$, which implies $VaR_{0.95}(L_n) = 0$. This perfectly satisfies the constraint.
+Now, we look at the expected loss:
+\begin{equation*}
+\mathbb{E}[L_n] = 0(0.95) + n(0.05) = 0.05n
+\end{equation*}
+As $n \rightarrow +\infty$, the limit of the expected loss $\mathbb{E}[L_n] \rightarrow +\infty$.
+
+
+\subsection{(7) Interpret financially}
+
+This demonstrates that a financial institution can theoretically take on infinitely large catastrophic risks (the state $L_n = n$) without violating a VaR-based regulatory framework, provided the probability of that catastrophe is kept just at or below the regulatory threshold (here, 5\%). The regulation fails to protect against the actual severity of systemic collapse.
+
+
+\subsection{(8) Compute ES\_0.95(L\_n) \& comment}
+
+Let us calculate the Expected Shortfall for this sequence:
+For $u \in (0.95, 1]$, $VaR_u(L_n) = n$.
+\begin{align*}
+ES_{0.95}(L_n) &= \frac{1}{0.05} \int_{0.95}^1 n \, du \\
+&= \frac{1}{0.05} \times n(0.05) \\
+&= n
+\end{align*}
+
+As $n \rightarrow +\infty$, $ES_{0.95}(L_n) \rightarrow +\infty$. 
+Comment: Expected Shortfall accurately reflects the increasing tail risk. While VaR remains entirely blind to the growing catastrophic exposure, ES correctly identifies it and diverges alongside the potential magnitude of the loss.

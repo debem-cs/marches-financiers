@@ -1,0 +1,114 @@
+\subsection*{1. Understanding the Given Data}
+We are given a market with one riskless asset and two risky assets. 
+The expected returns are given by the vector $R$, and the covariance matrix of the risky assets is $\Sigma$:
+\[
+R = \begin{pmatrix} 0.2 \\ 0.12 \end{pmatrix}, \quad 
+\Sigma = \begin{pmatrix} 0.09 & 0.0045 \\ 0.0045 & 0.0225 \end{pmatrix}
+\]
+The riskless asset return is $R^0 = 0.08$. The problem states we are only investing in the risky assets, meaning the weight of the riskless asset is $w_0 = 0$. We also require a ``long position'' only, meaning our weights must be non-negative ($w_1, w_2 \ge 0$). 
+
+Since we must fully invest our capital across the two risky assets, our weights must sum to 1:
+\[
+w_1 + w_2 = 1
+\]
+
+\subsection*{2. Calculating the Portfolio Variance}
+The variance of a portfolio consisting of two assets, defined by the weight vector $w = (w_1, w_2)^T$, is given by $V(w) = w^T \Sigma w$. 
+
+Let's expand this matrix multiplication step-by-step:
+\[
+V(w) = \begin{pmatrix} w_1 & w_2 \end{pmatrix} 
+\begin{pmatrix} 0.09 & 0.0045 \\ 0.0045 & 0.0225 \end{pmatrix} 
+\begin{pmatrix} w_1 \\ w_2 \end{pmatrix}
+\]
+First, multiply the row vector by the matrix:
+\[
+\begin{pmatrix} w_1 & w_2 \end{pmatrix} \Sigma = \begin{pmatrix} 0.09w_1 + 0.0045w_2 & 0.0045w_1 + 0.0225w_2 \end{pmatrix}
+\]
+Now, multiply this resulting row vector by the column vector $w$:
+\[
+V(w) = (0.09w_1 + 0.0045w_2)w_1 + (0.0045w_1 + 0.0225w_2)w_2
+\]
+\[
+V(w) = 0.09w_1^2 + 0.0045w_1w_2 + 0.0045w_1w_2 + 0.0225w_2^2
+\]
+Combining the middle terms yields the portfolio variance equation:
+\[
+V(w) = 0.09w_1^2 + 0.009w_1w_2 + 0.0225w_2^2
+\]
+
+\subsection*{3. Formulating the Lagrangian}
+We want to minimize the variance $V(w)$ subject to the constraint $w_1 + w_2 = 1$, which can be rewritten as $w_1 + w_2 - 1 = 0$. 
+
+To do this, we introduce a Lagrange multiplier, $\lambda$, to combine our objective function and our constraint:
+\[
+L(w, \lambda) = V(w) + \lambda(w_1 + w_2 - 1)
+\]
+\[
+L(w_1, w_2, \lambda) = 0.09w_1^2 + 0.009w_1w_2 + 0.0225w_2^2 + \lambda(w_1 + w_2 - 1)
+\]
+
+\subsection*{4. Solving the First-Order Conditions}
+To find the minimum, we take the partial derivative of the Lagrangian with respect to $w_1, w_2,$ and $\lambda$, and set them equal to zero.
+
+\vspace{0.5em}
+\noindent \textbf{Derivative with respect to $w_1$:}
+\[
+\frac{\partial L}{\partial w_1} = 2(0.09)w_1 + 0.009w_2 + \lambda = 0.18w_1 + 0.009w_2 + \lambda = 0
+\]
+
+\noindent \textbf{Derivative with respect to $w_2$:}
+\[
+\frac{\partial L}{\partial w_2} = 0.009w_1 + 2(0.0225)w_2 + \lambda = 0.009w_1 + 0.045w_2 + \lambda = 0
+\]
+
+\noindent \textbf{Derivative with respect to $\lambda$:}
+\[
+\frac{\partial L}{\partial \lambda} = w_1 + w_2 - 1 = 0 \implies w_2 = 1 - w_1
+\]
+
+We now have a system of linear equations. Since both the $w_1$ and $w_2$ derivatives equal $-\lambda$, we can set them equal to each other:
+\[
+0.18w_1 + 0.009w_2 = 0.009w_1 + 0.045w_2
+\]
+Now, substitute $w_2 = 1 - w_1$ into this equation:
+\[
+0.18w_1 + 0.009(1 - w_1) = 0.009w_1 + 0.045(1 - w_1)
+\]
+\[
+0.18w_1 + 0.009 - 0.009w_1 = 0.009w_1 + 0.045 - 0.045w_1
+\]
+\[
+0.171w_1 + 0.009 = -0.036w_1 + 0.045
+\]
+Add $0.036w_1$ to both sides, and subtract $0.009$ from both sides:
+\[
+0.207w_1 = 0.036
+\]
+\[
+\tilde{w}_1 = \frac{0.036}{0.207} \approx 0.1739
+\]
+Using $w_2 = 1 - w_1$, we find:
+\[
+\tilde{w}_2 = 1 - 0.1739 = 0.8261
+\]
+Since both weights are positive ($\tilde{w}_1, \tilde{w}_2 > 0$), this solution naturally satisfies the ``long only'' condition.
+
+\subsection*{5. Expected Value \& Variance of the Return}
+Now we calculate the expected return $r(V)$ and variance $Var(V)$ of this optimized portfolio.
+
+\noindent \textbf{Expected Return:}
+\[
+r(V) = \tilde{w}^T R = (0.1739)(0.2) + (0.8261)(0.12) \approx 0.03478 + 0.099132 = 0.1339
+\]
+Note that this expected return ($13.39\%$) is greater than the risk-free rate $R^0 = 0.08$.
+
+\noindent \textbf{Variance:}
+Using our variance formula $V(w) = 0.09w_1^2 + 0.009w_1w_2 + 0.0225w_2^2$:
+\[
+Var(V) = 0.09(0.1739)^2 + 0.009(0.1739)(0.8261) + 0.0225(0.8261)^2
+\]
+\[
+Var(V) \approx 0.00272 + 0.00129 + 0.01535 = 0.01936
+\]
+As expected, the minimum variance is strictly positive ($>0$), meaning uncertainty cannot be completely eliminated.

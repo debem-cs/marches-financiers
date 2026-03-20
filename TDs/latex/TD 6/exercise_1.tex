@@ -1,0 +1,150 @@
+\section*{Exercise 1: Pricing of barrier option}
+
+\subsection*{Context and Definitions}
+We are evaluating an \textbf{up-and-out call option}. The payoff is given by:
+\begin{equation*}
+    H := \mathbf{1}_{\{M_T \le B\}}(S_T - K)^+
+\end{equation*}
+where $(M_t)_{0 \le t \le T}$ is the running maximum process $M_t := \max_{0 \le u \le t} S_u$, $B > 1$ is the barrier, and $K > 0$ is the strike price. If the asset price ever exceeds $B$, the option becomes worthless.
+
+\subsection*{Question 1: Arbitrage-free, completeness, and martingale measure}
+\textbf{Goal:} Show the market is arbitrage-free and complete, and specify the equivalent martingale measure $Q$.
+
+\vspace{0.5cm}
+\noindent \textbf{Step-by-step Solution:}
+\begin{enumerate}
+    \item \textbf{Arbitrage-free condition:} By the Fundamental Theorem of Asset Pricing, a market is arbitrage-free if and only if there exists an equivalent martingale measure (EMM) $Q$. For a single-period binomial model, this implies the risk-free rate must lie strictly between the downward and upward return factors. Thus, the condition is $-1 < d < r < u$.
+    \item \textbf{Completeness:} Because there are exactly two possible states for the asset return at each time step (up or down) and two assets (the risky asset and the risk-free bank account), the market is complete. Any derivative can be perfectly replicated.
+    \item \textbf{Specifying $Q$:} Under the EMM $Q$, the discounted asset price must be a martingale. This means the expected return of the risky asset under $Q$ equals the risk-free rate $r$:
+    \begin{equation*}
+        E_Q[R_t] = r \implies u \cdot Q[R_t = u] + d \cdot Q[R_t = d] = r
+    \end{equation*}
+    Using the fact that probabilities sum to 1 ($Q[R_t = d] = 1 - Q[R_t = u]$):
+    \begin{equation*}
+        u \cdot q + d \cdot (1 - q) = r \implies q(u - d) = r - d \implies q = \frac{r - d}{u - d}
+    \end{equation*}
+    Thus, under $Q$, $R_1, \dots, R_T$ are independent and identically distributed (i.i.d.) random variables with $Q[R_t = u] = q$ and $Q[R_t = d] = 1 - q$.
+\end{enumerate}
+
+\subsection*{Question 2: The Stopping Time}
+\textbf{Goal:} Let $\tau := \inf\{0 \le t \le T : S_t > B\}$. Show it is a stopping time and $\tau = \inf\{0 \le t \le T : M_t > B\}$.
+
+\vspace{0.5cm}
+\noindent \textbf{Step-by-step Solution:}
+\begin{enumerate}
+    \item \textbf{Proving it is a stopping time:} By definition, a random variable $\tau$ is a stopping time if the event $\{\tau \le t\}$ belongs to the filtration $\mathcal{F}_t$ for all $t$. Equivalently, we can check the complement $\{\tau > t\}$.
+    \begin{equation*}
+        \{\tau > t\} = \{S_0 \le B, S_1 \le B, \dots, S_t \le B\}
+    \end{equation*}
+    Since this event only depends on the asset prices up to time $t$, it is $\mathcal{F}_t$-measurable. Thus, $\tau$ is a stopping time.
+    \item \textbf{Equivalence with the running maximum:} We evaluate the two possible scenarios for the stopping time:
+    \begin{itemize}
+        \item \textbf{Case 1 ($\tau = +\infty$):} The barrier is never breached. 
+        \begin{equation*}
+            S_t \le B, \, \forall 0 \le t \le T \iff \max_{0 \le t \le T} S_t \le B \iff M_T \le B
+        \end{equation*}
+        In this case, the set $\{0 \le t \le T : M_t > B\}$ is empty, so its infimum is $+\infty$.
+        \item \textbf{Case 2 ($\tau \le T$):} The barrier is breached at some specific time $\tau$.
+        \begin{equation*}
+            S_t \le B, \, \forall 0 \le t \le \tau-1 \quad \text{and} \quad S_\tau > B
+        \end{equation*}
+        This implies the running maximum up to $\tau-1$ is below the barrier ($M_{\tau-1} \le B$), but at time $\tau$, the maximum exceeds the barrier ($M_\tau > B$). Therefore, the first time $S_t > B$ is identical to the first time $M_t > B$.
+    \end{itemize}
+\end{enumerate}
+
+\subsection*{Question 3: Recursive Pricing Formula}
+\textbf{Goal:} Prove the value of the option $v_t := E_Q[H/(1+r)^{T-t} \mid \mathcal{F}_t]$ can be written as $v_t = f_t(S_t, M_t)$ and find the recursive relationship.
+
+\vspace{0.5cm}
+\noindent \textbf{Step-by-step Solution:}
+\begin{enumerate}
+    \item \textbf{Terminal Condition ($t = T$):} At maturity, the value of the option is simply its payoff.
+    \begin{equation*}
+        v_T = H = \mathbf{1}_{\{M_T \le B\}}(S_T - K)^+
+    \end{equation*}
+    This strictly depends on $S_T$ and $M_T$, giving us our base function: $f_T(s, m) := \mathbf{1}_{\{m \le B\}}(s - K)^+$.
+    
+    \item \textbf{Backward Induction Step ($t-1$):} We want to express $v_{t-1}$ in terms of $v_t$. Using the Tower Property of conditional expectations:
+    \begin{equation*}
+        v_{t-1} = \frac{1}{1+r} E_Q[ v_t \mid \mathcal{F}_{t-1} ]
+    \end{equation*}
+    We split the expectation based on whether the barrier was breached \textit{before or at} time $t-1$:
+    \begin{equation*}
+        v_{t-1} = \frac{1}{1+r} E_Q[ (\mathbf{1}_{\{M_{t-1} \le B\}} + \mathbf{1}_{\{M_{t-1} > B\}}) v_t \mid \mathcal{F}_{t-1} ]
+    \end{equation*}
+    If $M_{t-1} > B$, the barrier is already breached, meaning $M_T > B$ is guaranteed, and the final payoff $H = 0$. Thus, the second term vanishes.
+    \begin{equation*}
+        v_{t-1} = \frac{\mathbf{1}_{\{M_{t-1} \le B\}}}{1+r} E_Q[ v_t \mid \mathcal{F}_{t-1} ]
+    \end{equation*}
+    
+    \item \textbf{Applying the Markov Property:} Assuming $v_t = f_t(S_t, M_t)$ holds for $t$, we substitute it into the expectation. Note that $S_t = S_{t-1}(1+R_t)$ and $M_t = \max(M_{t-1}, S_t)$. 
+    \begin{equation*}
+        v_{t-1} = \frac{\mathbf{1}_{\{M_{t-1} \le B\}}}{1+r} E_Q[ f_t(S_{t-1}(1+R_t), \max(M_{t-1}, S_{t-1}(1+R_t))) \mid \mathcal{F}_{t-1} ]
+    \end{equation*}
+    Since $S_{t-1}$ and $M_{t-1}$ are known at time $t-1$ ($\mathcal{F}_{t-1}$-measurable), and $R_t$ is independent of $\mathcal{F}_{t-1}$ under $Q$, we calculate the expectation over the two possible states of $R_t$:
+    \begin{itemize}
+        \item State Up: $R_t = u$ with probability $q$.
+        \item State Down: $R_t = d$ with probability $1-q$.
+    \end{itemize}
+    This directly yields the recursive formula:
+    \begin{align*}
+        f_{t-1}(s, m) := \frac{\mathbf{1}_{\{m \le B\}}}{1+r} \Big[ &(1-q) f_t\big(s(1+d), m \vee s(1+d)\big) \\
+        &+ q f_t\big(s(1+u), m \vee s(1+u)\big) \Big]
+    \end{align*}
+    (Note: $a \vee b$ is standard notation for $\max(a, b)$).
+\end{enumerate}
+
+\subsection*{Question 4: Price Comparison}
+\textbf{Goal:} Compare the price of the barrier option $H$ to a standard call option.
+
+\vspace{0.5cm}
+\noindent \textbf{Step-by-step Solution:}
+The standard call option has a payoff of $(S_T - K)^+$. The up-and-out call option has a payoff of $\mathbf{1}_{\{M_T \le B\}}(S_T - K)^+$. 
+Since the indicator function $\mathbf{1}_{\{M_T \le B\}}$ can only be 0 or 1, it is strictly true that:
+\begin{equation*}
+    \mathbf{1}_{\{M_T \le B\}}(S_T - K)^+ \le (S_T - K)^+ \implies H \le \text{Call Payoff}
+\end{equation*}
+Because the pricing operator (taking the discounted expectation under the risk-neutral measure $Q$) is linear and positive, a uniformly smaller payoff must result in a smaller or equal price. Thus, the standard call option is more expensive.
+
+\subsection*{Question 5: Pricing related payoffs $H'$ and $H_0$}
+\textbf{Goal:} Find the prices of $H' := \mathbf{1}_{\{M_T > B\}}(S_T - K)^+$ (up-and-in call) and $H_0 := \mathbf{1}_{\{M_T \le B\}}\mathbf{1}_{\{S_T > K\}}$ (digital barrier call).
+
+\vspace{0.5cm}
+\noindent \textbf{Step-by-step Solution:}
+\begin{enumerate}
+    \item \textbf{Pricing $H'$ (In-Out Parity):} We notice that an up-and-out call plus an up-and-in call exactly replicates a standard call option.
+    \begin{equation*}
+        H + H' = \mathbf{1}_{\{M_T \le B\}}(S_T - K)^+ + \mathbf{1}_{\{M_T > B\}}(S_T - K)^+ = (S_T - K)^+
+    \end{equation*}
+    By the linearity of pricing, $p(K) + p'(K) = \text{Price}((S_T - K)^+)$. 
+    Therefore, the price of $H'$ is:
+    \begin{equation*}
+        p'(K) = \text{Price}(\text{Standard Call}) - p(K)
+    \end{equation*}
+    
+    \item \textbf{Pricing $H_0$ (Derivative Trick):} $H_0$ pays exactly 1 if the barrier is not breached and the final asset price is above the strike. This is a binary/digital payoff. We relate the digital payoff to the standard call payoff using calculus. For $S_T \neq K$:
+    \begin{equation*}
+        \frac{\partial}{\partial K} (S_T - K)^+ = 
+        \begin{cases} 
+            -1 & \text{if } S_T > K \\ 
+            0 & \text{if } S_T < K 
+        \end{cases}
+        \implies -\frac{\partial}{\partial K} (S_T - K)^+ = \mathbf{1}_{\{S_T > K\}}
+    \end{equation*}
+    We multiply both sides by the barrier condition $\mathbf{1}_{\{M_T \le B\}}$:
+    \begin{equation*}
+        H_0 = \mathbf{1}_{\{M_T \le B\}} \mathbf{1}_{\{S_T > K\}} = -\mathbf{1}_{\{M_T \le B\}} \frac{\partial}{\partial K} (S_T - K)^+
+    \end{equation*}
+    Taking the discounted expectation under $Q$ to find the price $p_0(K)$:
+    \begin{equation*}
+        p_0(K) = \frac{1}{(1+r)^T} E_Q[H_0] = \frac{1}{(1+r)^T} E_Q\left[ -\mathbf{1}_{\{M_T \le B\}} \frac{\partial}{\partial K} (S_T - K)^+ \right]
+    \end{equation*}
+    Assuming we can swap the derivative and the expectation (valid here as the state space is finite), we pull the derivative with respect to $K$ outside:
+    \begin{equation*}
+        p_0(K) = -\frac{\partial}{\partial K} \left( \frac{1}{(1+r)^T} E_Q\left[ \mathbf{1}_{\{M_T \le B\}} (S_T - K)^+ \right] \right) = -\frac{\partial p(K)}{\partial K}
+    \end{equation*}
+    In practice, you approximate this derivative using a finite difference method:
+    \begin{equation*}
+        p_0(K) \approx \frac{p(K) - p(K + \Delta K)}{\Delta K}
+    \end{equation*}
+\end{enumerate}

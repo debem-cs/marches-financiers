@@ -1,0 +1,107 @@
+This exercise establishes the universal no-arbitrage bounds for a call option and then uses a specific model (Poisson distribution) to show that if a market is incomplete, the arbitrage-free price can theoretically be anywhere within those bounds.
+
+\subsection*{1. Universal bounds of a call option}
+Let $\pi_{0}$ be the arbitrage-free price of the call option today ($t=0$). By the Fundamental Theorem of Asset Pricing, there exists an equivalent martingale measure (EMM) $Q$ such that the price is the discounted expected payoff:
+\begin{equation}
+    \pi_{0} = E^{Q}\left[\frac{(S_{1}-K)_{+}}{1+r}\right]
+\end{equation}
+
+\paragraph{Upper Bound:}
+We know that for any positive numbers, $(S_{1}-K)_{+} \le S_{1}$ (the option payoff can never exceed the stock price itself).
+Taking the discounted expectation under $Q$ on both sides:
+\begin{equation}
+    \pi_{0} = E^{Q}\left[\frac{(S_{1}-K)_{+}}{1+r}\right] \le E^{Q}\left[\frac{S_{1}}{1+r}\right]
+\end{equation}
+Because $Q$ is a martingale measure, $E^{Q}[\frac{S_{1}}{1+r}] = S_{0}$. Therefore:
+\begin{equation}
+    \pi_{0} \le S_{0}
+\end{equation}
+
+\paragraph{Lower Bound:}
+The function $f(x) = (x - \frac{K}{1+r})_{+}$ is a convex function. We can apply Jensen's inequality, which states that for a convex function $f$, $E[f(X)] \ge f(E[X])$.
+\begin{align}
+    \pi_{0} &= E^{Q}\left[\left(\frac{S_{1} - K}{1+r}\right)_{+}\right] \\
+    &\ge \left( E^{Q}\left[\frac{S_{1}}{1+r}\right] - \frac{K}{1+r} \right)_{+}
+\end{align}
+Since $E^{Q}[\frac{S_{1}}{1+r}] = S_{0}$, we get the lower bound:
+\begin{equation}
+    \pi_{0} \ge \left(S_{0} - \frac{K}{1+r}\right)_{+}
+\end{equation}
+Combining these gives $(S_{0}-\frac{K}{1+r})_{+} \le \pi_{0} \le S_{0}$.
+
+\subsection*{2. Drawing the bounds}
+If we plot $\pi_{0}$ (y-axis) against $S_{0}$ (x-axis):
+\begin{itemize}
+    \item The \textbf{upper bound} is a straight line starting at the origin with a slope of 1 ($y = S_{0}$).
+    \item The \textbf{lower bound} is $0$ for $S_{0} < \frac{K}{1+r}$, and then becomes a straight line of slope 1 starting from $S_{0} = \frac{K}{1+r}$.
+    \item The valid arbitrage-free prices must fall in the shaded region between these two lines.
+\end{itemize}
+
+\subsection*{3. Poisson model and incomplete markets}
+We now assume $r=0$, $S_{0}=1$, and $S_{1} \sim \text{Poisson}(1)$ under the historical measure $P$.
+Recall that for $S_{1} \sim \text{Poisson}(\lambda)$ with $\lambda=1$:
+\begin{equation}
+    P(S_{1} = k) = \frac{e^{-1} 1^{k}}{k!} = \frac{1}{e \cdot k!} \quad \text{for } k \in \{0, 1, 2, \dots\}
+\end{equation}
+
+\paragraph{(a) Show that $P$ is a martingale measure.}
+We need to check if $E^{P}[\frac{S_{1}}{1+r}] = S_{0}$.
+Since $r=0$, $E^{P}[\frac{S_{1}}{1+0}] = E^{P}[S_{1}]$.
+The expected value of a Poisson(1) random variable is $\lambda = 1$.
+Because $S_{0} = 1$, we have $E^{P}[S_{1}] = S_{0}$, meaning $P$ itself is already a martingale measure!
+
+\paragraph{(b) Show that $X$ and $Y_{n}$ are Radon-Nikodym derivatives.}
+To define a new valid probability measure $Q$ from $P$ using a random variable $Z$ (where $dQ = Z dP$), $Z$ must be strictly positive and $E^{P}[Z] = 1$.
+Let's check $X = e 1_{\{S_{1}=1\}}$:
+\begin{equation}
+    E^{P}[X] = e \cdot P(S_{1}=1) = e \left( \frac{1}{e \cdot 1!} \right) = 1
+\end{equation}
+Let's check $Y_{n} = (e-\frac{e}{n})1_{\{S_{1}=0\}} + (n-1)!e 1_{\{S_{1}=n\}}$:
+\begin{align}
+    E^{P}[Y_{n}] &= \left(e - \frac{e}{n}\right) P(S_{1}=0) + (n-1)!e P(S_{1}=n) \\
+    &= \left(e - \frac{e}{n}\right) \frac{1}{e \cdot 0!} + (n-1)!e \frac{1}{e \cdot n!} \\
+    &= \left(1 - \frac{1}{n}\right) \cdot 1 + \frac{(n-1)!}{n!} \\
+    &= 1 - \frac{1}{n} + \frac{1}{n} = 1
+\end{align}
+Both have an expectation of 1.
+
+\paragraph{(c) Show that $Q_{X}$ and $Q_{n}$ are martingale measures.}
+For $Q_{X}$, we must show $E^{Q_{X}}[S_{1}] = S_{0} = 1$:
+\begin{equation}
+    E^{Q_{X}}[S_{1}] = E^{P}[X S_{1}] = E^{P}[e 1_{\{S_{1}=1\}} S_{1}] = e \cdot 1 \cdot P(S_{1}=1) = e \cdot \frac{1}{e} = 1
+\end{equation}
+For $Q_{n}$:
+\begin{align}
+    E^{Q_{n}}[S_{1}] &= E^{P}[Y_{n} S_{1}] \\
+    &= 0 \cdot P(S_{1}=0) + n \cdot (n-1)!e \cdot P(S_{1}=n) \\
+    &= n! e \left(\frac{1}{e \cdot n!}\right) = 1
+\end{align}
+Both are martingale measures.
+
+\paragraph{(d) Are they equivalent to P?}
+No. For equivalence, $X$ and $Y_{n}$ must be strictly positive almost surely. However, $X = 0$ whenever $S_{1} \ne 1$. So, events like $\{S_{1}=2\}$ have a positive probability under $P$ but zero probability under $Q_{X}$. Therefore, they are not equivalent.
+
+\paragraph{(e) Construction of equivalent martingale measures.}
+Let $Q$ be an EMM (we know at least $P$ is one, from part a). We define $Q_{X}^{\epsilon} = \epsilon Q + (1-\epsilon)Q_{X}$.
+Because $Q$ is equivalent to $P$, $Q(A) > 0$ for all non-empty events. For any $\epsilon > 0$, the convex combination $\epsilon Q + (1-\epsilon)Q_{X}$ guarantees that every event possible under $P$ receives strictly positive probability. The expectation is linear, so it remains a martingale measure.
+
+\paragraph{(f) Is the market complete?}
+No. We just constructed infinitely many equivalent martingale measures by varying $\epsilon$ and $n$. A market is only complete if the EMM is unique.
+
+\paragraph{(g) Option prices at the limits.}
+Let's calculate the option price under $Q_{X}$:
+\begin{equation}
+    E^{Q_{X}}[(S_{1}-K)_{+}] = E^{P}[X(S_{1}-K)_{+}] = e(1-K)_{+}P(S_{1}=1) = (1-K)_{+}
+\end{equation}
+Notice that $(1-K)_{+}$ is exactly the \textbf{lower bound} we found in Question 1 (since $S_{0}=1$ and $r=0$). As $\epsilon \to 0$, $Q_{X}^{\epsilon} \to Q_{X}$, pushing the option price down to the absolute theoretical minimum.
+
+Now for $Q_{n}$:
+\begin{align}
+    E^{Q_{n}}[(S_{1}-K)_{+}] &= E^{P}[Y_{n}(S_{1}-K)_{+}] \\
+    &= (n-1)!e (n-K)_{+} P(S_{1}=n) \\
+    &= (n-1)!e (n-K)_{+} \frac{1}{e \cdot n!} \\
+    &= \frac{(n-K)_{+}}{n} = \left(1 - \frac{K}{n}\right)_{+}
+\end{align}
+As $n \to \infty$, $\frac{K}{n} \to 0$, so the expectation approaches $(1)_{+} = 1$.
+Notice that $1$ is exactly $S_{0}$, which is the \textbf{upper bound} from Question 1.
+This proves that in this incomplete market, you can find a valid pricing measure that justifies literally any price between the upper and lower no-arbitrage bounds!

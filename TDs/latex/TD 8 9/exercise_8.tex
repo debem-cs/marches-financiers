@@ -1,0 +1,85 @@
+\subsection*{(1) Compute the optimal $\xi$}
+
+From Exercise 7, we know that the optimal hedging ratio that minimizes the mean-squared error is given by:
+\begin{equation*}
+\xi = \frac{\text{Cov}(C, S_T - S_0)}{\text{Var}(S_T - S_0)}
+\end{equation*}
+
+We are given $S_T = S_0 + \epsilon$, with $\mathbb{E}[\epsilon] = 0$ and $\text{Var}(\epsilon) = \sigma^2$. 
+This implies $S_T - S_0 = \epsilon$, so the denominator is simply $\text{Var}(\epsilon) = \sigma^2$.
+
+The payoff is $C = S_T^2 = (S_0 + \epsilon)^2 = S_0^2 + 2S_0\epsilon + \epsilon^2$.
+Now we compute the covariance in the numerator:
+\begin{align*}
+\text{Cov}(C, \epsilon) &= \text{Cov}(S_0^2 + 2S_0\epsilon + \epsilon^2, \epsilon) \\
+&= \text{Cov}(S_0^2, \epsilon) + 2S_0\text{Cov}(\epsilon, \epsilon) + \text{Cov}(\epsilon^2, \epsilon)
+\end{align*}
+Since $S_0^2$ is a constant, its covariance with $\epsilon$ is 0. 
+We know $\text{Cov}(\epsilon, \epsilon) = \text{Var}(\epsilon) = \sigma^2$.
+For $\text{Cov}(\epsilon^2, \epsilon)$, we have:
+\begin{equation*}
+\text{Cov}(\epsilon^2, \epsilon) = \mathbb{E}[\epsilon^3] - \mathbb{E}[\epsilon^2]\mathbb{E}[\epsilon] = \mathbb{E}[\epsilon^3] - \sigma^2(0) = \mathbb{E}[\epsilon^3]
+\end{equation*}
+
+Assuming $\epsilon$ follows a symmetric distribution (such as a normal distribution), its skewness is zero, meaning $\mathbb{E}[\epsilon^3] = 0$. 
+Thus, the covariance simplifies to:
+\begin{equation*}
+\text{Cov}(C, \epsilon) = 2S_0\sigma^2
+\end{equation*}
+
+Plugging this back into the formula for $\xi$:
+\begin{equation*}
+\xi = \frac{2S_0\sigma^2}{\sigma^2} = 2S_0
+\end{equation*}
+
+
+\subsection*{(2) Compute the variance of the hedging error}
+
+The initial portfolio value is $V_0 = \mathbb{E}[C] - \xi\mathbb{E}[\epsilon]$. Since $\mathbb{E}[\epsilon] = 0$, $V_0 = \mathbb{E}[C]$.
+\begin{equation*}
+\mathbb{E}[C] = \mathbb{E}[S_0^2 + 2S_0\epsilon + \epsilon^2] = S_0^2 + 2S_0(0) + \sigma^2 = S_0^2 + \sigma^2
+\end{equation*}
+
+The hedging error (loss) is $L_H = C - V_0 - \xi(S_T - S_0)$. Substituting our terms:
+\begin{align*}
+L_H &= (S_0^2 + 2S_0\epsilon + \epsilon^2) - (S_0^2 + \sigma^2) - 2S_0(\epsilon) \\
+&= \epsilon^2 - \sigma^2
+\end{align*}
+
+The variance of the hedging error is $\text{Var}(L_H) = \text{Var}(\epsilon^2 - \sigma^2) = \text{Var}(\epsilon^2)$.
+Assuming $\epsilon \sim \mathcal{N}(0, \sigma^2)$, the fourth moment is $\mathbb{E}[\epsilon^4] = 3\sigma^4$.
+\begin{align*}
+\text{Var}(\epsilon^2) &= \mathbb{E}[\epsilon^4] - (\mathbb{E}[\epsilon^2])^2 \\
+&= 3\sigma^4 - (\sigma^2)^2 \\
+&= 2\sigma^4
+\end{align*}
+So, the variance of the hedging error is $2\sigma^4$.
+
+
+\subsection*{(3) Hedging reduces risk for small $\sigma$, but may increase tail losses for large $\sigma$}
+
+Let us define the unhedged loss $L_U$, which occurs if we simply price the derivative at its expected value $V_0$ but hold no stock ($\xi = 0$):
+\begin{align*}
+L_U &= C - V_0 = (S_0^2 + 2S_0\epsilon + \epsilon^2) - (S_0^2 + \sigma^2) \\
+&= 2S_0\epsilon + \epsilon^2 - \sigma^2
+\end{align*}
+
+We can compare the variance (risk) of both strategies:
+\begin{equation*}
+\text{Var}(L_U) = \text{Var}(2S_0\epsilon + \epsilon^2) = 4S_0^2\sigma^2 + 2\sigma^4
+\end{equation*}
+Since $\text{Var}(L_H) = 2\sigma^4 < 4S_0^2\sigma^2 + 2\sigma^4$, hedging strictly reduces the overall variance. For small $\sigma$, the $4S_0^2\sigma^2$ term heavily dominates the unhedged variance, meaning the linear hedge $\xi = 2S_0$ is highly effective at stabilizing the portfolio.
+
+However, let us examine the extreme tail events (large values of $|\epsilon|$), which become more probable for large $\sigma$. 
+Suppose the market crashes, resulting in a large negative shock $\epsilon < -2S_0$. 
+In this scenario, the linear term $2S_0\epsilon$ becomes a large negative number.
+\begin{equation*}
+L_U = \epsilon^2 + 2S_0\epsilon - \sigma^2 \quad \text{while} \quad L_H = \epsilon^2 - \sigma^2
+\end{equation*}
+Because $2S_0\epsilon < 0$, it strictly follows that:
+\begin{equation*}
+L_U < L_H
+\end{equation*}
+
+\textbf{Conclusion:} 
+During a severe market downturn, the unhedged portfolio actually loses less money than the hedged portfolio. The hedge requires holding a long position of $\xi = 2S_0$ shares. If the stock price plummets, this long position incurs massive losses. The quadratic payoff $C=S_T^2$ stops dropping once it hits zero (it cannot be negative), meaning the derivative no longer offsets the linear losses from the stock hedge. Therefore, for large $\sigma$ where extreme market movements are possible, the mean-variance hedge introduces dangerous tail risk.

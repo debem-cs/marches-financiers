@@ -1,0 +1,86 @@
+\subsection*{(1) Show that $ES_{\alpha}$ is monotone and cash-invariant}
+
+\textbf{Monotonicity:}
+Let $L_1$ and $L_2$ be two loss random variables such that $L_1 \le L_2$ almost surely. 
+By the definition of Value at Risk, for any probability level $u \in (0,1)$, $VaR_u(L_1) \le VaR_u(L_2)$.
+Using the integral representation of Expected Shortfall (which is directly equivalent to the conditional expectation for continuous distributions):
+\begin{equation*}
+ES_{\alpha}(L_1) = \frac{1}{1-\alpha}\int_{\alpha}^1 VaR_u(L_1) du \le \frac{1}{1-\alpha}\int_{\alpha}^1 VaR_u(L_2) du = ES_{\alpha}(L_2)
+\end{equation*}
+Thus, $ES_{\alpha}$ is monotone.
+
+\textbf{Cash-invariance (Translation invariance):}
+Let $c \in \mathbb{R}$ be a deterministic constant (e.g., adding cash to a portfolio reduces the loss by $c$). We evaluate $ES_{\alpha}(L + c)$.
+First, note that $VaR_{\alpha}(L + c) = VaR_{\alpha}(L) + c$.
+Using the conditional expectation formula provided:
+\begin{align*}
+ES_{\alpha}(L + c) &= \mathbb{E}[L + c \mid L + c \ge VaR_{\alpha}(L + c)] \\
+&= \mathbb{E}[L + c \mid L + c \ge VaR_{\alpha}(L) + c] \\
+&= \mathbb{E}[L + c \mid L \ge VaR_{\alpha}(L)] \\
+&= \mathbb{E}[L \mid L \ge VaR_{\alpha}(L)] + c \\
+&= ES_{\alpha}(L) + c
+\end{align*}
+Thus, $ES_{\alpha}$ is cash-invariant.
+
+
+\subsection*{(2) Show that $ES_{\alpha}$ is positively homogeneous}
+
+Let $\lambda > 0$ be a constant. We want to show $ES_{\alpha}(\lambda L) = \lambda ES_{\alpha}(L)$.
+Since $\lambda > 0$, the function $f(x) = \lambda x$ is strictly increasing. 
+From the results of Exercise 2, we know that $VaR_{\alpha}(\lambda L) = \lambda VaR_{\alpha}(L)$.
+Substitute this into the provided formula:
+\begin{align*}
+ES_{\alpha}(\lambda L) &= \mathbb{E}[\lambda L \mid \lambda L \ge VaR_{\alpha}(\lambda L)] \\
+&= \mathbb{E}[\lambda L \mid \lambda L \ge \lambda VaR_{\alpha}(L)] \\
+&= \mathbb{E}[\lambda L \mid L \ge VaR_{\alpha}(L)] \quad \text{(since } \lambda > 0 \text{)} \\
+&= \lambda \mathbb{E}[L \mid L \ge VaR_{\alpha}(L)] \\
+&= \lambda ES_{\alpha}(L)
+\end{align*}
+Thus, $ES_{\alpha}$ is positively homogeneous.
+
+
+\subsection*{(3) Prove the subadditivity of $ES_{\alpha}$}
+
+To prove $ES_{\alpha}(L_1 + L_2) \le ES_{\alpha}(L_1) + ES_{\alpha}(L_2)$, we first establish a useful lemma using the secondary formula given in the exercise:
+\begin{equation*}
+ES_{\alpha}(L) = \frac{1}{1-\alpha} \mathbb{E}[L \cdot 1_{\{L \ge VaR_{\alpha}(L)\}}]
+\end{equation*}
+
+\textbf{Lemma:} For any event $A$ such that $\mathbb{P}(A) = 1 - \alpha$, we have $\mathbb{E}[L \cdot 1_A] \le \mathbb{E}[L \cdot 1_{\{L \ge q\}}]$ where $q = VaR_{\alpha}(L)$.
+
+\textit{Proof of Lemma:} Let us look at the difference:
+\begin{equation*}
+\mathbb{E}[L \cdot 1_{\{L \ge q\}}] - \mathbb{E}[L \cdot 1_A] = \mathbb{E}[L (1_{\{L \ge q\}} - 1_A)]
+\end{equation*}
+Consider the value of $L (1_{\{L \ge q\}} - 1_A)$ inside the expectation:
+\begin{itemize}
+    \item If $L \ge q$, then $1_{\{L \ge q\}} = 1$. The term $(1_{\{L \ge q\}} - 1_A) \ge 0$. Since $L \ge q$, we have $L(1_{\{L \ge q\}} - 1_A) \ge q(1_{\{L \ge q\}} - 1_A)$.
+    \item If $L < q$, then $1_{\{L \ge q\}} = 0$. The term $(1_{\{L \ge q\}} - 1_A) \le 0$. Since $L < q$ and the term is negative or zero, we also have $L(1_{\{L \ge q\}} - 1_A) \ge q(1_{\{L \ge q\}} - 1_A)$.
+\end{itemize}
+In both cases, $L(1_{\{L \ge q\}} - 1_A) \ge q(1_{\{L \ge q\}} - 1_A)$ almost surely.
+Taking the expectation on both sides:
+\begin{align*}
+\mathbb{E}[L(1_{\{L \ge q\}} - 1_A)] &\ge q \mathbb{E}[1_{\{L \ge q\}} - 1_A] \\
+&= q (\mathbb{P}(L \ge q) - \mathbb{P}(A)) \\
+&= q ((1-\alpha) - (1-\alpha)) = 0
+\end{align*}
+This proves the lemma. It demonstrates that $ES_{\alpha}(L)$ can be viewed as the supremum of $\frac{1}{1-\alpha}\mathbb{E}[L \cdot 1_A]$ over all possible events $A$ with probability $1-\alpha$.
+
+\textbf{Proof of Subadditivity:}
+Let $L_P = L_1 + L_2$ and define the tail event for the combined portfolio $A^* = \{L_P \ge VaR_{\alpha}(L_P)\}$.
+By our assumption, $\mathbb{P}(A^*) = 1 - \alpha$.
+Using the formula for the portfolio:
+\begin{align*}
+ES_{\alpha}(L_1 + L_2) &= \frac{1}{1-\alpha} \mathbb{E}[(L_1 + L_2) 1_{A^*}] \\
+&= \frac{1}{1-\alpha} \mathbb{E}[L_1 1_{A^*}] + \frac{1}{1-\alpha} \mathbb{E}[L_2 1_{A^*}]
+\end{align*}
+Since $\mathbb{P}(A^*) = 1 - \alpha$, we can apply our Lemma to $L_1$ and $L_2$ individually:
+\begin{equation*}
+\mathbb{E}[L_1 1_{A^*}] \le \mathbb{E}[L_1 1_{\{L_1 \ge VaR_{\alpha}(L_1)\}}] \quad \text{and} \quad \mathbb{E}[L_2 1_{A^*}] \le \mathbb{E}[L_2 1_{\{L_2 \ge VaR_{\alpha}(L_2)\}}]
+\end{equation*}
+Substituting these bounds back into the equation:
+\begin{align*}
+ES_{\alpha}(L_1 + L_2) &\le \frac{1}{1-\alpha} \mathbb{E}[L_1 1_{\{L_1 \ge VaR_{\alpha}(L_1)\}}] + \frac{1}{1-\alpha} \mathbb{E}[L_2 1_{\{L_2 \ge VaR_{\alpha}(L_2)\}}] \\
+&= ES_{\alpha}(L_1) + ES_{\alpha}(L_2)
+\end{align*}
+Thus, Expected Shortfall is subadditive. Combining this with monotonicity, cash-invariance, and positive homogeneity, we conclude that $ES_{\alpha}$ satisfies all axioms of a coherent risk measure.

@@ -1,0 +1,65 @@
+\section{Exercise 1: Construction of Arbitrage}
+
+\subsection{Problem Statement}
+We are given a market with $d=1$ risky asset and $1$ riskless asset. The interest rate is $r=0$, meaning the riskless asset's price is $S_t^0 = 1$ for all $t$. We have $T=2$ periods. 
+
+We are given two derivative contracts:
+\begin{itemize}
+    \item Contract 1 pays $(S_1)^2$ at time $t=1$. Its price today ($t=0$) is $p_1$.
+    \item Contract 2 pays $(S_2)^2$ at time $t=2$. Its price today ($t=0$) is $p_2$.
+\end{itemize}
+We assume $p_1 > p_2$. Our goal is to construct a self-financing portfolio with an initial cost of zero ($V_0 = 0$) that guarantees a strictly positive profit at the end ($V_2 > 0$).
+
+\subsection{Step-by-Step Strategy}
+
+\subsubsection*{Time $t=0$: Initializing the Portfolio}
+Since $p_1 > p_2$, the claim paying out at $t=1$ is more expensive than the claim paying out at $t=2$. The core idea of arbitrage is to "sell high and buy low".
+\begin{enumerate}
+    \item \textbf{Sell (Short) Contract 1:} We sell the payoff $(S_1)^2$. This generates a positive cash flow of $+p_1$ today.
+    \item \textbf{Buy Contract 2:} We buy the payoff $(S_2)^2$. This costs us $-p_2$ today.
+    \item \textbf{Bank Account:} We have a net positive cash flow of $p_1 - p_2 > 0$. We invest this into the riskless asset $S^0$. Because $r=0$, this cash simply sits in the account without generating interest.
+\end{enumerate}
+The initial cost of this portfolio is exactly $0$, so $V_0 = 0$.
+
+\subsubsection*{Time $t=1$: Rebalancing}
+At $t=1$, Contract 1 expires and we are obligated to pay out $(S_1)^2$. 
+Let's look at our cash (riskless asset) position right after paying this obligation:
+\begin{equation}
+    \text{Cash} = (p_1 - p_2) - (S_1)^2
+\end{equation}
+At this point, we need to make a strategic trade to guarantee a profit at $t=2$. We know that at $t=2$, we will receive $(S_2)^2$ from Contract 2. To ensure our final wealth is positive, we want to construct a perfect square: $(S_1 - S_2)^2 = (S_1)^2 - 2S_1S_2 + (S_2)^2$. 
+
+Right now, we are missing the $+2(S_1)^2$ and the $-2S_1S_2$ terms. To create them, we do the following:
+\begin{enumerate}
+    \item \textbf{Short the Risky Asset:} We short a quantity of $2S_1$ shares of the risky asset. Since the price of one share at $t=1$ is $S_1$, shorting $2S_1$ shares generates a cash inflow of $2S_1 \times S_1 = +2(S_1)^2$.
+    \item \textbf{Update Bank Account:} We deposit this new cash into our riskless asset account. Our new cash balance becomes:
+    \begin{equation}
+        \text{Cash} = [(p_1 - p_2) - (S_1)^2] + 2(S_1)^2 = (p_1 - p_2) + (S_1)^2
+    \end{equation}
+\end{enumerate}
+Our portfolio heading into $t=2$ now consists of:
+\begin{itemize}
+    \item $(p_1 - p_2) + (S_1)^2$ invested in the riskless asset.
+    \item A short position of $2S_1$ shares of the risky asset.
+    \item A long position in Contract 2, which will pay $(S_2)^2$.
+\end{itemize}
+
+\subsubsection*{Time $t=2$: Final Payoff}
+At $t=2$, we liquidate everything:
+\begin{enumerate}
+    \item We receive the payoff from Contract 2: $+(S_2)^2$.
+    \item We must close our short position in the risky asset. We owe $2S_1$ shares, and the price is now $S_2$. Buying them back costs us $-2S_1S_2$.
+    \item We withdraw our cash from the riskless asset: $+(p_1 - p_2) + (S_1)^2$.
+\end{enumerate}
+Let's sum these up to find the final value of our portfolio, $V_2$:
+\begin{align}
+    V_2 &= (S_2)^2 - 2S_1S_2 + (p_1 - p_2) + (S_1)^2 \\
+    V_2 &= \left( (S_1)^2 - 2S_1S_2 + (S_2)^2 \right) + (p_1 - p_2) \\
+    V_2 &= (S_1 - S_2)^2 + (p_1 - p_2)
+\end{align}
+
+\subsection{Conclusion}
+We have $(S_1 - S_2)^2 \ge 0$ for any possible price path. Furthermore, we assumed $p_1 - p_2 > 0$. 
+Therefore, $V_2 \ge p_1 - p_2 > 0$. 
+
+Since our strategy cost nothing to initiate ($V_0 = 0$) and guarantees a strictly positive payoff without any risk of loss, it is an arbitrage opportunity.

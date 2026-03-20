@@ -1,0 +1,90 @@
+\subsection*{(1) Minimize $\mathbb{E}[L^2]$ over $(V_0, \xi)$}
+
+The hedging loss is given by $L = C - V_0 - \xi(S_T - S_0)$. We want to find the pair $(V_0, \xi)$ that minimizes the expected squared loss, also known as the mean-squared error:
+\begin{equation*}
+f(V_0, \xi) = \mathbb{E}[(C - V_0 - \xi(S_T - S_0))^2]
+\end{equation*}
+
+To find the minimum, we take the partial derivatives with respect to $V_0$ and $\xi$ \textendash{} and set them to zero.
+
+First, taking the derivative with respect to $V_0$:
+\begin{align*}
+\frac{\partial f}{\partial V_0} &= \mathbb{E}[-2(C - V_0 - \xi(S_T - S_0))] = 0 \\
+\mathbb{E}[C] - V_0 - \xi\mathbb{E}[S_T - S_0] &= 0 \\
+V_0 &= \mathbb{E}[C] - \xi\mathbb{E}[S_T - S_0]
+\end{align*}
+This gives us the formula for $V_0$. 
+
+Next, taking the derivative with respect to $\xi$:
+\begin{align*}
+\frac{\partial f}{\partial \xi} &= \mathbb{E}[-2(S_T - S_0)(C - V_0 - \xi(S_T - S_0))] = 0
+\end{align*}
+Substitute the expression we found for $V_0$ into this equation:
+\begin{align*}
+\mathbb{E}\left[(S_T - S_0)\left(C - (\mathbb{E}[C] - \xi\mathbb{E}[S_T - S_0]) - \xi(S_T - S_0)\right)\right] &= 0 \\
+\mathbb{E}\left[(S_T - S_0)\left((C - \mathbb{E}[C]) - \xi(S_T - S_0 - \mathbb{E}[S_T - S_0])\right)\right] &= 0
+\end{align*}
+Expanding the expectation:
+\begin{equation*}
+\mathbb{E}[(S_T - S_0)(C - \mathbb{E}[C])] - \xi\mathbb{E}[(S_T - S_0)(S_T - S_0 - \mathbb{E}[S_T - S_0])] = 0
+\end{equation*}
+
+Recall the definition of covariance for two random variables $X$ and $Y$: $\text{Cov}(X,Y) = \mathbb{E}[(X - \mathbb{E}[X])(Y - \mathbb{E}[Y])] = \mathbb{E}[X(Y - \mathbb{E}[Y])]$.
+Applying this to our terms:
+\begin{itemize}
+    \item $\mathbb{E}[(S_T - S_0)(C - \mathbb{E}[C])] = \text{Cov}(S_T - S_0, C)$
+    \item $\mathbb{E}[(S_T - S_0)(S_T - S_0 - \mathbb{E}[S_T - S_0])] = \text{Var}(S_T - S_0)$
+\end{itemize}
+
+Substituting these back into the expanded derivative equation:
+\begin{align*}
+\text{Cov}(S_T - S_0, C) - \xi\text{Var}(S_T - S_0) &= 0 \\
+\xi &= \frac{\text{Cov}(C, S_T - S_0)}{\text{Var}(S_T - S_0)}
+\end{align*}
+
+
+\subsection*{(2) Interpret $V_0$ and $\xi$ as a regression coefficient}
+
+The expressions we derived for $V_0$ and $\xi$ perfectly match the ordinary least squares (OLS) estimators for a simple linear regression. 
+If we were to regress the payoff $C$ on the asset return $(S_T - S_0)$ using the model:
+\begin{equation*}
+C = V_0 + \xi(S_T - S_0) + \epsilon
+\end{equation*}
+where $\epsilon$ is the error term (equivalent to our hedging loss $L$), the standard formulas for the slope and intercept that minimize the sum of squared errors are exactly the $\xi$ and $V_0$ we just found. 
+Thus, mean-variance hedging is mathematically equivalent to finding the best linear approximation of the derivative's payoff $C$ using the underlying asset's price change $S_T - S_0$ \& interpreting the residual as the unhedgeable risk.
+
+
+\subsection*{(3) Binomial model exact hedging}
+
+In a one-period binomial model, the terminal stock price $S_T$ can only take two possible values:
+\begin{itemize}
+    \item Up state: $S_T^u = S_0(1+b)$
+    \item Down state: $S_T^d = S_0(1+a)$
+\end{itemize}
+Similarly, the derivative payoff $C$ will take two corresponding values, $C_u$ and $C_d$.
+
+We want to find $(V_0, \xi)$ such that $L = 0$ almost surely. This means the portfolio must exactly match the payoff in both states:
+\begin{align}
+V_0 + \xi(S_0(1+b) - S_0) &= C_u \Rightarrow V_0 + \xi S_0 b = C_u \\
+V_0 + \xi(S_0(1+a) - S_0) &= C_d \Rightarrow V_0 + \xi S_0 a = C_d
+\end{align}
+
+This is a system of two linear equations with two unknowns ($V_0, \xi$). Because $a < 0 < b$, the determinant of the system's matrix is proportional to $(b-a)$, which is strictly positive (non-zero). Therefore, a unique solution exists. Because there are only two states of the world and two available assets (the risk-free asset and the stock), the market is complete, and we can replicate any payoff perfectly.
+
+To find the solution, subtract the second equation from the first:
+\begin{align*}
+(V_0 + \xi S_0 b) - (V_0 + \xi S_0 a) &= C_u - C_d \\
+\xi S_0 (b - a) &= C_u - C_d \\
+\xi &= \frac{C_u - C_d}{S_0(b - a)}
+\end{align*}
+This is the standard delta hedging ratio in the binomial model.
+
+Now, substitute $\xi$ back into the second equation to solve for $V_0$:
+\begin{align*}
+V_0 &= C_d - \xi S_0 a \\
+V_0 &= C_d - a \left( \frac{C_u - C_d}{b - a} \right) \\
+V_0 &= \frac{C_d(b - a) - a(C_u - C_d)}{b - a} \\
+V_0 &= \frac{b C_d - a C_d - a C_u + a C_d}{b - a} \\
+V_0 &= \frac{b C_d - a C_u}{b - a}
+\end{align*}
+This $V_0$ represents the initial replication cost (or arbitrage-free price) of the derivative in the binomial framework.

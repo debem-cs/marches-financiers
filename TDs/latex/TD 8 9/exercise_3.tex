@@ -1,0 +1,59 @@
+\subsection*{(1) Compute $VaR_{0.95}(L)$}
+
+The cumulative distribution function (CDF) of $L$ is given by:
+\begin{equation*}
+F_L(x) = 
+\begin{cases} 
+0 & \text{if } x < 0 \\
+0.95 & \text{if } 0 \le x < 100 \\
+1 & \text{if } x \ge 100 
+\end{cases}
+\end{equation*}
+
+By definition, $VaR_{\alpha}(L) = \inf\{x \in \mathbb{R} : F_L(x) \ge \alpha\}$. 
+For $\alpha = 0.95$, the smallest value $x$ such that $F_L(x) \ge 0.95$ is $x = 0$. 
+Therefore,
+\begin{equation*}
+VaR_{0.95}(L) = 0
+\end{equation*}
+
+
+\subsection*{(2) Compute $\mathbb{E}[L|L\ge VaR_{0.95}(L)]$}
+
+Since we found $VaR_{0.95}(L) = 0$, we need to compute $\mathbb{E}[L | L \ge 0]$.
+
+Because the only possible values for $L$ are 0 and 100, the condition $L \ge 0$ is always satisfied (it holds with probability 1). Thus, the conditional expectation is simply the unconditional expectation:
+\begin{align*}
+\mathbb{E}[L | L \ge 0] &= \mathbb{E}[L] \\
+&= 0 \times \mathbb{P}(L = 0) + 100 \times \mathbb{P}(L = 100) \\
+&= 0 \times 0.95 + 100 \times 0.05 \\
+&= 5
+\end{align*}
+
+
+\subsection*{(3) Compute $ES_{0.95}(L)$}
+
+The Expected Shortfall is defined via the integral:
+\begin{equation*}
+ES_{\alpha}(L) = \frac{1}{1-\alpha}\int_{\alpha}^1 VaR_u(L) du
+\end{equation*}
+
+For $u \in (0.95, 1]$, we are looking for $\inf\{x : F_L(x) \ge u\}$. Since $u > 0.95$, we must have $F_L(x) = 1$, which first occurs at $x = 100$. Thus, $VaR_u(L) = 100$ for all $u \in (0.95, 1]$.
+
+Now we compute the integral for $\alpha = 0.95$:
+\begin{align*}
+ES_{0.95}(L) &= \frac{1}{1 - 0.95} \int_{0.95}^1 100 \, du \\
+&= \frac{1}{0.05} \left[ 100u \right]_{0.95}^1 \\
+&= 20 \times 100(1 - 0.95) \\
+&= 20 \times 5 \\
+&= 100
+\end{align*}
+
+
+\subsection*{(4) Explain why the conditional expectation definition is problematic here}
+
+In this example, the conditional expectation yields $5$, whereas the true Expected Shortfall yields $100$. This shows a severe discrepancy.
+
+The formula $ES_{\alpha}(L) = \mathbb{E}[L | L \ge VaR_{\alpha}(L)]$ is only guaranteed to hold when the cumulative distribution function $F_L$ is continuous at $VaR_{\alpha}(L)$. Here, the distribution is discrete, and there is a massive probability mass exactly at $VaR_{0.95}(L) = 0$, since $\mathbb{P}(L=0) = 0.95$.
+
+When we condition on the event $L \ge VaR_{0.95}(L)$, we are inadvertently including the entire probability mass of the non-tail event $L=0$. This "dilutes" the expectation with a large number of zero-loss scenarios, fundamentally misrepresenting the average of the strictly worst 5\% of cases. The true integral definition of ES correctly isolates the 5\% tail, which in this distribution consists entirely of the $L=100$ outcome.

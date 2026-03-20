@@ -1,0 +1,113 @@
+\section{Exercise 4: Dependency of the Call Price on the Strike}
+
+\subsection{Problem Statement}
+We assume a market with one risky asset ($d=1$) that is arbitrage-free and complete. We want to study the properties of the arbitrage-free price of a European call option, denoted as $C_t(K,T)$, with respect to its strike price $K$ and its maturity $T$.
+
+\subsection{Part 1: Monotonicity of Prices based on Payoffs}
+
+\textbf{Question:} If $H_1$ and $H_2$ are two payoffs satisfying $H_1 \le H_2$ $\mathbb{P}$-almost surely, show that their arbitrage-free prices at any date satisfy the same inequality.
+
+\textbf{Step-by-Step Proof:}
+\begin{enumerate}
+    \item Because the market is complete and arbitrage-free, the Fundamental Theorems of Asset Pricing state that there exists a unique equivalent martingale measure (risk-neutral measure) $\mathbb{Q}$.
+    \item Under this measure $\mathbb{Q}$, the arbitrage-free price of any replicable payoff $H$ at time $t$ is given by the conditional expectation of its discounted final payoff:
+    \begin{equation}
+        V_t(H) = \mathbb{E}_{\mathbb{Q}} \left[ \frac{H}{(1+r)^{T-t}} \middle| \mathcal{F}_t \right]
+    \end{equation}
+    \item We are given that $H_1 \le H_2$ $\mathbb{P}$-a.s. Since $\mathbb{P}$ and $\mathbb{Q}$ are equivalent measures, they agree on events of probability zero, meaning $H_1 \le H_2$ $\mathbb{Q}$-a.s. as well.
+    \item The conditional expectation is a positive linear operator. Therefore, it preserves inequalities. Since $H_1 \le H_2$ and $(1+r)^{T-t} > 0$, it immediately follows that:
+    \begin{equation}
+        \mathbb{E}_{\mathbb{Q}} \left[ \frac{H_1}{(1+r)^{T-t}} \middle| \mathcal{F}_t \right] \le \mathbb{E}_{\mathbb{Q}} \left[ \frac{H_2}{(1+r)^{T-t}} \middle| \mathcal{F}_t \right]
+    \end{equation}
+    \item Substituting our pricing formula, we get $V_t(H_1) \le V_t(H_2)$.
+\end{enumerate}
+
+\subsection{Part 2: The Call Price is Non-Increasing with Respect to Strike}
+
+\textbf{Question:} Deduce that $K \mapsto C_t(K,T)$ is non-increasing.
+
+\textbf{Step-by-Step Proof:}
+\begin{enumerate}
+    \item Let $K_1$ and $K_2$ be two strike prices such that $K_1 \le K_2$. We want to show that $C_t(K_1, T) \ge C_t(K_2, T)$.
+    \item The payoff of a call option with strike $K$ is $H(K) = (S_T - K)_+ = \max(S_T - K, 0)$.
+    \item Since $K_1 \le K_2$, we have $-K_1 \ge -K_2$, and thus $S_T - K_1 \ge S_T - K_2$.
+    \item Applying the maximum function preserves this inequality: $\max(S_T - K_1, 0) \ge \max(S_T - K_2, 0)$.
+    \item Therefore, the payoffs satisfy $H(K_1) \ge H(K_2)$ for all possible states of the world.
+    \item Using the result from Part 1, since the payoff of call 1 is always greater than or equal to call 2, its price must also be greater than or equal: $C_t(K_1, T) \ge C_t(K_2, T)$. The function is non-increasing.
+\end{enumerate}
+
+\subsection{Part 3: Proving Monotonicity via No-Arbitrage Strategies}
+
+\textbf{Question:} Using the definition of no-arbitrage, prove the result above (this approach does not require the market to be complete).
+
+\textbf{Step-by-Step Proof:}
+\begin{enumerate}
+    \item Assume $K_1 \le K_2$. Consider a portfolio constructed at time $t$ by buying one call with strike $K_1$ and selling (shorting) one call with strike $K_2$.
+    \item The value of this portfolio at maturity $T$ is $V_T = (S_T - K_1)_+ - (S_T - K_2)_+$.
+    \item Let's analyze this payoff $V_T$ for all possible values of $S_T$:
+    \begin{itemize}
+        \item If $S_T \le K_1 \le K_2$: Both options expire worthless. $V_T = 0 - 0 = 0$.
+        \item If $K_1 < S_T \le K_2$: The first option pays out, the second does not. $V_T = (S_T - K_1) - 0 > 0$.
+        \item If $K_1 \le K_2 < S_T$: Both options pay out. $V_T = (S_T - K_1) - (S_T - K_2) = K_2 - K_1 \ge 0$.
+    \end{itemize}
+    \item In all scenarios, $V_T \ge 0$.
+    \item By the principle of no-arbitrage, if a portfolio has a guaranteed non-negative payoff at maturity, its cost at any prior time $t$ must also be non-negative. If it cost less than 0, buying it would be an arbitrage opportunity.
+    \item Therefore, $V_t \ge 0 \implies C_t(K_1, T) - C_t(K_2, T) \ge 0 \implies C_t(K_1, T) \ge C_t(K_2, T)$.
+\end{enumerate}
+
+\subsection{Part 4: Convexity of the Call Price}
+
+\textbf{Question:} Show that $K \mapsto C_t(K,T)$ is convex.
+
+\textbf{Step-by-Step Proof:}
+\begin{enumerate}
+    \item Let $K_1, K_2$ be two strike prices, and let $\lambda \in [0,1]$. Define a new strike price as a convex combination: $K = \lambda K_1 + (1-\lambda) K_2$.
+    \item The function $f(x) = (x)_+ = \max(x, 0)$ is a convex function.
+    \item We apply the definition of convexity to the option payoff at time $T$:
+    \begin{align}
+        (S_T - K)_+ &= (S_T - (\lambda K_1 + (1-\lambda)K_2))_+ \\
+        &= (\lambda S_T - \lambda K_1 + (1-\lambda)S_T - (1-\lambda)K_2)_+ \\
+        &= (\lambda(S_T - K_1) + (1-\lambda)(S_T - K_2))_+
+    \end{align}
+    \item By the convexity of the maximum function:
+    \begin{equation}
+        (\lambda(S_T - K_1) + (1-\lambda)(S_T - K_2))_+ \le \lambda(S_T - K_1)_+ + (1-\lambda)(S_T - K_2)_+
+    \end{equation}
+    \item This inequality holds for the payoffs. By taking the conditional expectation under the risk-neutral measure (as justified in Part 1), the inequality is preserved for the prices:
+    \begin{equation}
+        C_t(K, T) \le \lambda C_t(K_1, T) + (1-\lambda) C_t(K_2, T)
+    \end{equation}
+    \item This is the exact definition of a convex function.
+\end{enumerate}
+
+\subsection{Part 5: Monotonicity with Respect to Maturity}
+
+\textbf{Question:} Assuming $r=0$, show that $T \mapsto C_0(K,T)$ is non-decreasing.
+
+\textbf{Step-by-Step Proof:}
+\begin{enumerate}
+    \item We want to compare the price of a call expiring at $T$ with one expiring at $T+1$. Since $r=0$, the discount factor $(1+r)^{-t}$ is just $1$.
+    \item The price of the option maturing at $T+1$ is $C_0(K, T+1) = \mathbb{E}_{\mathbb{Q}}[(S_{T+1} - K)_+]$.
+    \item By the Law of Iterated Expectations (Tower Property), we can condition on the information available at time $T$:
+    \begin{equation}
+        \mathbb{E}_{\mathbb{Q}}[(S_{T+1} - K)_+] = \mathbb{E}_{\mathbb{Q}} \left[ \mathbb{E}_{\mathbb{Q}}[(S_{T+1} - K)_+ \mid \mathcal{F}_T] \right]
+    \end{equation}
+    \item Consider the inner expectation: $\mathbb{E}_{\mathbb{Q}}[(S_{T+1} - K)_+ \mid \mathcal{F}_T]$. The function $g(x) = (x - K)_+$ is convex. 
+    \item Jensen's Inequality states that for a convex function $g$, $\mathbb{E}[g(X)] \ge g(\mathbb{E}[X])$. Applying this to our inner expectation:
+    \begin{equation}
+        \mathbb{E}_{\mathbb{Q}}[(S_{T+1} - K)_+ \mid \mathcal{F}_T] \ge (\mathbb{E}_{\mathbb{Q}}[S_{T+1} \mid \mathcal{F}_T] - K)_+
+    \end{equation}
+    \item Under the risk-neutral measure $\mathbb{Q}$ and with $r=0$, the discounted stock price is a martingale. This means $\mathbb{E}_{\mathbb{Q}}[S_{T+1} \mid \mathcal{F}_T] = S_T$. Substituting this back:
+    \begin{equation}
+        \mathbb{E}_{\mathbb{Q}}[(S_{T+1} - K)_+ \mid \mathcal{F}_T] \ge (S_T - K)_+
+    \end{equation}
+    \item Now, we take the unconditional expectation of both sides (from step 3):
+    \begin{equation}
+        \mathbb{E}_{\mathbb{Q}} \left[ \mathbb{E}_{\mathbb{Q}}[(S_{T+1} - K)_+ \mid \mathcal{F}_T] \right] \ge \mathbb{E}_{\mathbb{Q}}[(S_T - K)_+]
+    \end{equation}
+    \item The left side is exactly $C_0(K, T+1)$ and the right side is exactly $C_0(K, T)$. Therefore:
+    \begin{equation}
+        C_0(K, T+1) \ge C_0(K, T)
+    \end{equation}
+    \item Thus, the call price is non-decreasing with respect to maturity.
+\end{enumerate}

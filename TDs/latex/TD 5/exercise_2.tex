@@ -1,0 +1,79 @@
+\section{Exercise 2: Linear Payoff}
+
+\subsection{Problem Statement}
+We want to replicate a specific payoff $H$, and we do \emph{not} assume the market is arbitrage-free. 
+First, we need to show that a payoff depending on a single asset at a specific past or present date, $H = S_{t^*}^i$, is replicable at maturity $T$. 
+Then, we will generalize this to show that any linear combination of asset prices across different times is also replicable.
+
+\subsection{Part 1: Replicating H = S\_t i}
+
+The payoff $H$ is paid at the final time $T$, but its value is completely determined and known at time $t^*$ (it is $\mathcal{F}_{t^*}$-measurable). 
+
+To replicate this, our strategy will have two phases:
+\begin{enumerate}
+    \item \textbf{Phase 1 (From $t=1$ to $t^*$):} We hold a constant fraction of the risky asset $i$ so that at time $t^*$, its value is exactly the present value of the payoff we need at time $T$.
+    \item \textbf{Phase 2 (From $t^*+1$ to $T$):} At time $t^*$, we sell the risky asset and put all the proceeds into the riskless bank account $S^0$, letting it accrue interest until time $T$.
+\end{enumerate}
+
+\subsubsection*{Defining the Strategy mathematically}
+Let's build the portfolio $\phi_t = (\xi_t^0, \xi_t^1, \dots, \xi_t^d)$ for $t \in \{1, \dots, T\}$.
+
+\vspace{0.5em}
+\noindent\textbf{For $1 \le t \le t^*$ (Phase 1):} \\
+We invest solely in the risky asset $i$. We want to end up with $S_{t^*}^i$ at time $T$. Discounting this back to time $t^*$, we need a value of $\frac{S_{t^*}^i}{(1+r)^{T-t^*}}$ at time $t^*$. 
+Since the price of asset $i$ at time $t^*$ is $S_{t^*}^i$, we need exactly $\frac{1}{(1+r)^{T-t^*}}$ shares.
+\begin{itemize}
+    \item $\xi_t^i = \frac{1}{(1+r)^{T-t^*}}$
+    \item $\xi_t^0 = 0$ (no money in the bank)
+    \item $\xi_t^j = 0$ for all $j \ne i, 0$
+\end{itemize}
+
+\vspace{0.5em}
+\noindent\textbf{For $t^*+1 \le t \le T$ (Phase 2):} \\
+At time $t^*$, we liquidate the risky asset. The value of our portfolio at time $t^*$ is:
+\begin{equation}
+    V_{t^*} = \xi_{t^*}^i S_{t^*}^i = \frac{S_{t^*}^i}{(1+r)^{T-t^*}}
+\end{equation}
+We use all this value to buy units of the riskless asset $\xi_{t^*+1}^0$. The price of the riskless asset at time $t^*$ is $S_{t^*}^0 = (1+r)^{t^*}$. Therefore, the number of units we buy is:
+\begin{equation}
+    \xi_{t^*+1}^0 = \frac{V_{t^*}}{S_{t^*}^0} = \frac{\frac{S_{t^*}^i}{(1+r)^{T-t^*}}}{(1+r)^{t^*}} = \frac{S_{t^*}^i}{(1+r)^T}
+\end{equation}
+So, for the remainder of the time until $T$, our positions are:
+\begin{itemize}
+    \item $\xi_t^0 = \frac{S_{t^*}^i}{(1+r)^T}$
+    \item $\xi_t^j = 0$ for all $j \ne 0$ (no risky assets)
+\end{itemize}
+
+\subsubsection*{Checking the Self-Financing Condition}
+A strategy is self-financing if changes in the portfolio composition do not require injecting or withdrawing external cash. This must hold at our rebalancing time $t^*$:
+\begin{equation}
+    (\xi_{t^*+1}^0 - \xi_{t^*}^0) S_{t^*}^0 + \sum_{j=1}^d (\xi_{t^*+1}^j - \xi_{t^*}^j) S_{t^*}^j = 0
+\end{equation}
+Substituting our chosen quantities:
+\begin{align}
+    \left( \frac{S_{t^*}^i}{(1+r)^T} - 0 \right) (1+r)^{t^*} + \left( 0 - \frac{1}{(1+r)^{T-t^*}} \right) S_{t^*}^i &= 0 \\
+    \frac{S_{t^*}^i}{(1+r)^{T-t^*}} - \frac{S_{t^*}^i}{(1+r)^{T-t^*}} &= 0
+\end{align}
+The condition holds. The strategy is predictable, self-financing, and at time $T$, the value is:
+\begin{equation}
+    V_T = \xi_T^0 S_T^0 = \left( \frac{S_{t^*}^i}{(1+r)^T} \right) (1+r)^T = S_{t^*}^i = H
+\end{equation}
+Thus, $H = S_{t^*}^i$ is replicable.
+
+\subsection{Part 2: Replicating a General Linear Payoff}
+
+We now consider a general linear payoff of the form:
+\begin{equation}
+    H = \sum_{k=0}^T \sum_{i=1}^d \alpha(i,k) S_k^i
+\end{equation}
+where $\alpha(i,k)$ are constant coefficients.
+
+Let $\phi(i,k)_t = (\xi_t^0(i,k), \xi_t(i,k))$ be the self-financing strategy that replicates the single payoff $S_k^i$, which we just proved exists in Part 1.
+
+Because the financial market operations (portfolio value and self-financing condition) are strictly linear, any linear combination of payoffs can be replicated by the exact same linear combination of their respective replicating strategies.
+
+Therefore, the payoff $H$ is replicable by the composite strategy $\Phi_t$:
+\begin{equation}
+    \Phi_t = \sum_{k=0}^T \sum_{i=1}^d \alpha(i,k) \phi(i,k)_t
+\end{equation}
+This strategy simply means holding $\alpha(i,k)$ units of the portfolio $\phi(i,k)_t$ for every $i$ and $k$. Since each sub-portfolio is predictable and self-financing, their linear combination remains predictable and self-financing, successfully replicating $H$.

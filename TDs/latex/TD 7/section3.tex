@@ -1,0 +1,62 @@
+\section{The Early Exercise Boundary}
+
+\subsection*{Question 6: Existence of the Early Exercise Threshold}
+
+\textbf{Problem Statement:}
+Show that there exists $s_0^* \in [0,K)$ such that $v(0,x) = h(x)$ if $x \in [0,s_0^*]$ and $v(0,x) > h(x)$ if $x \in (s_0^*, \frac{K}{(1+d)^T})$.
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Defining the Threshold:} Let us define a candidate for our boundary point, $s_0^*$, as the supremum of all prices where the option value equals the immediate payoff for all values below it:
+    \begin{equation*}
+        s_0^* := \sup\{x \in \mathbb{R}_+ : \forall y \in [0, x], v(0,y) = h(y)\}
+    \end{equation*}
+
+    \item \textbf{Existence and Bounds:} 
+    From Question 5, we know $v(0,0) = h(0)$, meaning the set is non-empty and $s_0^*$ exists. 
+    Also from Question 5, we established $v(0,K) > 0$. Since the payoff at strike is $h(K) = (K-K)_+ = 0$, we have $v(0,K) > h(K)$. Therefore, the threshold $s_0^*$ must be strictly less than $K$, meaning $s_0^* \in [0,K)$.
+
+    \item \textbf{Equality at the Boundary:} Because $h$ is a continuous function and the maximum operator preserves continuity (proved in Question 2), the value function $v(0,\cdot)$ is also continuous. Taking the limit as we approach the supremum implies $v(0,s_0^*) = h(s_0^*)$.
+
+    \item \textbf{Proving Equality on the Interval $[0, s_0^*]$:}
+    We need to show the condition holds for any $x$ in this interval. For any $x \in [0,s_0^*]$, we can express $x$ as a convex combination of $0$ and $s_0^*$. There exists an interpolation factor $l \in [0,1]$ such that:
+    \begin{equation*}
+        x = l s_0^* + (1-l)0
+    \end{equation*}
+    Since we proved in Question 2 that $v(0,\cdot)$ is convex, we can apply the definition of convexity:
+    \begin{equation*}
+        v(0,x) \le l v(0,s_0^*) + (1-l)v(0,0)
+    \end{equation*}
+    Substituting the known equalities $v(0,s_0^*) = h(s_0^*)$ and $v(0,0) = h(0)$:
+    \begin{equation*}
+        v(0,x) \le l h(s_0^*) + (1-l)h(0)
+    \end{equation*}
+    The put payoff $h$ is a straight line (affine) on the interval $[0, s_0^*]$ since $s_0^* < K$. Thus, the linear combination is exactly $h(x)$, giving us $v(0,x) \le h(x)$.
+    However, by the recursive formulation of the American option, $v(0,x) \ge h(x)$ is always true. Thus, $v(0,x) = h(x)$ for all $x \in [0,s_0^*]$.
+
+    \item \textbf{Proving Strict Inequality on $(s_0^*, \frac{K}{(1+d)^T})$:}
+    We split this into two regions and evaluate them:
+    \begin{itemize}
+        \item \textit{For $x \in (s_0^*, K)$:} By the very definition of the supremum $s_0^*$, any point slightly larger than $s_0^*$ must break the equality condition. Thus, $v(0,x) > h(x)$.
+        \item \textit{For $x \in [K, \frac{K}{(1+d)^T})$:} From Question 4, we know $v(0,x) > 0$. Since $x \ge K$, the immediate payoff is $h(x) = (K-x)_+ = 0$. Hence, $v(0,x) > h(x) = 0$.
+    \end{itemize}
+    Combining these two facts, we see that $v(0,x) > h(x)$ holds strictly for the entire interval $(s_0^*, \frac{K}{(1+d)^T})$.
+\end{enumerate}
+
+\subsection*{Question 7: Conclusion on the Infimum}
+
+\textbf{Problem Statement:}
+Conclude $s_0^* = \inf\{x \in \mathbb{R}_+ : v(0,x) > h(x)\}$.
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Connecting the Regions:} In Question 6, we perfectly partitioned the pricing domain below $\frac{K}{(1+d)^T}$ into two adjacent regions without any gaps:
+    \begin{itemize}
+        \item The \textit{immediate exercise region} $[0, s_0^*]$ where $v(0,x) = h(x)$.
+        \item The \textit{continuation region} $(s_0^*, \frac{K}{(1+d)^T})$ where $v(0,x) > h(x)$.
+    \end{itemize}
+    
+    \item \textbf{Defining the Infimum:} The mathematical set $\{x \in \mathbb{R}_+ : v(0,x) > h(x)\}$ represents the region where it is strictly optimal to hold the option rather than exercise it.
+    
+    \item \textbf{Identifying the Boundary:} The lowest possible value (the infimum) of this strict inequality continuation region is exactly the upper bound (the supremum) of the equality exercise region. Therefore, it immediately follows that the threshold $s_0^*$ is the infimum of the set of points where the option value is strictly greater than its intrinsic value.
+\end{enumerate}

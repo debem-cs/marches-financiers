@@ -1,0 +1,92 @@
+\subsection*{(1) Continuous and strictly increasing transformations}
+
+Let $f: \mathbb{R} \rightarrow \mathbb{R}$ be a continuous and strictly increasing function. We want to show that $VaR_{\alpha}(f(L)) = f(VaR_{\alpha}(L))$.
+
+First, recall the definition of Value at Risk:
+\begin{equation*}
+VaR_{\alpha}(L) = \inf\{x \in \mathbb{R} : \mathbb{P}(L \le x) \ge \alpha\}
+\end{equation*}
+
+Now, let us find the cumulative distribution function for $f(L)$. Since $f$ is strictly increasing, it is invertible, and the event $\{f(L) \le x\}$ is equivalent to the event $\{L \le f^{-1}(x)\}$.
+\begin{equation*}
+\mathbb{P}(f(L) \le x) = \mathbb{P}(L \le f^{-1}(x)) = F_L(f^{-1}(x))
+\end{equation*}
+
+Applying the definition of VaR to $f(L)$:
+\begin{equation*}
+VaR_{\alpha}(f(L)) = \inf\{x \in \mathbb{R} : \mathbb{P}(f(L) \le x) \ge \alpha\}
+\end{equation*}
+\begin{equation*}
+VaR_{\alpha}(f(L)) = \inf\{x \in \mathbb{R} : F_L(f^{-1}(x)) \ge \alpha\}
+\end{equation*}
+
+Let us perform a change of variable by setting $y = f^{-1}(x)$, which implies $x = f(y)$. Because $f$ is strictly increasing, as $x$ increases, $y$ also increases. Furthermore, taking the infimum over $x$ is equivalent to taking the infimum over $y$ and then applying $f$, due to the fact that $f$ is continuous and preserves the ordering of the set.
+\begin{align*}
+VaR_{\alpha}(f(L)) &= \inf\{f(y) \in \mathbb{R} : F_L(y) \ge \alpha\} \\
+&= f\left( \inf\{y \in \mathbb{R} : F_L(y) \ge \alpha\} \right) \\
+&= f(VaR_{\alpha}(L))
+\end{align*}
+
+
+\subsection*{(2) Continuous and strictly decreasing transformations}
+
+Let $f: \mathbb{R} \rightarrow \mathbb{R}$ be a continuous and strictly decreasing function. We want to show that $VaR_{\alpha}(f(L)) = f(VaR_{1-\alpha}^{+}(L))$.
+
+Since $f$ is strictly decreasing, the inequality direction reverses when applying the inverse function. The event $\{f(L) \le x\}$ is equivalent to $\{L \ge f^{-1}(x)\}$.
+\begin{equation*}
+\mathbb{P}(f(L) \le x) = \mathbb{P}(L \ge f^{-1}(x))
+\end{equation*}
+
+We write the VaR for $f(L)$:
+\begin{equation*}
+VaR_{\alpha}(f(L)) = \inf\{x \in \mathbb{R} : \mathbb{P}(L \ge f^{-1}(x)) \ge \alpha\}
+\end{equation*}
+
+Let $y = f^{-1}(x)$. Since $f$ is strictly decreasing, as $x$ decreases toward its infimum, $y$ increases toward its supremum. Therefore, finding the infimum of $x$ is equivalent to finding the supremum of $y$ and applying $f$:
+\begin{equation*}
+VaR_{\alpha}(f(L)) = f\left( \sup\{y \in \mathbb{R} : \mathbb{P}(L \ge y) \ge \alpha\} \right)
+\end{equation*}
+
+We must now show that $\sup\{y \in \mathbb{R} : \mathbb{P}(L \ge y) \ge \alpha\} = VaR_{1-\alpha}^{+}(L)$.
+Recall the definition of $VaR_{1-\alpha}^{+}(L)$:
+\begin{equation*}
+VaR_{1-\alpha}^{+}(L) = \inf\{z \in \mathbb{R} : \mathbb{P}(L \le z) > 1 - \alpha\}
+\end{equation*}
+
+Let $A = \{y \in \mathbb{R} : \mathbb{P}(L \ge y) \ge \alpha\}$ and $B = \{z \in \mathbb{R} : \mathbb{P}(L \le z) > 1 - \alpha\}$.
+If $y \in A$, then $\mathbb{P}(L \ge y) \ge \alpha$. Since $\mathbb{P}(L \ge y) = 1 - \mathbb{P}(L < y)$, we have:
+\begin{align*}
+1 - \mathbb{P}(L < y) &\ge \alpha \\
+\mathbb{P}(L < y) &\le 1 - \alpha
+\end{align*}
+For any $z < y$, it is strictly true that $\mathbb{P}(L \le z) \le \mathbb{P}(L < y) \le 1 - \alpha$. This implies $z \notin B$. Therefore, any element in $B$ must be greater than or equal to $y$. This means $y \le \inf B$, which implies $\sup A \le \inf B$.
+
+Conversely, take any $y < \inf B$. By definition of the infimum of $B$, $y \notin B$, which means $\mathbb{P}(L \le y) \le 1 - \alpha$. 
+Consequently, $\mathbb{P}(L > y) = 1 - \mathbb{P}(L \le y) \ge \alpha$. 
+Since $\mathbb{P}(L \ge y) \ge \mathbb{P}(L > y) \ge \alpha$, it follows that $y \in A$. 
+Since every value less than $\inf B$ is in $A$, we must have $\sup A \ge \inf B$.
+
+Combining $\sup A \le \inf B$ and $\sup A \ge \inf B$, we conclude $\sup A = \inf B$. 
+Thus:
+\begin{equation*}
+\sup\{y \in \mathbb{R} : \mathbb{P}(L \ge y) \ge \alpha\} = \inf\{z \in \mathbb{R} : \mathbb{P}(L \le z) > 1 - \alpha\} = VaR_{1-\alpha}^{+}(L)
+\end{equation*}
+
+Substitute this back into the equation for $VaR_{\alpha}(f(L))$:
+\begin{equation*}
+VaR_{\alpha}(f(L)) = f(VaR_{1-\alpha}^{+}(L))
+\end{equation*}
+
+\vspace{0.5cm}
+\noindent \textbf{Deduction for continuous $F_L$:}
+
+We are given the property that if $F_L$ is continuous, $VaR_{\beta}(L) = VaR_{\beta}^{+}(L)$ for any confidence level $\beta \in (0,1)$.
+Applying this property to $\beta = 1 - \alpha$, we get:
+\begin{equation*}
+VaR_{1-\alpha}^{+}(L) = VaR_{1-\alpha}(L)
+\end{equation*}
+
+Substituting this into the result we just proved for strictly decreasing functions:
+\begin{equation*}
+VaR_{\alpha}(f(L)) = f(VaR_{1-\alpha}(L))
+\end{equation*}

@@ -1,0 +1,76 @@
+\subsection*{1. Formulating the Lagrangian}
+In this problem, we want to maximize the expected return of our portfolio, $w^T R$, subject to two constraints:
+1. The portfolio variance cannot exceed a given threshold: $w^T \Sigma w \le \sigma^2$
+2. The weights must sum to 1: $w^T \mathbf{1} = 1$
+
+To solve this constrained optimization problem, we set up the Lagrangian. We introduce a multiplier $\lambda \ge 0$ for the variance constraint and a multiplier $\theta \in \mathbb{R}$ for the budget constraint. Since we are maximizing, we subtract the constraints (or equivalently, add them with specific signs to maintain the correct inequality direction):
+$$L(w, \lambda, \theta) = w^T R + \frac{\lambda}{2}(\sigma^2 - w^T \Sigma w) + \theta(w^T \mathbf{1} - 1)$$
+Note that the $\frac{1}{2}$ is added for convenience when taking the derivative, as it will cancel out the 2 from differentiating the quadratic form.
+
+\subsection*{2. First-Order Conditions (FOC)}
+We take the partial derivatives of the Lagrangian with respect to $w$, $\lambda$, and $\theta$, and set them to zero.
+
+\vspace{0.5em}
+\noindent \textbf{Derivative with respect to $w$:}
+$$\frac{\partial L}{\partial w} = R - \lambda \Sigma w + \theta \mathbf{1} = 0$$
+Solving for $w$, we find the general form of our optimal portfolio $\tilde{w}$:
+$$\lambda \Sigma \tilde{w} = R + \theta \mathbf{1} \implies \tilde{w} = \frac{1}{\lambda} \Sigma^{-1} (R + \theta \mathbf{1})$$
+
+\noindent \textbf{Derivatives with respect to $\lambda$ and $\theta$:}
+These simply recover our binding constraints:
+$$\frac{\partial L}{\partial \lambda} = \frac{1}{2}(\sigma^2 - w^T \Sigma w) = 0 \implies \tilde{w}^T \Sigma \tilde{w} = \sigma^2$$
+$$\frac{\partial L}{\partial \theta} = w^T \mathbf{1} - 1 = 0 \implies \tilde{w}^T \mathbf{1} = 1$$
+
+\subsection*{3. Solving for the Multipliers}
+To find the exact values of $\lambda$ and $\theta$, we substitute our expression for $\tilde{w}$ into the two constraints. Let us define three useful scalars to make the notation cleaner:
+$$a = \mathbf{1}^T \Sigma^{-1} \mathbf{1}, \quad b = R^T \Sigma^{-1} \mathbf{1}, \quad c = R^T \Sigma^{-1} R$$
+
+\vspace{0.5em}
+\noindent \textbf{Using the budget constraint:}
+$$\tilde{w}^T \mathbf{1} = \left( \frac{1}{\lambda} \Sigma^{-1} (R + \theta \mathbf{1}) \right)^T \mathbf{1} = \frac{1}{\lambda} (R^T + \theta \mathbf{1}^T) \Sigma^{-1} \mathbf{1} = 1$$
+$$\frac{1}{\lambda} (R^T \Sigma^{-1} \mathbf{1} + \theta \mathbf{1}^T \Sigma^{-1} \mathbf{1}) = 1$$
+Substituting our defined scalars:
+$$\frac{1}{\lambda} (b + a\theta) = 1 \implies \lambda = b + a\theta$$
+
+\vspace{0.5em}
+\noindent \textbf{Using the variance constraint:}
+$$\tilde{w}^T \Sigma \tilde{w} = \left( \frac{1}{\lambda} \Sigma^{-1} (R + \theta \mathbf{1}) \right)^T \Sigma \left( \frac{1}{\lambda} \Sigma^{-1} (R + \theta \mathbf{1}) \right) = \sigma^2$$
+$$\frac{1}{\lambda^2} (R^T + \theta \mathbf{1}^T) \Sigma^{-1} \Sigma \Sigma^{-1} (R + \theta \mathbf{1}) = \sigma^2$$
+Since $\Sigma^{-1} \Sigma = I$ (the identity matrix), this simplifies to:
+$$(R^T + \theta \mathbf{1}^T) \Sigma^{-1} (R + \theta \mathbf{1}) = \lambda^2 \sigma^2$$
+Expanding the product:
+$$R^T \Sigma^{-1} R + \theta R^T \Sigma^{-1} \mathbf{1} + \theta \mathbf{1}^T \Sigma^{-1} R + \theta^2 \mathbf{1}^T \Sigma^{-1} \mathbf{1} = \lambda^2 \sigma^2$$
+$$c + 2b\theta + a\theta^2 = \lambda^2 \sigma^2$$
+
+Now, substitute $\lambda = b + a\theta$ into this variance equation:
+$$c + 2b\theta + a\theta^2 = (b + a\theta)^2 \sigma^2$$
+$$c + 2b\theta + a\theta^2 = (b^2 + 2ab\theta + a^2\theta^2) \sigma^2$$
+Rearranging into a standard quadratic equation in terms of $\theta$:
+$$a(a\sigma^2 - 1)\theta^2 + 2b(a\sigma^2 - 1)\theta + (b^2\sigma^2 - c) = 0$$
+
+\subsection*{4. Existence and Uniqueness of the Optimizer}
+To find if an optimal solution exists, we look at the discriminant ($\Delta$) of this quadratic equation:
+$$\Delta = [2b(a\sigma^2 - 1)]^2 - 4[a(a\sigma^2 - 1)][b^2\sigma^2 - c]$$
+Factoring out $4(a\sigma^2 - 1)$ gives:
+$$\Delta = 4(a\sigma^2 - 1) \left[ b^2(a\sigma^2 - 1) - a(b^2\sigma^2 - c) \right]$$
+$$\Delta = 4(a\sigma^2 - 1) (ab^2\sigma^2 - b^2 - ab^2\sigma^2 + ac)$$
+$$\Delta = 4(a\sigma^2 - 1)(ac - b^2)$$
+
+For the optimizer to exist, we need $\Delta \ge 0$. Because $\Sigma$ is a positive definite covariance matrix, the term $(ac - b^2)$ is strictly positive. Therefore, the condition for existence relies entirely on $(a\sigma^2 - 1)$:
+$$a\sigma^2 - 1 > 0 \implies \sigma^2 > \frac{1}{a}$$
+This makes intuitive sense: $\frac{1}{a}$ is the absolute minimum variance achievable by \textit{any} portfolio on this frontier. If your allowed variance $\sigma^2$ is lower than the global minimum variance, no solution can exist.
+
+Solving for $\theta$ using the quadratic formula yields:
+$$\theta^* = \frac{-2b(a\sigma^2 - 1) \pm \sqrt{\Delta}}{2a(a\sigma^2 - 1)} = \frac{-b(a\sigma^2 - 1) \pm \sqrt{(a\sigma^2 - 1)(ac - b^2)}}{a(a\sigma^2 - 1)}$$
+Since $\lambda = b + a\theta$, we substitute this back to find $\lambda^*$:
+$$\lambda^* = b + a \left( \frac{-b(a\sigma^2 - 1) \pm \sqrt{\Delta/4}}{a(a\sigma^2 - 1)} \right) = \pm \frac{\sqrt{\Delta/4}}{a\sigma^2 - 1}$$
+Because we defined our Lagrangian multiplier $\lambda \ge 0$ for an inequality constraint, we must choose the positive root. This guarantees the uniqueness of the solution:
+$$\lambda^* = \frac{\sqrt{(a\sigma^2 - 1)(ac - b^2)}}{a\sigma^2 - 1} = \sqrt{\frac{ac - b^2}{a\sigma^2 - 1}}$$
+And the unique $\theta^*$ is:
+$$\theta^* = \frac{\lambda^* - b}{a} = -\frac{b}{a} + \frac{1}{a}\sqrt{\frac{ac - b^2}{a\sigma^2 - 1}}$$
+
+\subsection*{5. Final Expression for the Optimal Weights}
+Now we substitute our unique $\lambda^*$ and $\theta^*$ back into our initial equation for $\tilde{w}$:
+$$\tilde{w} = \frac{1}{\lambda^*} \Sigma^{-1} (R + \theta^* \mathbf{1})$$
+$$\tilde{w} = \sqrt{\frac{a\sigma^2 - 1}{ac - b^2}} \Sigma^{-1} \left( R + \left( -\frac{b}{a} + \frac{1}{a}\sqrt{\frac{ac - b^2}{a\sigma^2 - 1}} \right) \mathbf{1} \right)$$
+This gives us the exact, closed-form expression for the optimal portfolio weights under a variance constraint.

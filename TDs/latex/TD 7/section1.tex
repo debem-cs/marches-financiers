@@ -1,0 +1,86 @@
+\section{Model Setup and Value Function Properties}
+
+\subsection*{Question 1: Recursive Formulation of the American Option Value}
+
+\textbf{Problem Statement:}
+Prove that $V_t = v(t,S_t)$ such that:
+\begin{align*}
+v(T, x) &= h(x) \\
+v(t-1, x) &= \max\left\{ h(x), \tilde{p} v(t, x(1+d)) + \tilde{q} v(t, x(1+u)) \right\}, \quad t=1,\dots,T
+\end{align*}
+where $\tilde{p}$ and $\tilde{q}$ are positive constants to be determined.
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Terminal Condition:} At maturity $t=T$, the option expires. The value of the American option is simply its intrinsic payoff. Thus, $V_T = h(S_T)$, which implies $v(T, x) = h(x)$.
+    
+    \item \textbf{Dynamic Programming Principle:} At any time $t-1$, the holder of an American option must choose between two mutually exclusive actions:
+    \begin{itemize}
+        \item \textit{Exercise immediately:} The payoff received right now is $h(S_{t-1})$.
+        \item \textit{Hold the option (Continuation):} The option is kept alive until at least time $t$. Its value is the discounted expected value of the option at time $t$ under the risk-neutral measure $Q$.
+    \end{itemize}
+    
+    \item \textbf{Calculating the Continuation Value:} Because the market is complete and arbitrage-free, the Fundamental Theorem of Asset Pricing states that the expected discounted value under $Q$ is:
+    \begin{equation*}
+        \frac{1}{1+r} \mathbb{E}_Q[ V_t \mid \mathcal{F}_{t-1} ]
+    \end{equation*}
+    We know that $V_t = v(t, S_t)$. Under the binomial model, the asset price $S_t$ can transition from $S_{t-1}$ to:
+    \begin{itemize}
+        \item $S_{t-1}(1+u)$ with risk-neutral probability $q = \frac{r-d}{u-d}$
+        \item $S_{t-1}(1+d)$ with risk-neutral probability $1-q$
+    \end{itemize}
+    Substituting these into the expectation gives the continuation value:
+    \begin{equation*}
+        \frac{1}{1+r} \left( (1-q) v(t, S_{t-1}(1+d)) + q v(t, S_{t-1}(1+u)) \right)
+    \end{equation*}
+    
+    \item \textbf{Identifying the Constants:} Matching this expectation with the given formula yields:
+    \begin{align*}
+        \tilde{p} &= \frac{1-q}{1+r} \\
+        \tilde{q} &= \frac{q}{1+r}
+    \end{align*}
+    Given the problem condition $-1 < d < r < u$, it follows that $0 < q < 1$ and $1+r > 0$. Therefore, both $\tilde{p}$ and $\tilde{q}$ are strictly positive.
+    
+    \item \textbf{Conclusion:} The rational option holder will choose the action that maximizes their payoff. Taking the maximum of the immediate exercise value and the continuation value yields the desired recursive relation:
+    \begin{equation*}
+        v(t-1,x) = \max\left\{ h(x), \tilde{p} v(t, x(1+d)) + \tilde{q} v(t, x(1+u)) \right\}
+    \end{equation*}
+\end{enumerate}
+
+
+\subsection*{Question 2: Shape Preservation of the Value Function}
+
+\textbf{Problem Statement:}
+If $h$ is non-decreasing (resp. non-increasing, convex, continuous), then $x \mapsto v(t,x)$ is non-decreasing (resp. non-increasing, convex, continuous) for all $t=0,\dots,T$.
+
+\textbf{Step-by-Step Solution:}
+We prove this by backward induction on time $t$.
+
+\begin{enumerate}
+    \item \textbf{Base Case ($t=T$):} We have $v(T,x) = h(x)$. Since the payoff function $h(x)$ inherently possesses the property in question, $v(T,x)$ trivially holds the same property.
+    
+    \item \textbf{Inductive Hypothesis:} Assume that for some time $t \le T$, the function $x \mapsto v(t,x)$ possesses the required property (e.g., convexity). We must show that $x \mapsto v(t-1,x)$ also possesses it.
+    
+    \item \textbf{Analyzing the Continuation Function:} Let us define the continuation value function $C(x)$ at time $t-1$:
+    \begin{equation*}
+        C(x) = \tilde{p} v(t, x(1+d)) + \tilde{q} v(t, x(1+u))
+    \end{equation*}
+    \begin{itemize}
+        \item From our base assumptions, $d > -1$, meaning $(1+d) > 0$ and $(1+u) > 0$. Scaling the input $x$ by a positive constant preserves monotonicity, convexity, and continuity. Thus, the terms $v(t, x(1+d))$ and $v(t, x(1+u))$ maintain the property.
+        \item Since $\tilde{p} > 0$ and $\tilde{q} > 0$, taking a linear combination with strictly positive weights also preserves these properties. Therefore, $C(x)$ inherits the exact same shape properties as $v(t,\cdot)$.
+    \end{itemize}
+    
+    \item \textbf{Applying Properties to the Maximum Operator:} 
+    Recall the recursive relationship:
+    \begin{equation*}
+        v(t-1, x) = \max\{h(x), C(x)\}
+    \end{equation*}
+    A fundamental property of the max operator is that it preserves these specific functional shapes:
+    \begin{itemize}
+        \item The maximum of two non-decreasing functions is non-decreasing.
+        \item The maximum of two non-increasing functions is non-increasing.
+        \item The maximum of two convex functions is convex.
+        \item The maximum of two continuous functions is continuous.
+    \end{itemize}
+    Since both the immediate payoff $h(x)$ and the continuation value $C(x)$ possess the required property, their maximum $v(t-1, x)$ does as well. This completes the inductive step, proving the statement for all $t=0,\dots,T$.
+\end{enumerate}

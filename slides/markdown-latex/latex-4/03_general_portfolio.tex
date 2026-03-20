@@ -54,13 +54,24 @@ Thus, the global optimization problem simplifies to:
     &= \min_{w^0 \in I} (1-w^0)^2 \left( \min_{\hat{w} \in E_0 : \hat{w} \cdot R \ge \hat{\mu}(w^0)} \hat{w}^T \Sigma \hat{w} \right) \notag \\
     &= \min_{w^0 \in I} \left[ (1-w^0)^2 g(\hat{\mu}(w^0)) \right],
 \end{align}
-where $g(\cdot)$ is exactly the variance-minimizing function for purely risky assets derived in Chapter 2.
+where $g(\cdot)$ is exactly the variance-minimizing function for purely risky assets derived in Chapter 2. 
+More precisely, for a given target expected return $m$, $g(m)$ represents the minimum variance achievable by a portfolio consisting \textit{only} of risky assets:
+\begin{equation}
+    g(m) := \min_{\hat{w} \in E_0 : \hat{w} \cdot R \ge m} \hat{w}^T \Sigma \hat{w}.
+\end{equation}
+This function $g$ describes the boundary of the purely risky efficient frontier (the Markowitz bullet).
 
 This result implies that all \textit{globally} efficient portfolios (involving both riskless and risky assets) can be represented functionally as:
 \begin{equation}
     \rho(V) = \tilde{w}^0 R^0 + (1 - \tilde{w}^0) \tilde{w} \cdot \rho(S).
 \end{equation}
-Here, $\tilde{w}$ denotes the fixed, unique optimal vector of risky asset weights (normalized so they sum to 1), and $\tilde{w}^0$ dictates the mix between cash and this single optimal risky portfolio. In the literature, this unique purely risky portfolio $\tilde{w}$ is called the \textbf{Market Portfolio} or the \textbf{Tangency Portfolio}, denoted $V_M$.
+Here, $\tilde{w}$ denotes the fixed, unique optimal vector of risky asset weights (normalized so they sum to 1).
+
+\textbf{Relationship to the purely risky case:} In Chapter 2 (without a risk-free asset), the optimal risky portfolio $w(\mu)$ changed depending on the investor's target return $\mu$, following the Two-Fund Separation Theorem ($w(\mu) = \mu h + g$). To achieve higher returns, the investor had to physically alter the composition of their risky assets (moving along the Markowitz bullet). 
+
+However, introducing a riskless asset fundamentally changes this dynamic. The optimal relative composition of risky assets $\tilde{w}$ becomes \textit{completely independent} of the target return $\mu$. Regardless of whether an investor is highly conservative or aggressively seeking high returns, they should always hold exactly the same relative proportions of risky assets (the vector $\tilde{w}$). To achieve their specific target return $\mu$, they simply adjust $\tilde{w}^0$, which dictates the mix between cash and this single optimal risky portfolio (borrowing or lending at the risk-free rate).
+
+In the literature, this uniquely optimal purely risky portfolio $\tilde{w}$ is called the \textbf{Market Portfolio} or the \textbf{Tangency Portfolio}, denoted $V_M$.
 \begin{equation*}
     V_M := \tilde{w} \cdot S.
 \end{equation*}
