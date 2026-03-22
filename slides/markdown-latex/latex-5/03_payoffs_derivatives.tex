@@ -6,8 +6,8 @@ With the foundational model of a multi-period arbitrage-free market established,
 \section{Formalizing Payoffs}
 
 \begin{definition}[Payoff and European Derivative]
-A \textbf{payoff} is a random payout delivered at a specific future time. Mathematically, it is defined as an $\mathcal{F}_T$-measurable random variable $H$. 
-A \textbf{European derivative} written on the underlying assets $S^1, \dots, S^d$ is a financial contract that guarantees its holder a payoff $H$ at the maturity date $T$, where $H = F(S^0, S^1, \dots, S^d)$ for some measurable function $F$.
+    A \textbf{payoff} is a random payout delivered at a specific future time. Mathematically, it is defined as an $\mathcal{F}_T$-measurable random variable $H$.
+    A \textbf{European derivative} written on the underlying assets $S^1, \dots, S^d$ is a financial contract that guarantees its holder a payoff $H$ at the maturity date $T$, where $H = F(S^0, S^1, \dots, S^d)$ for some measurable function $F$.
 \end{definition}
 
 The measurability condition $H \in \mathcal{F}_T$ simply ensures that by the time the contract expires at $T$, its value is perfectly known and unambiguously determined by the market history up to that point.
@@ -25,21 +25,21 @@ To ground these definitions, we list several classical derivatives. For simplici
 \paragraph{European Vanilla Options:}
 \begin{itemize}
     \item \textbf{European Call Option:} Gives the right (but not the obligation) to buy the asset at price $K$ at time $T$. The rational holder will exercise precisely when $S_T^i > K$.
-    $$ H = (S_T^i - K)_+ = \max(S_T^i - K, 0) $$
+          $$ H = (S_T^i - K)_+ = \max(S_T^i - K, 0) $$
     \item \textbf{European Put Option:} Gives the right to sell the asset at price $K$ at time $T$. The holder exercises if the asset crashes below the strike.
-    $$ H = (K - S_T^i)_+ = \max(K - S_T^i, 0) $$
+          $$ H = (K - S_T^i)_+ = \max(K - S_T^i, 0) $$
     \item \textbf{Basket Call Option:} Written on a linearly weighted basket of all $d$ risky assets with fixed weights $w_i$.
-    $$ H = \left(\sum_{i=1}^d w_i S_T^i - K\right)_+ $$
+          $$ H = \left(\sum_{i=1}^d w_i S_T^i - K\right)_+ $$
 \end{itemize}
 
 \paragraph{Path-Dependent (Exotic) Options:}
 \begin{itemize}
     \item \textbf{Asian Call Option:} The payoff depends on the arithmetic average price of the asset over the contract's life. This smoothens out volatility and makes the option generally cheaper than a vanilla call, while protecting the holder from potential market manipulation strictly at maturity.
-    $$ H = \left( \frac{1}{T} \sum_{t=1}^T S_t^i - K \right)_+ $$
+          $$ H = \left( \frac{1}{T} \sum_{t=1}^T S_t^i - K \right)_+ $$
     \item \textbf{Lookback Call Option:} The payoff depends on the optimal (maximum) price reached by the asset during the contract's life. By definition, this will always pay out at least as much as a vanilla call, making it strictly more expensive.
-    $$ H = \left( \max_{t=1, \dots, T} S_t^i - K \right)_+ $$
+          $$ H = \left( \max_{t=1, \dots, T} S_t^i - K \right)_+ $$
     \item \textbf{Barrier (Up-and-Out) Call Option:} The payoff is identical to a vanilla call option, provided the asset's price never touches or breaches an upper barrier $B$ during the entire life of the contract. If at any time $S_t^i \geq B$, the option is immediately knocked out and becomes worthless ($H = 0$).
-    $$ H = (S_T^i - K)_+ \mathbf{1}_{\{S_t^i < B, \forall t = 1, \dots, T\}} $$
+          $$ H = (S_T^i - K)_+ \mathbf{1}_{\{S_t^i < B, \forall t = 1, \dots, T\}} $$
 \end{itemize}
 
 Notice how indicator functions $\mathbf{1}_{\{\cdot\}}$ naturally model structural contingencies in path-dependent exotic options.
@@ -49,34 +49,39 @@ Notice how indicator functions $\mathbf{1}_{\{\cdot\}}$ naturally model structur
 The central paradigm of modern derivative pricing relies on the concept of \textbf{replication}. If a derivative's random payoff can be perfectly emulated by actively trading the underlying market assets dynamically, then the derivative provides no inherently new risk to the market.
 
 \begin{definition}[Replicable Payoff]
-A European payoff $H \in \mathcal{F}_T$ is said to be \textbf{replicable} (or \textbf{attainable}) if there exists a self-financing strategy $(\xi^0, \xi) = (\xi_t^0, \xi_t)_{t=1, \dots, T}$ such that the terminal value of its portfolio exactly matches the derivative's payoff in every possible scenario:
-$$
-H = V_T^{\xi_0, \xi} = \left(\xi_T^0, \xi_T\right) \cdot \left(S_T^0, S_T\right) \quad \mathbb{P}\text{-a.s.}
-$$
-This specific strategy is called the \textbf{replicating strategy} (or hedging strategy) for $H$.
+    A European payoff $H \in \mathcal{F}_T$ is said to be \textbf{replicable} (or \textbf{attainable}) if there exists a self-financing strategy $(\xi^0, \xi) = (\xi_t^0, \xi_t)_{t=1, \dots, T}$ such that the terminal value of its portfolio exactly matches the derivative's payoff in every possible scenario:
+    $$
+        H = V_T^{\xi_0, \xi} = \left(\xi_T^0, \xi_T\right) \cdot \left(S_T^0, S_T\right) \quad \mathbb{P}\text{-a.s.}
+    $$
+    This specific strategy is called the \textbf{replicating strategy} (or hedging strategy) for $H$.
 \end{definition}
 
 If $H$ is replicable, determining its fair price is conceptually straightforward using the No Arbitrage principle. If two assets (or portfolios) yield identical cash flows at all future states, they must have the exact same price today; otherwise, an investor could short the more expensive one, buy the cheaper one, and pocket a riskless initial difference. Therefore, the fair price of the payoff $H$ at time $t=0$ must precisely equal the initial capital required to set up its replicating portfolio, $V_0^{\xi_0, \xi}$.
 
 \begin{proposition} \label{prop:replicable_pricing}
-Assume the market satisfies the No-Arbitrage condition (hence at least one equivalent martingale measure $\mathbb{Q}$ exists). Let $H$ be a replicable European payoff. Then, for \textbf{any} replicating strategy $(\xi_0, \xi)$ and for \textbf{any} equivalent martingale measure $\mathbb{Q}$, the discounted value of the replicating portfolio satisfies:
-\begin{equation}
-\tilde{V}_t^{\xi_0, \xi} = \mathbb{E}^{\mathbb{Q}} \left[ \frac{H}{S_T^0} \mathrel{\Big|} \mathcal{F}_t \right] \quad \mathbb{Q}\text{-a.s. for } t = 0, \dots, T.
-\end{equation}
-In particular, the discounted portfolio process $(\tilde{V}_t^{\xi_0, \xi})_{t=0, \dots, T}$ is a true $\mathbb{F}$-adapted martingale under $\mathbb{Q}$.
+    Assume the market satisfies the No-Arbitrage condition (hence at least one equivalent martingale measure $\mathbb{Q}$ exists). Let $H$ be a replicable European payoff. Then, for \textbf{any} replicating strategy $(\xi_0, \xi)$ and for \textbf{any} equivalent martingale measure $\mathbb{Q}$, the discounted value of the replicating portfolio satisfies:
+    \begin{equation}
+        \tilde{V}_t^{\xi_0, \xi} = \mathbb{E}^{\mathbb{Q}} \left[ \frac{H}{S_T^0} \mathrel{\Big|} \mathcal{F}_t \right] \quad \mathbb{Q}\text{-a.s. for } t = 0, \dots, T.
+    \end{equation}
+    In particular, the discounted portfolio process $(\tilde{V}_t^{\xi_0, \xi})_{t=0, \dots, T}$ is a true $\mathbb{F}$-adapted martingale under $\mathbb{Q}$.
 \end{proposition}
 
 \begin{proof}[Proof and Derivation]
-Let $\mathbb{Q}$ be an equivalent martingale measure. By Proposition \ref{prop:self_financing_equiv}, the discounted value process for any self-financing strategy is given by the stochastic integral:
-$$ \tilde{V}_T^{\xi_0, \xi} = \tilde{V}_t^{\xi_0, \xi} + \sum_{k=t+1}^T \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1}). $$
-Taking the conditional expectation under $\mathbb{Q}$ given $\mathcal{F}_t$:
-$$ \mathbb{E}^{\mathbb{Q}}\left[ \tilde{V}_T^{\xi_0, \xi} \mid \mathcal{F}_t \right] = \tilde{V}_t^{\xi_0, \xi} + \sum_{k=t+1}^T \mathbb{E}^{\mathbb{Q}}\left[ \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1}) \mid \mathcal{F}_t \right]. $$
-Because $\xi_k$ is $\mathcal{F}_{k-1}$-measurable (predictable), and $\tilde{S}_k$ is a $\mathbb{Q}$-martingale, by the tower property of conditional expectation, the expected increments evaluate progressively to zero:
-$$ \mathbb{E}^{\mathbb{Q}}\left[ \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1}) \mid \mathcal{F}_t \right] = \mathbb{E}^{\mathbb{Q}}\left[ \mathbb{E}^{\mathbb{Q}}\left[ \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1}) \mid \mathcal{F}_{k-1} \right] \mid \mathcal{F}_t \right] = \mathbb{E}^{\mathbb{Q}}\left[ \xi_k \cdot 0 \mid \mathcal{F}_t \right] = 0. $$
-Hence, $\mathbb{E}^{\mathbb{Q}}\left[ \tilde{V}_T^{\xi_0, \xi} \mid \mathcal{F}_t \right] = \tilde{V}_t^{\xi_0, \xi}$. This demonstrates that $\tilde{V}$ is a martingale.
+    Let $\mathbb{Q}$ be an equivalent martingale measure. By Proposition \ref{prop:self_financing_equiv}, the discounted value process for any self-financing strategy is given by the stochastic integral:
+    $$ \tilde{V}_T^{\xi_0, \xi} = \tilde{V}_t^{\xi_0, \xi} + \sum_{k=t+1}^T \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1}). $$
+    Taking the conditional expectation under $\mathbb{Q}$ given $\mathcal{F}_t$:
+    $$ \mathbb{E}^{\mathbb{Q}}\left[ \tilde{V}_T^{\xi_0, \xi} \mid \mathcal{F}_t \right] = \tilde{V}_t^{\xi_0, \xi} + \sum_{k=t+1}^T \mathbb{E}^{\mathbb{Q}}\left[ \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1}) \mid \mathcal{F}_t \right]. $$
+    To understand this critical step, we must evaluate the expectation $\mathbb{E}^{\mathbb{Q}}\left[ \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1}) \mid \mathcal{F}_t \right]$ for a future time $k > t$.
+    Because the trading strategy $\xi_k$ is decided at time $k-1$ (it is $\mathcal{F}_{k-1}$-measurable or predictable), it is not yet known at our current time $t$. Therefore, we cannot simply factor $\xi_k$ out of the expectation conditioned on $\mathcal{F}_t$.
+    Instead, we apply the \textbf{tower property of conditional expectation} to first condition on the intermediate time $k-1$, taking advantage of the fact that $\mathcal{F}_t \subseteq \mathcal{F}_{k-1}$:
+    $$ \mathbb{E}^{\mathbb{Q}}\left[ \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1}) \mid \mathcal{F}_t \right] = \mathbb{E}^{\mathbb{Q}}\left[ \mathbb{E}^{\mathbb{Q}}\left[ \xi_k \cdot (\tilde{S}_k - \tilde{S}_{k-1}) \mid \mathcal{F}_{k-1} \right] \mathrel{\Big|} \mathcal{F}_t \right] $$
+    In the inner expectation conditioned on $\mathcal{F}_{k-1}$, the variable $\xi_k$ behaves as a known constant and can be factored out. Furthermore, because the discounted price $\tilde{S}$ is a $\mathbb{Q}$-martingale, the expected price change from $k-1$ to $k$ is perfectly zero: $\mathbb{E}^{\mathbb{Q}}\left[ \tilde{S}_k - \tilde{S}_{k-1} \mid \mathcal{F}_{k-1} \right] = 0$.
+    The expected increments therefore evaluate progressively to zero:
+    $$ \dots = \mathbb{E}^{\mathbb{Q}}\left[ \xi_k \cdot \underbrace{\mathbb{E}^{\mathbb{Q}}\left[ (\tilde{S}_k - \tilde{S}_{k-1}) \mid \mathcal{F}_{k-1} \right]}_{= 0} \mathrel{\Big|} \mathcal{F}_t \right] = \mathbb{E}^{\mathbb{Q}}[ \xi_k \cdot 0 \mid \mathcal{F}_t ] = 0 $$
+    Hence, $\mathbb{E}^{\mathbb{Q}}\left[ \tilde{V}_T^{\xi_0, \xi} \mid \mathcal{F}_t \right] = \tilde{V}_t^{\xi_0, \xi}$. This demonstrates that $\tilde{V}$ is a martingale.
 
-Because the strategy strictly replicates the payoff, $V_T^{\xi_0, \xi} = H$ almost surely. Dividing by the numéraire gives $\tilde{V}_T^{\xi_0, \xi} = H / S_T^0$. Substituting this into our martingale expression yields the final result:
-$$ \tilde{V}_t^{\xi_0, \xi} = \mathbb{E}^{\mathbb{Q}} \left[ \frac{H}{S_T^0} \mathrel{\Big|} \mathcal{F}_t \right]. $$
+    Because the strategy strictly replicates the payoff, $V_T^{\xi_0, \xi} = H$ almost surely. Dividing by the numéraire gives $\tilde{V}_T^{\xi_0, \xi} = H / S_T^0$. Substituting this into our martingale expression yields the final result:
+    $$ \tilde{V}_t^{\xi_0, \xi} = \mathbb{E}^{\mathbb{Q}} \left[ \frac{H}{S_T^0} \mathrel{\Big|} \mathcal{F}_t \right]. $$
 \end{proof}
 
 Evaluating this at $t=0$, where $\mathcal{F}_0 = \{\emptyset, \Omega\}$ is trivial, the conditional expectation collapses to a simple expectation. The initial price of the replicating portfolio is therefore fixed and deterministic:
@@ -87,24 +92,24 @@ $$ V_0^{\xi_0, \xi} = \mathbb{E}^{\mathbb{Q}} \left[ \frac{H}{S_T^0} \right]. $$
 In the broader context—what if a derivative is \textbf{not} replicable? Can we still price it without introducing inconsistencies into the market?
 
 \begin{definition}[No-Arbitrage Price]
-Assume the market modeling the primary assets $(S^0, \dots, S^d)$ is arbitrage-free. We formally call $\pi_0 \in \mathbb{R}$ an \textbf{arbitrage-free price} of an European payoff $H$ if one can artificially augment the original market with a newly traded asset $X$ defined by:
-$$ X_0 = \pi_0 \quad \text{and} \quad X_T = H $$
-such that the structurally expanded market consisting of $d+2$ assets $(S^0, S^1, \dots, S^d, X)$ remains strictly arbitrage-free.
+    Assume the market modeling the primary assets $(S^0, \dots, S^d)$ is arbitrage-free. We formally call $\pi_0 \in \mathbb{R}$ an \textbf{arbitrage-free price} of an European payoff $H$ if one can artificially augment the original market with a newly traded asset $X$ defined by:
+    $$ X_0 = \pi_0 \quad \text{and} \quad X_T = H $$
+    such that the structurally expanded market consisting of $d+2$ assets $(S^0, S^1, \dots, S^d, X)$ remains strictly arbitrage-free.
 \end{definition}
 
 By invoking the First Fundamental Theorem of Asset Pricing on this augmented market, standard integration yields a comprehensive characterization of all possible prices that do not violate No Arbitrage.
 
 \begin{proposition}
-The set of all valid arbitrage-free prices for any bounded European payoff $H$ takes the exact functional form:
-$$ \left\{ \mathbb{E}^{\mathbb{Q}}\left[ \frac{H}{S_T^0} \right] : \mathbb{Q} \text{ is an equivalent martingale measure for } S, \text{ such that } \mathbb{E}^{\mathbb{Q}}\left[ \left| \frac{H}{S_T^0} \right| \right] < \infty \right\}. $$
+    The set of all valid arbitrage-free prices for any bounded European payoff $H$ takes the exact functional form:
+    $$ \left\{ \mathbb{E}^{\mathbb{Q}}\left[ \frac{H}{S_T^0} \right] : \mathbb{Q} \text{ is an equivalent martingale measure for } S, \text{ such that } \mathbb{E}^{\mathbb{Q}}\left[ \left| \frac{H}{S_T^0} \right| \right] < \infty \right\}. $$
 \end{proposition}
 
-This set represents an interval of prices $[p_{min}, p_{max}]$. If you sell the derivative for more than $p_{max}$, you introduce an arbitrage in the market (you priced it too high); if you sell it for less than $p_{min}$, you also create an arbitrage (you priced it too low). 
+This set represents an interval of prices $[p_{min}, p_{max}]$. If you sell the derivative for more than $p_{max}$, you introduce an arbitrage in the market (you priced it too high); if you sell it for less than $p_{min}$, you also create an arbitrage (you priced it too low).
 
-Critically, when a payoff $H$ \textbf{is} replicable, its initial capital $V_0^{\xi}$ is completely unaffected by the subjective choice of the measure $\mathbb{Q}$! Every EMM $\mathbb{Q}$ must agree on $\mathbb{E}^{\mathbb{Q}}[H / S_T^0]$. 
+Critically, when a payoff $H$ \textbf{is} replicable, its initial capital $V_0^{\xi}$ is completely unaffected by the subjective choice of the measure $\mathbb{Q}$! Every EMM $\mathbb{Q}$ must agree on $\mathbb{E}^{\mathbb{Q}}[H / S_T^0]$.
 
 \begin{proposition} \label{prop:unique_price}
-Assume the NA condition holds. Let $H$ be a strongly replicable European derivative. Then $H$ has a \textbf{unique} arbitrage-free price:
-$$ V_0^{\xi_0, \xi} = \mathbb{E}^{\mathbb{Q}} \left[ \frac{H}{S_T^0} \right] $$
-where $(\xi_0, \xi)$ is \textbf{any} replicating portfolio and $\mathbb{Q}$ is \textbf{any} equivalent martingale measure. The set of valid prices naturally collapses to a single unique point.
+    Assume the NA condition holds. Let $H$ be a strongly replicable European derivative. Then $H$ has a \textbf{unique} arbitrage-free price:
+    $$ V_0^{\xi_0, \xi} = \mathbb{E}^{\mathbb{Q}} \left[ \frac{H}{S_T^0} \right] $$
+    where $(\xi_0, \xi)$ is \textbf{any} replicating portfolio and $\mathbb{Q}$ is \textbf{any} equivalent martingale measure. The set of valid prices naturally collapses to a single unique point.
 \end{proposition}

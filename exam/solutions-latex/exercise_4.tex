@@ -1,0 +1,102 @@
+\section{Exercise 4. Markov Process and Average Options}
+
+\subsection{I) Introduction}
+
+\begin{enumerate}
+      \item \textbf{Show that $\mathcal{F}_n = \sigma(S_1, \dots, S_n)$ and its meaning.}
+
+            By definition, $\mathcal{F}_n = \sigma(U_1, \dots, U_n)$.
+            We know that $S_k = S_0 \prod_{i=1}^k U_i$ for any $k \ge 1$. Since $S_0$ is a strictly positive constant, each $S_k$ is a continuous function of $U_1, \dots, U_k$, meaning $S_k$ is measurable with respect to $\sigma(U_1, \dots, U_k)$. Therefore, $\sigma(S_1, \dots, S_n) \subseteq \sigma(U_1, \dots, U_n) = \mathcal{F}_n$.
+
+            Conversely, we can recover $U_k$ from the prices since $U_k = \frac{S_k}{S_{k-1}}$ for $k \ge 1$. Thus, each $U_k$ is a measurable function of $S_{k-1}$ and $S_k$, which means $U_k$ is measurable with respect to $\sigma(S_1, \dots, S_n)$. Therefore, $\mathcal{F}_n = \sigma(U_1, \dots, U_n) \subseteq \sigma(S_1, \dots, S_n)$.
+
+            We conclude that $\mathcal{F}_n = \sigma(S_1, \dots, S_n)$. Economically, $\mathcal{F}_n$ represents the information available to investors at time $n$, which is exactly the entire history of the risky asset's prices up to that time.
+
+      \item \textbf{Condition for an arbitrage-free and complete market.}
+
+            In the standard binomial model, the necessary and sufficient condition for the market to be arbitrage-free and complete is:
+            \[ d < 1+r < u \]
+
+      \item \textbf{Defining $\mathbb{P}^*$ and the behavior of $(U_n)$.}
+
+            For the discounted price process $\hat{S}_n = \frac{S_n}{(1+r)^n}$ to be a martingale under $\mathbb{P}^*$, we need $\mathbb{E}^*[\hat{S}_{n+1} \mid \mathcal{F}_n] = \hat{S}_n$.
+
+            This implies $\mathbb{E}^*\left[ \frac{S_n U_{n+1}}{(1+r)^{n+1}} \mid \mathcal{F}_n \right] = \frac{S_n}{(1+r)^n}$.
+
+            Since $S_n$ is $\mathcal{F}_n$-measurable, it can be taken out of the expectation:
+            \[ \frac{S_n}{(1+r)^{n+1}} \mathbb{E}^*[U_{n+1} \mid \mathcal{F}_n] = \frac{S_n}{(1+r)^n} \implies \mathbb{E}^*[U_{n+1} \mid \mathcal{F}_n] = 1+r \]
+
+            Let $p^* = \mathbb{P}^*(U_{n+1} = u \mid \mathcal{F}_n)$. Since $U_{n+1}$ only takes values $u$ and $d$:
+            \[ p^* u + (1 - p^*) d = 1+r \]
+
+            Solving for $p^*$:
+            \[ p^*(u - d) + d = 1+r \implies p^* = \frac{1+r-d}{u-d} \]
+
+            Under $\mathbb{P}^*$, the random variables $(U_n)_{n \in \{1, \dots, N\}}$ are independent and identically distributed (i.i.d.), each taking the value $u$ with probability $p^*$ and $d$ with probability $1 - p^*$.
+
+      \item \textbf{Proving the conditional expectation property.}
+
+            Let $g$ be a Borel measurable and integrable function. We want to evaluate $\mathbb{E}^*[g(S_1, \dots, S_n, U_{n+1}) \mid \mathcal{F}_n]$.
+
+            The random variables $S_1, \dots, S_n$ are $\mathcal{F}_n$-measurable.
+            The random variable $U_{n+1}$ is independent of $\mathcal{F}_n$ under the probability measure $\mathbb{P}^*$ (since $U_i$ are i.i.d.).
+
+            By the Independence Lemma for conditional expectations (also known as the Freezing Lemma), if we have a function $g(X, Y)$ where $X$ is $\mathcal{F}$-measurable and $Y$ is independent of $\mathcal{F}$, then $\mathbb{E}[g(X,Y) \mid \mathcal{F}] = G(X)$, where $G(x) = \mathbb{E}[g(x,Y)]$.
+
+            Applying this directly with $X = (S_1, \dots, S_n)$ and $Y = U_{n+1}$:
+            \[ \mathbb{E}^*[g(S_1, \dots, S_n, U_{n+1}) \mid \mathcal{F}_n] = G(S_1, \dots, S_n) \]
+            where $G(s_1, \dots, s_n) = \mathbb{E}^*[g(s_1, \dots, s_n, U_{n+1})]$.
+
+\end{enumerate}
+
+\subsection{II) Option Pricing}
+
+\begin{enumerate}
+      \item \textbf{Evaluating the conditional expectation for $h(S_{n+1}, \Sigma_{n+1})$.}
+
+            We have $S_{n+1} = S_n U_{n+1}$ and $\Sigma_{n+1} = \Sigma_n + S_{n+1} = \Sigma_n + S_n U_{n+1}$.
+
+            Therefore, $h(S_{n+1}, \Sigma_{n+1}) = h(S_n U_{n+1}, \Sigma_n + S_n U_{n+1})$.
+            Let's define a function $g(S_n, \Sigma_n, U_{n+1}) = h(S_n U_{n+1}, \Sigma_n + S_n U_{n+1})$.
+
+            Using the result from I.4, since $S_n$ and $\Sigma_n$ are $\mathcal{F}_n$-measurable and $U_{n+1}$ is independent of $\mathcal{F}_n$:
+            \[ \mathbb{E}^*[h(S_n U_{n+1}, \Sigma_n + S_n U_{n+1}) \mid \mathcal{F}_n] = G(S_n, \Sigma_n) \]
+            where $G(x, y) = \mathbb{E}^*[h(x U_{n+1}, y + x U_{n+1})]$.
+
+            To compute this expectation over $U_{n+1}$, we use its distribution under $\mathbb{P}^*$ (let $\pi = p^* = \frac{1+r-d}{u-d}$):
+            \[ G(x, y) = \pi h(x u, y + x u) + (1 - \pi) h(x d, y + x d) \]
+
+            Substituting $S_n$ for $x$ and $\Sigma_n$ for $y$ yields:
+            \[ \mathbb{E}^*[h(S_{n+1}, \Sigma_{n+1}) \mid \mathcal{F}_n] = \pi h(u S_n, \Sigma_n + u S_n) + (1 - \pi) h(d S_n, \Sigma_n + d S_n) \]
+
+      \item \textbf{Deducing the Markovian property of $C_n$.}
+
+            A process $C = (C_n)_{n \in \{0, \dots, N\}}$ is a Markov process under $\mathbb{P}^*$ with respect to the filtration $\mathbb{F}$ if, for any bounded measurable function $h$, $\mathbb{E}^*[h(C_{n+1}) \mid \mathcal{F}_n] = \mathbb{E}^*[h(C_{n+1}) \mid C_n]$.
+
+            From the result in II.1, for any function $h$, the conditional expectation $\mathbb{E}^*[h(C_{n+1}) \mid \mathcal{F}_n]$ depends on the past history only through the values of $S_n$ and $\Sigma_n$.
+
+            Since $C_n = (S_n, \Sigma_n)$, we have $\mathbb{E}^*[h(C_{n+1}) \mid \mathcal{F}_n] = f(C_n)$ for some function $f$. This confirms that $C_n$ is an $(\mathbb{F}, \mathbb{P}^*)$-Markovian process.
+
+      \item \textbf{Arbitrage-free value of the average option and its recursive form.}
+
+            By the Fundamental Theorem of Asset Pricing, the arbitrage-free value $E_n$ at time $n$ of a European option with payoff $e(S_N, \Sigma_N)$ at maturity $N$ is the discounted expected payoff under the risk-neutral measure $\mathbb{P}^*$:
+            \[ E_n = \mathbb{E}^*\left[ \frac{1}{(1+r)^{N-n}} e(S_N, \Sigma_N) \mid \mathcal{F}_n \right] \]
+
+            We can also express this recursively. At maturity $N$, the value is simply the payoff:
+            \[ E_N = e(S_N, \Sigma_N) \]
+            So we can define $e_N(x, y) = e(x, y)$.
+
+            For any time $n < N$, the value is the discounted expected value of the option at time $n+1$:
+            \[ E_n = \frac{1}{1+r} \mathbb{E}^*[E_{n+1} \mid \mathcal{F}_n] \]
+
+            Assume by backward induction that at time $n+1$, $E_{n+1} = e_{n+1}(S_{n+1}, \Sigma_{n+1})$ for some function $e_{n+1}$. Then:
+            \[ E_n = \frac{1}{1+r} \mathbb{E}^*[e_{n+1}(S_{n+1}, \Sigma_{n+1}) \mid \mathcal{F}_n] \]
+
+            Applying the result from II.1 to the function $e_{n+1}$:
+            \[ E_n = \frac{1}{1+r} \left[ \pi e_{n+1}(u S_n, \Sigma_n + u S_n) + (1 - \pi) e_{n+1}(d S_n, \Sigma_n + d S_n) \right] \]
+
+            This shows that $E_n$ is a function of only $S_n$ and $\Sigma_n$. We can define this function $e_n(x, y)$ as:
+            \[ e_n(x, y) = \frac{1}{1+r} \left[ \pi e_{n+1}(u x, x u + y) + (1 - \pi) e_{n+1}(d x, x d + y) \right] \]
+            Thus, $E_n = e_n(S_n, \Sigma_n)$, proving the required recursive relationship.
+
+\end{enumerate}

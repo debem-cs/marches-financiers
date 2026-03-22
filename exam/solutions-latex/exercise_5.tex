@@ -1,0 +1,93 @@
+\section{Exercise 5. Risk Management}
+
+\begin{enumerate}
+      \item \textsl{Compute the loss $L(x,p)$.}
+
+            The initial value of the portfolio at time 0 is given by:
+            \[ V_0 = xS_0 + yS^0_0 - p \]
+            Since $S_0 = s$, $S^0_0 = 1$, and $(x, y)$ is a hedging strategy such that $p = xs + y$, we can substitute $y$:
+            \[ V_0 = xs + (p - xs) - p = 0 \]
+
+            The value of the portfolio at time 1 is:
+            \[ V_1 = xS_1 + yS^0_1 - F(S_1) \]
+            Since $S^0_1 = 1$, $S_1 = s + \Delta S$, and $y = p - xs$:
+            \[ V_1 = x(s + \Delta S) + p - xs - F(S_1) = p + x\Delta S - F(S_1) \]
+
+            The loss $L(x,p)$ is defined as $V_0 - V_1$:
+            \[ L(x,p) = 0 - (p + x\Delta S - F(S_1)) = F(S_1) - p - x\Delta S \]
+
+      \item \textsl{Optimality conditions and solving for $p^*$.}
+
+            We want to minimize the risk measure $\rho(L(x,p)) = \mathbb{E}[L(x,p)^2] = \mathbb{E}[(F(S_1) - p - x\Delta S)^2]$.
+            The first-order optimality conditions require the partial derivatives with respect to $p$ and $x$ to be zero:
+
+            With respect to $p$:
+            \[ \frac{\partial}{\partial p} \mathbb{E}[(F(S_1) - p - x\Delta S)^2] = \mathbb{E}[-2(F(S_1) - p - x\Delta S)] = 0 \]
+            \[ \mathbb{E}[F(S_1)] - p - x\mathbb{E}[\Delta S] = 0 \implies p = \mathbb{E}[F(S_1)] - x\mathbb{E}[\Delta S] \]
+
+            With respect to $x$:
+            \[ \frac{\partial}{\partial x} \mathbb{E}[(F(S_1) - p - x\Delta S)^2] = \mathbb{E}[-2\Delta S(F(S_1) - p - x\Delta S)] = 0 \]
+            \[ \mathbb{E}[F(S_1)\Delta S] - p\mathbb{E}[\Delta S] - x\mathbb{E}[\Delta S^2] = 0 \]
+
+            Substitute the expression for $p$ into this second equation:
+            \[ \mathbb{E}[F(S_1)\Delta S] - (\mathbb{E}[F(S_1)] - x\mathbb{E}[\Delta S])\mathbb{E}[\Delta S] - x\mathbb{E}[\Delta S^2] = 0 \]
+            \[ \mathbb{E}[F(S_1)\Delta S] - \mathbb{E}[F(S_1)]\mathbb{E}[\Delta S] + x(\mathbb{E}[\Delta S])^2 - x\mathbb{E}[\Delta S^2] = 0 \]
+
+            Factor out $x$ and recognize that $\mathbb{E}[\Delta S^2] - (\mathbb{E}[\Delta S])^2 = \mathrm{var}(\Delta S)$:
+            \[ x \cdot \mathrm{var}(\Delta S) = \mathbb{E}[F(S_1)\Delta S] - \mathbb{E}[F(S_1)]\mathbb{E}[\Delta S] \]
+            \[ x^* = \frac{\mathbb{E}[F(S_1)\Delta S] - \mathbb{E}[F(S_1)]\mathbb{E}[\Delta S]}{\mathrm{var}(\Delta S)} \]
+
+            Now, plug $x^*$ back into the equation for $p$:
+            \[ p^* = \mathbb{E}[F(S_1)] - \left( \frac{\mathbb{E}[F(S_1)\Delta S] - \mathbb{E}[F(S_1)]\mathbb{E}[\Delta S]}{\mathrm{var}(\Delta S)} \right) \mathbb{E}[\Delta S] \]
+            \[ p^* = \frac{\mathbb{E}[F(S_1)]\mathrm{var}(\Delta S) - \mathbb{E}[F(S_1)\Delta S]\mathbb{E}[\Delta S] + \mathbb{E}[F(S_1)](\mathbb{E}[\Delta S])^2}{\mathrm{var}(\Delta S)} \]
+
+            Since $\mathrm{var}(\Delta S) + (\mathbb{E}[\Delta S])^2 = \mathbb{E}[\Delta S^2]$, we can combine the terms with $\mathbb{E}[F(S_1)]$:
+            \[ p^* = \frac{\mathbb{E}[\Delta S^2]\mathbb{E}[F(S_1)] - \mathbb{E}[\Delta S]\mathbb{E}[F(S_1)\Delta S]}{\mathrm{var}(\Delta S)} \]
+
+      \item \textsl{Assuming $S$ is a martingale under $\mathbb{P}$.}
+
+            If $S$ is a martingale, then $\mathbb{E}[S_1 \mid \mathcal{F}_0] = S_0$. This implies $\mathbb{E}[\Delta S] = 0$.
+            Substituting $\mathbb{E}[\Delta S] = 0$ into the formula for $p^*$:
+            \[ p^* = \frac{\mathbb{E}[\Delta S^2]\mathbb{E}[F(S_1)] - 0}{\mathrm{var}(\Delta S)} \]
+            Since $\mathbb{E}[\Delta S] = 0$, we have $\mathrm{var}(\Delta S) = \mathbb{E}[\Delta S^2]$. Therefore:
+            \[ p^* = \frac{\mathbb{E}[\Delta S^2]\mathbb{E}[F(S_1)]}{\mathbb{E}[\Delta S^2]} = \mathbb{E}[F(S_1)] \]
+
+            Because the risk-free asset is constant ($S^0 \equiv 1$), the interest rate $r=0$. Furthermore, since $S$ is a martingale under $\mathbb{P}$, $\mathbb{P}$ is the risk-neutral measure. The arbitrage-free price is precisely the expected payoff under the risk-neutral measure discounted at rate $r=0$, which is $\mathbb{E}[F(S_1)]$. Thus, $p^*$ is exactly equal to the arbitrage-free price.
+
+      \item \textsl{Compute $p^*$ in the binomial model context.}
+
+            Let $F_u = F((1+u)s)$ and $F_d = F((1+d)s)$.
+            We know $\Delta S$ takes values $us$ with probability $q$ and $ds$ with probability $1-q$.
+            \begin{align*}
+                  \mathbb{E}[\Delta S]       & = q(us) + (1-q)(ds) = s(qu + (1-q)d)                 \\
+                  \mathbb{E}[\Delta S^2]     & = q(u^2 s^2) + (1-q)(d^2 s^2) = s^2(qu^2 + (1-q)d^2) \\
+                  \mathbb{E}[F(S_1)]         & = qF_u + (1-q)F_d                                    \\
+                  \mathbb{E}[F(S_1)\Delta S] & = qF_u(us) + (1-q)F_d(ds) = s(quF_u + (1-q)dF_d)
+            \end{align*}
+
+            Using the hint $\mathrm{var}(\Delta S) = s^2 q(1-q)(u-d)^2$, we evaluate the coefficient for $F_u$ in the $p^*$ formula:
+            \[ \frac{q s^2(qu^2 + (1-q)d^2) - s(qu + (1-q)d) \cdot q u s}{s^2 q(1-q)(u-d)^2} \]
+            \[ = \frac{q(qu^2 + (1-q)d^2 - qu^2 - (1-q)ud)}{q(1-q)(u-d)^2} = \frac{q(1-q)d(d-u)}{q(1-q)(u-d)^2} = \frac{-d}{u-d} \]
+
+            Similarly, evaluating the coefficient for $F_d$:
+            \[ \frac{(1-q) s^2(qu^2 + (1-q)d^2) - s(qu + (1-q)d) \cdot (1-q) d s}{s^2 q(1-q)(u-d)^2} \]
+            \[ = \frac{(1-q)(qu^2 + (1-q)d^2 - qud - (1-q)d^2)}{q(1-q)(u-d)^2} = \frac{(1-q)qu(u-d)}{q(1-q)(u-d)^2} = \frac{u}{u-d} \]
+
+            Summing these parts gives:
+            \[ p^* = -\frac{d}{u-d}F((1+u)s) + \frac{u}{u-d}F((1+d)s) \]
+
+            This matches the arbitrage-free price. In a binomial model with $r=0$, the risk-neutral probabilities are $\pi_u = \frac{0-d}{u-d}$ and $\pi_d = \frac{u-0}{u-d}$. The arbitrage-free price is $\pi_u F_u + \pi_d F_d$, which is exactly what we derived for $p^*$.
+
+      \item \textsl{Perfect Hedging.}
+
+            In the binomial model, the market is complete. We can define a strategy $(\overline{x}, \overline{p})$ that perfectly replicates the derivative.
+            Let $\overline{x} = \frac{F_u - F_d}{s(u-d)}$ and $\overline{p} = p^*$.
+
+            For the up state: $L = F_u - p^* - \overline{x}(us) = 0$
+            For the down state: $L = F_d - p^* - \overline{x}(ds) = 0$
+
+            Since the loss $L(\overline{x}, \overline{p})$ is identically 0 in all states of the world, its risk measure $\rho(L) = \mathbb{E}[0^2] = 0$.
+
+            Comment: In a complete market, quadratic risk minimization \& perfect replication are equivalent. The minimal risk is zero, and the optimal initial capital $p^*$ required for this strategy uniquely aligns with the arbitrage-free price.
+
+\end{enumerate}

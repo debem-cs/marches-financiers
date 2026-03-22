@@ -1,0 +1,84 @@
+\section{Exercise 2. American/European Option}
+
+\begin{enumerate}
+      \item \textbf{Recursive formulation of $\mathcal{C}_n$}
+
+            Let $\mathbb{P}^*$ be the unique Equivalent Martingale Measure (risk-neutral measure) in this complete arbitrage-free market.
+            The arbitrage-free value of an American option $\mathcal{C}_n$ at time $n$ is given by the Snell envelope of the discounted payoff process. The recursive formulation (backward induction) is:
+
+            At maturity $N$:
+            \[ \mathcal{C}_N = Z_N \]
+
+            For $n \in \{0, \dots, N-1\}$:
+            \[ \mathcal{C}_n = \max\left(Z_n, \frac{1}{1+r} \mathbb{E}^*\left[\mathcal{C}_{n+1} \mid \mathcal{F}_n\right]\right) \]
+
+            Here, $Z_n$ represents the intrinsic value (immediate exercise value), and $\frac{1}{1+r} \mathbb{E}^*[\mathcal{C}_{n+1} \mid \mathcal{F}_n]$ represents the continuation value.
+
+      \item \textbf{Showing that $\mathcal{C}_n \ge c_n$}
+
+            The European option value $c_n$ at time $n$ is the expected discounted payoff at maturity $N$:
+            \[ c_n = \mathbb{E}^*\left[\frac{1}{(1+r)^{N-n}} Z_N \mid \mathcal{F}_n\right] \]
+
+            The American option gives the holder the right to exercise at any stopping time $\tau$ taking values in $\{n, \dots, N\}$. Its value is the supremum over all such stopping times:
+            \[ \mathcal{C}_n = \sup_{\tau \in \mathcal{T}_{n, N}} \mathbb{E}^*\left[\frac{1}{(1+r)^{\tau-n}} Z_\tau \mid \mathcal{F}_n\right] \]
+
+            Since choosing to hold the option until maturity ($\tau = N$) is one possible valid stopping time in the set $\mathcal{T}_{n, N}$, the supremum over all possible stopping times must be greater than or equal to the expected value of this specific strategy:
+            \[ \mathcal{C}_n \ge \mathbb{E}^*\left[\frac{1}{(1+r)^{N-n}} Z_N \mid \mathcal{F}_n\right] = c_n \]
+
+            Therefore, $\mathcal{C}_n \ge c_n$ for all $n = 0 \dots N$.
+
+      \item \textbf{Showing that if $c_n \ge Z_n$ then $\mathcal{C}_n = c_n$}
+
+            We will prove this by backward induction on $n$.
+
+            Base case at $n = N$:
+            By definition, $\mathcal{C}_N = Z_N$ and $c_N = Z_N$. Thus, $\mathcal{C}_N = c_N$.
+
+            Inductive step:
+            Assume that for a given $n+1 \le N$, we have $\mathcal{C}_{n+1} = c_{n+1}$.
+            We need to show that $\mathcal{C}_n = c_n$.
+
+            Using the recursive formulation for the American option:
+            \[ \mathcal{C}_n = \max\left(Z_n, \frac{1}{1+r} \mathbb{E}^*\left[\mathcal{C}_{n+1} \mid \mathcal{F}_n\right]\right) \]
+
+            By our induction hypothesis, we replace $\mathcal{C}_{n+1}$ with $c_{n+1}$:
+            \[ \mathcal{C}_n = \max\left(Z_n, \frac{1}{1+r} \mathbb{E}^*\left[c_{n+1} \mid \mathcal{F}_n\right]\right) \]
+
+            We know that the discounted European option price process is a martingale under $\mathbb{P}^*$, which means:
+            \[ c_n = \frac{1}{1+r} \mathbb{E}^*\left[c_{n+1} \mid \mathcal{F}_n\right] \]
+
+            Substituting this back into the maximum equation:
+            \[ \mathcal{C}_n = \max(Z_n, c_n) \]
+
+            The problem statement provides the condition that $c_n \ge Z_n$ for all $n$. Therefore, the maximum between $Z_n$ and $c_n$ is simply $c_n$:
+            \[ \mathcal{C}_n = c_n \]
+
+            By induction, $\mathcal{C}_n = c_n$ holds for all $n = 0 \dots N$.
+
+      \item \textbf{Application to a European Call option}
+
+            For a call option on a single risky asset $S$ with strike $K$ and maturity $N$, the payoff is $Z_n = (S_n - K)_+$.
+
+            We want to check if the condition $c_n \ge Z_n$ holds. The European call price is:
+            \[ c_n = \mathbb{E}^*\left[\frac{1}{(1+r)^{N-n}} (S_N - K)_+ \mid \mathcal{F}_n\right] \]
+
+            By Jensen's inequality, since the function $x \mapsto \max(x, 0)$ is convex:
+            \[ c_n \ge \left( \mathbb{E}^*\left[\frac{S_N - K}{(1+r)^{N-n}} \mid \mathcal{F}_n\right] \right)_+ \]
+            \[ c_n \ge \left( \mathbb{E}^*\left[\frac{S_N}{(1+r)^{N-n}} \mid \mathcal{F}_n\right] - \frac{K}{(1+r)^{N-n}} \right)_+ \]
+
+            Since the discounted stock price is a martingale under $\mathbb{P}^*$, we have $\mathbb{E}^*[\frac{S_N}{(1+r)^{N-n}} \mid \mathcal{F}_n] = S_n$.
+            \[ c_n \ge \left( S_n - \frac{K}{(1+r)^{N-n}} \right)_+ \]
+
+            Given that the interest rate $r \ge 0$, it follows that $(1+r)^{N-n} \ge 1$, which implies $\frac{K}{(1+r)^{N-n}} \le K$.
+            Subtracting a smaller number yields a larger result, so:
+            \[ S_n - \frac{K}{(1+r)^{N-n}} \ge S_n - K \]
+
+            Applying the positive part operator preserves this inequality:
+            \[ \left( S_n - \frac{K}{(1+r)^{N-n}} \right)_+ \ge (S_n - K)_+ \]
+
+            Therefore, we conclude:
+            \[ c_n \ge (S_n - K)_+ = Z_n \]
+
+            Since $c_n \ge Z_n$ for all $n$, we can apply the result from question 3 to conclude that $\mathcal{C}_n = c_n$. An American call option on a non-dividend-paying asset has the exact same price as a European call option, meaning it is never optimal to exercise it early.
+
+\end{enumerate}

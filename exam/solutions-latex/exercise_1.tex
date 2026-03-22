@@ -1,0 +1,80 @@
+\section{Exercise 1. Chooser Option}
+
+\begin{enumerate}
+      \item \textbf{Fundamental Theorem of Asset Pricing (FTAP)}
+
+            In a finite discrete-time market, the market is arbitrage-free if and only if there exists an Equivalent Martingale Measure (EMM), denoted by $\mathbb{P}^*$, such that the discounted asset price process $(\tilde{S}_n)_{n \in \mathbb{N}}$ where $\tilde{S}_n = e^{-rn} S_n$ is a martingale under $\mathbb{P}^*$.
+
+            Furthermore, the market is complete if and only if this Equivalent Martingale Measure $\mathbb{P}^*$ is unique. Under this unique EMM, the arbitrage-free price $V_n$ at time $n$ of any attainable $\mathcal{F}_N$-measurable payoff $X$ at maturity $N$ is given by the conditional expectation of its discounted payoff:
+            \[ V_n = \mathbb{E}^*\left[ e^{-r(N-n)} X \mid \mathcal{F}_n \right] \]
+
+      \item \textbf{Arbitrage-free price at $T_c$}
+
+            At the decision date $T_c$, the buyer can choose whether the option becomes a Call or a Put. A rational investor will choose the option with the highest value at that time.
+
+            The payoff at time $N$ is given by $(S_N - K)_+ \mathds{1}_{C_{T_c} \ge P_{T_c}} + (K - S_N)_+ \mathds{1}_{C_{T_c} < P_{T_c}}$.
+
+            Using the risk-neutral pricing formula from time $T_c$, the price of the chooser option at $T_c$, let's denote it $V_{T_c}$, is:
+            \[ V_{T_c} = \mathbb{E}^*\left[ e^{-r(N-T_c)} \left( (S_N - K)_+ \mathds{1}_{C_{T_c} \ge P_{T_c}} + (K - S_N)_+ \mathds{1}_{C_{T_c} < P_{T_c}} \right) \mid \mathcal{F}_{T_c} \right] \]
+
+            Since the indicator functions $\mathds{1}_{C_{T_c} \ge P_{T_c}}$ and $\mathds{1}_{C_{T_c} < P_{T_c}}$ are $\mathcal{F}_{T_c}$-measurable, we can take them out of the conditional expectation:
+            \[ V_{T_c} = \mathds{1}_{C_{T_c} \ge P_{T_c}} \mathbb{E}^*\left[ e^{-r(N-T_c)} (S_N - K)_+ \mid \mathcal{F}_{T_c} \right] + \mathds{1}_{C_{T_c} < P_{T_c}} \mathbb{E}^*\left[ e^{-r(N-T_c)} (K - S_N)_+ \mid \mathcal{F}_{T_c} \right] \]
+
+            Recognizing the pricing formulas for the Call and Put options at time $T_c$:
+            \[ C_{T_c} = \mathbb{E}^*\left[ e^{-r(N-T_c)} (S_N - K)_+ \mid \mathcal{F}_{T_c} \right] \]
+            \[ P_{T_c} = \mathbb{E}^*\left[ e^{-r(N-T_c)} (K - S_N)_+ \mid \mathcal{F}_{T_c} \right] \]
+
+            We get:
+            \[ V_{T_c} = \mathds{1}_{C_{T_c} \ge P_{T_c}} C_{T_c} + \mathds{1}_{C_{T_c} < P_{T_c}} P_{T_c} \]
+
+            This expression is exactly the definition of the maximum between $C_{T_c}$ and $P_{T_c}$. Thus, $V_{T_c} = \max(C_{T_c}, P_{T_c})$.
+
+      \item \textbf{Price at $T_c$ using Put-Call parity}
+
+            The Put-Call parity relation at time $t$ for European options on a non-dividend-paying stock is given by:
+            \[ C_t - P_t = S_t - e^{-r(N-t)} K \]
+
+            Rearranging this formula to express the Put price in terms of the Call price at time $T_c$:
+            \[ P_{T_c} = C_{T_c} - S_{T_c} + e^{-r(N-T_c)} K \]
+
+            Now, substitute this expression for $P_{T_c}$ into the result from question 2:
+            \[ V_{T_c} = \max(C_{T_c}, P_{T_c}) = \max\left(C_{T_c}, C_{T_c} - S_{T_c} + e^{-r(N-T_c)} K\right) \]
+
+            We can factor out $C_{T_c}$ from the maximum function:
+            \[ V_{T_c} = C_{T_c} + \max\left(0, e^{-r(N-T_c)} K - S_{T_c}\right) \]
+
+            This is equivalent to:
+            \[ V_{T_c} = C_{T_c} + \left(e^{-r(N-T_c)} K - S_{T_c}\right)_+ \]
+
+      \item \textbf{Replication portfolio}
+
+            From the previous question, the value of the "chooser" option at time $T_c$ is $C_{T_c} + (e^{-r(N-T_c)} K - S_{T_c})_+$. This value can be viewed as the payoff of a specific portfolio at time $T_c$.
+
+            Let's break down the two terms:
+            \begin{itemize}
+                  \item $C_{T_c}$ is the value at time $T_c$ of a standard European Call option with strike $K$ and maturity $N$.
+                  \item $(e^{-r(N-T_c)} K - S_{T_c})_+$ is exactly the payoff at time $T_c$ of a standard European Put option with strike $K' = e^{-r(N-T_c)} K$ and maturity $T_c$.
+            \end{itemize}
+
+            Therefore, to replicate the payoff of the chooser option at $T_c$, an investor can buy a portfolio at time 0 consisting of:
+            \begin{itemize}
+                  \item One European Call option with strike $K$ and maturity $N$.
+                  \item One European Put option with strike $e^{-r(N-T_c)} K$ and maturity $T_c$.
+            \end{itemize}
+
+      \item \textbf{Arbitrage-free price at 0}
+
+            By the principle of no-arbitrage, if two portfolios have the same value at a future date $T_c$ in all states of the world, they must have the same value today (time 0).
+
+            Since the chooser option can be perfectly replicated by the portfolio described in question 4, its price at time 0 is simply the sum of the prices of the components of that replicating portfolio evaluated at time 0.
+
+            Using the given notation:
+            \begin{itemize}
+                  \item The price at 0 of the Call option with strike $K$ and maturity $N$ is $C_0(K, N)$.
+                  \item The price at 0 of the Put option with strike $e^{-r(N-T_c)} K$ and maturity $T_c$ is $P_0(e^{-r(N-T_c)} K, T_c)$.
+            \end{itemize}
+
+            Thus, the arbitrage-free price of the chooser option at time 0 is:
+            \[ V_0 = C_0(K, N) + P_0\left(e^{-r(N-T_c)} K, T_c\right) \]
+
+\end{enumerate}

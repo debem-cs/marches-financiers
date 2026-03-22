@@ -1,0 +1,94 @@
+\section{Exercise 3. Optimal Portfolio}
+
+\begin{enumerate}
+      \item Compute the optimizer $w_{\phi}^{*}$ as a function of $a$, $b$, $c$ and $\Sigma$, $\mu$, and $\phi$.
+
+            We want to solve the problem:
+            \[ \max_{w\in\mathbb{R}^{n}} \left( \mu^{T}w - \frac{\phi}{2}w^{T}\Sigma w \right) \quad \text{s.t.} \quad \mathbf{1}^{T}w = 1 \]
+
+            We set up the Lagrangian for this optimization problem. Let $\lambda$ be the Lagrange multiplier associated with the budget constraint:
+            \[ \mathcal{L}(w, \lambda) = \mu^{T}w - \frac{\phi}{2}w^{T}\Sigma w + \lambda (1 - \mathbf{1}^{T}w) \]
+
+            The first-order conditions for an extremum are obtained by setting the gradients with respect to $w$ and $\lambda$ to zero:
+            \begin{align*}
+                  \nabla_{w}\mathcal{L}                         & = \mu - \phi \Sigma w - \lambda \mathbf{1} = 0 \\
+                  \frac{\partial \mathcal{L}}{\partial \lambda} & = 1 - \mathbf{1}^{T}w = 0
+            \end{align*}
+
+            From the first equation, assuming $\Sigma$ is invertible, we can solve for $w$:
+            \[ \phi \Sigma w = \mu - \lambda \mathbf{1} \implies w = \frac{1}{\phi}\Sigma^{-1}\mu - \frac{\lambda}{\phi}\Sigma^{-1}\mathbf{1} \]
+
+            Substitute this expression for $w$ into the second first-order condition (the constraint $\mathbf{1}^{T}w = 1$):
+            \[ \mathbf{1}^{T} \left( \frac{1}{\phi}\Sigma^{-1}\mu - \frac{\lambda}{\phi}\Sigma^{-1}\mathbf{1} \right) = 1 \]
+            \[ \frac{1}{\phi}\mathbf{1}^{T}\Sigma^{-1}\mu - \frac{\lambda}{\phi}\mathbf{1}^{T}\Sigma^{-1}\mathbf{1} = 1 \]
+
+            Using the definitions $a = \mu^{T}\Sigma^{-1}\mathbf{1} = \mathbf{1}^{T}\Sigma^{-1}\mu$ (since $\Sigma^{-1}$ is symmetric) and $c = \mathbf{1}^{T}\Sigma^{-1}\mathbf{1}$, we get:
+            \[ \frac{a}{\phi} - \frac{\lambda c}{\phi} = 1 \implies a - \lambda c = \phi \implies \lambda = \frac{a - \phi}{c} \]
+
+            Now substitute $\lambda$ back into the expression for $w$ to find the optimal portfolio weights $w_{\phi}^{*}$:
+            \begin{align*}
+                  w_{\phi}^{*} & = \frac{1}{\phi}\Sigma^{-1}\mu - \frac{1}{\phi} \left( \frac{a - \phi}{c} \right) \Sigma^{-1}\mathbf{1} \\
+                  w_{\phi}^{*} & = \frac{1}{\phi}\Sigma^{-1}\mu - \frac{a - \phi}{\phi c}\Sigma^{-1}\mathbf{1}
+            \end{align*}
+
+      \item Deduce the limit $\lim_{\phi\rightarrow\infty}w_{\phi}^{*}$.
+
+            Taking the limit of the expression found in question 1 as $\phi$ goes to infinity:
+            \begin{align*}
+                  \lim_{\phi\rightarrow\infty} w_{\phi}^{*} & = \lim_{\phi\rightarrow\infty} \left( \frac{1}{\phi}\Sigma^{-1}\mu - \frac{a - \phi}{\phi c}\Sigma^{-1}\mathbf{1} \right)                                      \\
+                                                            & = \lim_{\phi\rightarrow\infty} \frac{1}{\phi}\Sigma^{-1}\mu - \lim_{\phi\rightarrow\infty} \left( \frac{a}{\phi c} - \frac{1}{c} \right) \Sigma^{-1}\mathbf{1} \\
+                                                            & = 0 - \left(0 - \frac{1}{c}\right)\Sigma^{-1}\mathbf{1}                                                                                                        \\
+                                                            & = \frac{1}{c}\Sigma^{-1}\mathbf{1}
+            \end{align*}
+            This represents the global minimum variance portfolio, which is the optimal portfolio for an infinitely risk-averse investor.
+
+      \item Compute the return and the variance of $w_{\phi}^{*}$.
+
+            The expected return $R_{\phi}$ is given by $\mu^{T}w_{\phi}^{*}$:
+            \begin{align*}
+                  R_{\phi} & = \mu^{T} \left( \frac{1}{\phi}\Sigma^{-1}\mu - \frac{a - \phi}{\phi c}\Sigma^{-1}\mathbf{1} \right) \\
+                           & = \frac{1}{\phi}\mu^{T}\Sigma^{-1}\mu - \frac{a - \phi}{\phi c}\mu^{T}\Sigma^{-1}\mathbf{1}          \\
+                           & = \frac{b}{\phi} - \frac{a(a - \phi)}{\phi c}                                                        \\
+                           & = \frac{bc - a^{2} + a\phi}{\phi c} = \frac{bc - a^{2}}{\phi c} + \frac{a}{c}
+            \end{align*}
+
+            The variance $V_{\phi}$ is given by $(w_{\phi}^{*})^{T}\Sigma w_{\phi}^{*}$. We use the expanded form of $w_{\phi}^{*}$:
+            \begin{align*}
+                  V_{\phi} & = \left( \frac{1}{\phi}\mu^{T}\Sigma^{-1} - \frac{a - \phi}{\phi c}\mathbf{1}^{T}\Sigma^{-1} \right) \Sigma \left( \frac{1}{\phi}\Sigma^{-1}\mu - \frac{a - \phi}{\phi c}\Sigma^{-1}\mathbf{1} \right)                                   \\
+                           & = \left( \frac{1}{\phi}\mu^{T} - \frac{a - \phi}{\phi c}\mathbf{1}^{T} \right) \left( \frac{1}{\phi}\Sigma^{-1}\mu - \frac{a - \phi}{\phi c}\Sigma^{-1}\mathbf{1} \right)                                                                \\
+                           & = \frac{1}{\phi^{2}}\mu^{T}\Sigma^{-1}\mu - \frac{a - \phi}{\phi^{2} c}\mu^{T}\Sigma^{-1}\mathbf{1} - \frac{a - \phi}{\phi^{2} c}\mathbf{1}^{T}\Sigma^{-1}\mu + \frac{(a - \phi)^{2}}{\phi^{2} c^{2}}\mathbf{1}^{T}\Sigma^{-1}\mathbf{1} \\
+                           & = \frac{b}{\phi^{2}} - \frac{a(a - \phi)}{\phi^{2} c} - \frac{a(a - \phi)}{\phi^{2} c} + \frac{(a - \phi)^{2}}{\phi^{2} c^{2}} c                                                                                                         \\
+                           & = \frac{bc - 2a^{2} + 2a\phi + a^{2} - 2a\phi + \phi^{2}}{\phi^{2} c}                                                                                                                                                                    \\
+                           & = \frac{bc - a^{2} + \phi^{2}}{\phi^{2} c} = \frac{bc - a^{2}}{\phi^{2} c} + \frac{1}{c}
+            \end{align*}
+
+      \item Prove that $bc-a^{2}>0$ and compare the return of $w_{\phi}^{*}$ to $a/c$.
+
+            Since $\Sigma$ is positive definite, $\Sigma^{-1}$ is also positive definite. We can define an inner product on $\mathbb{R}^{n}$ as $\langle x, y \rangle = x^{T}\Sigma^{-1}y$.
+            Applying the Cauchy-Schwarz inequality to the vectors $\mu$ and $\mathbf{1}$:
+            \[ \langle \mu, \mathbf{1} \rangle^{2} \le \langle \mu, \mu \rangle \langle \mathbf{1}, \mathbf{1} \rangle \]
+            \[ (\mu^{T}\Sigma^{-1}\mathbf{1})^{2} \le (\mu^{T}\Sigma^{-1}\mu)(\mathbf{1}^{T}\Sigma^{-1}\mathbf{1}) \]
+            \[ a^{2} \le b \cdot c \]
+            The problem states that $\mu$ is not collinear to $\mathbf{1}$. Thus, the vectors are linearly independent, making the Cauchy-Schwarz inequality strict:
+            \[ a^{2} < bc \implies bc - a^{2} > 0 \]
+
+            Now comparing the return $R_{\phi}$ to $a/c$:
+            \[ R_{\phi} = \frac{bc - a^{2}}{\phi c} + \frac{a}{c} \]
+            Since $bc - a^{2} > 0$, and we know $\phi > 0$ and $c > 0$ (because $\Sigma^{-1}$ is positive definite and $c = \mathbf{1}^{T}\Sigma^{-1}\mathbf{1}$), the term $\frac{bc - a^{2}}{\phi c}$ is strictly positive.
+            Therefore, $R_{\phi} > \frac{a}{c}$.
+
+      \item Express the variance of $w_{\phi}^{*}$ as a function of its return. What do you deduce?
+
+            From the expression for return derived in question 3, we can isolate $\frac{1}{\phi}$:
+            \[ R_{\phi} - \frac{a}{c} = \frac{bc - a^{2}}{\phi c} \implies \frac{1}{\phi} = \frac{c\left(R_{\phi} - \frac{a}{c}\right)}{bc - a^{2}} \]
+
+            Now substitute this into the variance equation:
+            \begin{align*}
+                  V_{\phi} & = \frac{bc - a^{2}}{c} \left( \frac{1}{\phi} \right)^{2} + \frac{1}{c}                                          \\
+                           & = \frac{bc - a^{2}}{c} \left[ \frac{c\left(R_{\phi} - \frac{a}{c}\right)}{bc - a^{2}} \right]^{2} + \frac{1}{c} \\
+                           & = \frac{c(R_{\phi} - a/c)^{2}}{bc - a^{2}} + \frac{1}{c}
+            \end{align*}
+
+            We deduce that the relationship between the variance $V_{\phi}$ and the expected return $R_{\phi}$ describes a parabola in the variance-return plane. This equation represents the efficient frontier (the Markowitz bullet) in modern portfolio theory. The minimum possible variance is $1/c$, which occurs when the expected return is $a/c$ (this aligns with the global minimum variance portfolio found when $\phi \rightarrow \infty$).
+
+\end{enumerate}
